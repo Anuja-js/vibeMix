@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/Constants/colors.dart';
-class ScaffoldCustom extends StatefulWidget {
+
+// ignore: must_be_immutable
+class ScaffoldCustom extends StatelessWidget {
   String tittle;
   bool backButton;
   Widget body;
   bool showBottomNav;
   bool appBar;
 
-   ScaffoldCustom({required this.tittle, required this.backButton, required this.body, required this.showBottomNav,required this.appBar});
+   ScaffoldCustom({super.key, required this.tittle, required this.backButton, required this.body, required this.showBottomNav,required this.appBar});
 
-  @override
-  State<ScaffoldCustom> createState() => _ScaffoldCustomState();
-}
-
-class _ScaffoldCustomState extends State<ScaffoldCustom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar:widget.appBar? AppBar(
-       title: Text(widget.tittle,),
-       automaticallyImplyLeading: widget.backButton,
+     appBar:appBar? AppBar(backgroundColor: background,centerTitle: true,elevation: 0,
+       title: Text(tittle,style: const TextStyle(color: foreground,fontSize: 20,fontWeight: FontWeight.bold),),
+       automaticallyImplyLeading: backButton,leading: backButton?IconButton(onPressed: (){}, icon: const Icon(Icons.arrow_back,color: foreground,size: 25,)
+         ):null
      ):null,
-      body: widget.body,
+      body: body,
       backgroundColor: background,
-      bottomNavigationBar:widget.showBottomNav? const BottomAppBar():null,
+      bottomNavigationBar:showBottomNav? const BottomAppBar(
+
+      ):null,
     );
   }
 }

@@ -26,8 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Center(
             child: Image.asset(
               "assets/images/logo.png",
-              height: 150,
-              width: 150,
+              height: 200,
+              width: 200,
             ),
           ),
         ),
@@ -35,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   Future<void> gotoOnboarding()async{
     await Future.delayed(const Duration(seconds: 3));
+    // ignore: use_build_context_synchronously
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (ctx) => const OnboardingScreen()));
 

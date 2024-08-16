@@ -51,21 +51,21 @@ class OnboardingScreen extends StatelessWidget {
                       focusColor: foreground,
                       prefixIconColor: background,
                       labelText: 'Enter Your Name',
-                      floatingLabelStyle: TextStyle(
+                      floatingLabelStyle: const TextStyle(
                           color: textPink,
                           fontSize: 14,
                           fontWeight: FontWeight.bold),
-                      labelStyle: TextStyle(
+                      labelStyle: const TextStyle(
                           color: background,
                           fontSize: 15,
                           fontWeight: FontWeight.normal),
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.perm_identity_outlined,
                       ),
-                      enabledBorder: OutlineInputBorder(
+                      enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: containerPink),
                       ),
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: containerPink),
                       ),
                       border: OutlineInputBorder(
