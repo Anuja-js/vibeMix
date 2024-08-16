@@ -1,0 +1,12 @@
+import 'package:flutter/material.dart';
+const white=Colors.white;
+const black=Colors.black;
+const foreground=white;
+const background=black;
+const textPink=Color(0xffE07373);
+const containerPink=Color(0xffBE9393);
+const shadow=Color(0xff8685B3);
+const sh25=SizedBox(height: 25,);
+const sh10=SizedBox(height: 10,);
+const sw10=SizedBox(width: 10,);
+const sw15=SizedBox(width: 15,);
