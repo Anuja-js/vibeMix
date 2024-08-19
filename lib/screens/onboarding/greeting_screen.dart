@@ -3,7 +3,7 @@ import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/screens/home_screen.dart';
 
-import '../Constants/colors.dart';
+import '../../Constants/colors.dart';
 class GreetingScreen extends StatelessWidget {
   const GreetingScreen({Key? key}) : super(key: key);
 

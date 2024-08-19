@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import 'package:vibemix/screens/greeting_screen.dart';
+import 'package:vibemix/screens/onboarding/greeting_screen.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({Key? key}) : super(key: key);

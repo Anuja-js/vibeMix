@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
-import 'package:vibemix/screens/onboarding_secsion.dart';
+import 'package:vibemix/screens/onboarding/onboarding_secsion.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
