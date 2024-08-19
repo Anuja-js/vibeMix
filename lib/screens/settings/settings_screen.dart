@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
+import 'package:vibemix/screens/terms_screen.dart';
 
 import '../../Constants/colors.dart';
 import '../../customs/text_custom.dart';
@@ -21,9 +22,16 @@ class SettingScreen extends StatelessWidget {
       ),   ListTile(
         trailing: Icon(Icons.arrow_forward_ios_outlined,size: 20,color: foreground,),
         title: TextCustom(color: foreground, size: 18, fontWeight: FontWeight.normal, text: "Terms and Conditions"),
+        onTap: (){
+          Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
+            return TermsAndCondition();
+          }));
+        },
       ),  ListTile(
         trailing: Icon(Icons.arrow_forward_ios_outlined,size: 20,color: foreground,),
         title: TextCustom(color: foreground, size: 18, fontWeight: FontWeight.normal, text: "Logout"),
+        onTap: (){
+        },
       ),
 
     ],), showBottomNav: true, appBar: true);
