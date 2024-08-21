@@ -62,7 +62,7 @@ List <Map>terms=[
       return sh10;
     }, itemCount: terms.length),
 
-        showBottomNav: false, appBar: true);
+         appBar: true);
 
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:vibemix/screens/about_screen.dart';
 import 'package:vibemix/screens/library/library_screen.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Flutter VibeMix',
-      home:SettingScreen(),debugShowCheckedModeBanner: false,
+      home:SplashScreen(),debugShowCheckedModeBanner: false,
     );
   }
 }

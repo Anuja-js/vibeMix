@@ -13,8 +13,8 @@ class LibraryScreen extends StatelessWidget {
           leading: Icon(Icons.music_note_outlined,size: 25,color: foreground,),
           title: TextCustom(color: foreground, size: 18, fontWeight: FontWeight.normal, text: "Now Playing"),
         ),   ListTile(
-          leading: Icon(Icons.timelapse_sharp,size: 25,color: foreground,),
-          title: TextCustom(color: foreground, size: 18, fontWeight: FontWeight.normal, text: "Last Session"),
+          leading: Icon(Icons.playlist_add,size: 25,color: foreground,),
+          title: TextCustom(color: foreground, size: 18, fontWeight: FontWeight.normal, text: "Playlists"),
         ),   ListTile(
           leading: Icon(Icons.favorite_border_outlined,size: 25,color: foreground,),
           title: TextCustom(color: foreground, size: 18, fontWeight: FontWeight.normal, text: "Favorites"),
@@ -24,6 +24,6 @@ class LibraryScreen extends StatelessWidget {
         ),
 
       ],
-    ), showBottomNav: true, appBar: true);
+    ),  appBar: true);
   }
 }

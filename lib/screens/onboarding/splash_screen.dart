@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
         ),
-        showBottomNav: false, appBar: false, tittle: '',);
+         appBar: false, tittle: '',);
   }
   Future<void> gotoOnboarding()async{
     await Future.delayed(const Duration(seconds: 3));

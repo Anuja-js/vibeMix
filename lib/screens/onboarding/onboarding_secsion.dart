@@ -101,7 +101,7 @@ class OnboardingScreen extends StatelessWidget {
           ],
         ),
       ),
-      showBottomNav: false,
+      
       appBar: false,
     );
   }

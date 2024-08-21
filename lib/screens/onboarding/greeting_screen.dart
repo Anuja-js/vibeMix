@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/screens/home_screen.dart';
+import 'package:vibemix/screens/navbar.dart';
 
 import '../../Constants/colors.dart';
 class GreetingScreen extends StatelessWidget {
@@ -54,7 +55,7 @@ TextSpan(
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+                        .pushReplacement(MaterialPageRoute(builder: (ctx) => const NavBar()));
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: containerPink,
@@ -69,6 +70,6 @@ TextSpan(
             ],
           ),
         ),
-      showBottomNav: false, appBar: false,);
+       appBar: false,);
   }
 }

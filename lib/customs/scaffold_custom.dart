@@ -6,7 +6,6 @@ class ScaffoldCustom extends StatelessWidget {
   String tittle;
   bool backButton;
   Widget body;
-  bool showBottomNav;
   bool appBar;
   bool? action;
   Color?color;
@@ -16,7 +15,6 @@ class ScaffoldCustom extends StatelessWidget {
       required this.tittle,
       required this.backButton,
       required this.body,
-      required this.showBottomNav,
       required this.appBar,this.action,this.color});
 
   @override
@@ -50,7 +48,7 @@ class ScaffoldCustom extends StatelessWidget {
           : null,
       body: body,
       backgroundColor: background,
-      bottomNavigationBar: showBottomNav ? const BottomAppBar() : null,
+
     );
   }
 }

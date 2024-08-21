@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
+import 'package:vibemix/screens/onboarding/splash_screen.dart';
 import 'package:vibemix/screens/terms_screen.dart';
 
 import '../../Constants/colors.dart';
@@ -31,10 +32,35 @@ class SettingScreen extends StatelessWidget {
         trailing: Icon(Icons.arrow_forward_ios_outlined,size: 20,color: foreground,),
         title: TextCustom(color: foreground, size: 18, fontWeight: FontWeight.normal, text: "Logout"),
         onTap: (){
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("Logout...?"),
+                  content: Text(
+                      "Are you sure? To Logout?"),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Cancel")),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx){
+                            return SplashScreen();
+                          }), (route) => false);
+
+                        Navigator.of(context).pop();
+                        },
+                        child: const Text("Logout")),
+                  ],
+                );
+              });
         },
       ),
 
-    ],), showBottomNav: true, appBar: true);
+    ],),     appBar: true);
   }
 }
 
