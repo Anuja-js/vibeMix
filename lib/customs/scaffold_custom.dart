@@ -38,7 +38,9 @@ class ScaffoldCustom extends StatelessWidget {
               automaticallyImplyLeading: backButton,
               leading: backButton
                   ? IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       icon: const Icon(
                         Icons.arrow_back,
                         color: foreground,

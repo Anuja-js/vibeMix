@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:vibemix/screens/about_screen.dart';
-import 'package:vibemix/screens/library/library_screen.dart';
-import 'package:vibemix/screens/library/now_playing_screen.dart';
 import 'package:vibemix/screens/onboarding/splash_screen.dart';
-import 'package:vibemix/screens/settings/settings_screen.dart';
-import 'package:vibemix/screens/terms_screen.dart';
-
+// ignore: constant_identifier_names
+const save_Key = "userLoggedIn";
 void main() {
   runApp(const MyApp());
 }

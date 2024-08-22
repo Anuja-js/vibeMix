@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import 'package:vibemix/screens/home_screen.dart';
-import 'package:vibemix/screens/navbar.dart';
+import 'package:vibemix/nav/navbar.dart';
 
 import '../../Constants/colors.dart';
+// ignore: must_be_immutable
 class GreetingScreen extends StatelessWidget {
-  const GreetingScreen({Key? key}) : super(key: key);
+  String name;
+   GreetingScreen({Key? key,required this.name}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +35,9 @@ class GreetingScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       text: "Welcome"),
                  Text.rich(
-                   TextSpan(text: "Anuja ",
-                     style: TextStyle(color: foreground,fontWeight: FontWeight.bold,fontSize: 45),
-                     children: <TextSpan>[
+                   TextSpan(text:name,
+                     style: const TextStyle(color: foreground,fontWeight: FontWeight.bold,fontSize: 45),
+                     children: const <TextSpan>[
                      TextSpan(
                        text: '!\n',
                        style: TextStyle(color:textPink,fontWeight: FontWeight.bold,fontSize: 45),
@@ -55,7 +56,8 @@ TextSpan(
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (ctx) => const NavBar()));
+                        .pushReplacement(MaterialPageRoute(builder: (ctx) =>  NavBar(
+                    )));
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: containerPink,

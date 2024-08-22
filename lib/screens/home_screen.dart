@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/music_widget.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import 'package:vibemix/helper/permissions.dart';
+import 'package:vibemix/screens/mymusic.dart';
 import 'package:vibemix/screens/search_music.dart';
 
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+   const HomeScreen({Key? key,}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _hasPermission=false;
+  //use to fetch the audio from audio folder
+  final OnAudioQuery _audioQuery = OnAudioQuery();
   @override
   void initState() {
     checkAndRequestPermissions();
    super.initState();
   }
+  //pass default parameter
   checkAndRequestPermissions({bool retry = false}) async {
     _hasPermission = await _audioQuery.checkAndRequest(
       retryRequest: retry,
@@ -29,22 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_hasPermission) {
       setState(() {});
     } else {
-
     }
   }
-
-
-  // checkAndRequestPermissions({bool retry = false}) async {
-  //   // The param 'retryRequest' is false, by default.
-  //   _hasPermission = await _audioQuery.checkAndRequest(
-  //     retryRequest: retry,
-  //   );
-  //
-  //
-  //   _hasPermission ? setState(() {}) : null;
-  // }
-  bool _hasPermission=false;
-  final OnAudioQuery _audioQuery = OnAudioQuery();
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         sw15,
-                        const Text.rich(
+                         const Text.rich(
                           TextSpan(
                             text: "Hi There,\n",
                             style: TextStyle(
@@ -91,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 20),
                             children: <TextSpan>[
                               TextSpan(
-                                text: 'Anuja',
+                                text:"Anuja",
                                 style: TextStyle(
                                     color: foreground,
                                     fontWeight: FontWeight.bold,
@@ -118,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                         color: textPink,
                         borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Color(0x40e07373),
                             spreadRadius: 4,
@@ -139,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             size: 14,
                             fontWeight: FontWeight.bold,
                             text: "Search for anything ..."),
-                        trailing: Icon(
+                        trailing: const Icon(
                           Icons.search,
                           color: background,
                           size: 20,
@@ -147,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap:() {
                           Navigator.of(context).push(
                               MaterialPageRoute(builder: (ctx) {
-                                return SearchMusic();
+                                return const SearchMusic();
                               }));
 
                         }
@@ -155,97 +144,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       ),
                   sh25,
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   crossAxisAlignment: CrossAxisAlignment.center,
-                  //   children: [
-                  //     Expanded(
-                  //         child: TextCustom(
-                  //             color: foreground,
-                  //             size: 18,
-                  //             fontWeight: FontWeight.bold,
-                  //             text: "Favorites Songs")),
-                  //     TextCustom(
-                  //         color: foreground,
-                  //         size: 12,
-                  //         fontWeight: FontWeight.normal,
-                  //         text: "See all"),
-                  //     sw10,
-                  //     const Icon(
-                  //       Icons.arrow_forward_ios,
-                  //       color: foreground,
-                  //       size: 15,
-                  //     )
-                  //   ],
-                  // ),
-                  // SizedBox(
-                  //   height: 160,
-                  //   child: ListView.builder(
-                  //     scrollDirection: Axis.horizontal,
-                  //     itemCount: 10,
-                  //     itemBuilder: (context, index) {
-                  //       return Padding(
-                  //         padding: const EdgeInsets.symmetric(
-                  //             horizontal: 8.0, vertical: 15),
-                  //         child: Column(
-                  //           children: [
-                  //             Container(
-                  //               width: 80,
-                  //               height: 80,
-                  //               decoration: BoxDecoration(
-                  //                 borderRadius: BorderRadius.circular(8),
-                  //                 image: const DecorationImage(
-                  //                   image:
-                  //                       AssetImage('assets/images/music.png'),
-                  //                   fit: BoxFit.cover,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             sh10,
-                  //             TextCustom(
-                  //               color: foreground,
-                  //               size: 15,
-                  //               fontWeight: FontWeight.bold,
-                  //               text: 'Flower',
-                  //               align: TextAlign.center,
-                  //             ),
-                  //             TextCustom(
-                  //               color: foreground,
-                  //               size: 13,
-                  //               fontWeight: FontWeight.w200,
-                  //               text: 'Post Melon',
-                  //               align: TextAlign.center,
-                  //             )
-                  //           ],
-                  //         ),
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   crossAxisAlignment: CrossAxisAlignment.center,
-                  //   children: [
-                  //     Expanded(
-                  //         child: TextCustom(
-                  //             color: foreground,
-                  //             size: 18,
-                  //             fontWeight: FontWeight.bold,
-                  //             text: "Recently Played")),
-                  //     TextCustom(
-                  //         color: foreground,
-                  //         size: 12,
-                  //         fontWeight: FontWeight.normal,
-                  //         text: "See all"),
-                  //     sw10,
-                  //     const Icon(
-                  //       Icons.arrow_forward_ios,
-                  //       color: foreground,
-                  //       size: 15,
-                  //     )
-                  //   ],
-                  // ),
-                  ListTile(
+
+                  ListTile(onTap: (){
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (ctx) {
+                          return const MyMusic();
+                        }));
+                  },
                     title:  TextCustom(
                           color: foreground,
                           size: 18,
@@ -273,10 +178,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 future: _audioQuery.querySongs(
                   orderType: OrderType.ASC_OR_SMALLER,
                   uriType: UriType.EXTERNAL,
+                  //assume A=a
                   ignoreCase: true,
                 ),
                 builder: (BuildContext context, AsyncSnapshot<List<SongModel>> snapshot) {
-                  // Check if there's an error
                   if (snapshot.hasError) {
                     return Center(
                       child: TextCustom(
@@ -287,15 +192,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   }
-
-                  // Display loading indicator while the data is loading
+                  //waiting for the data
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
-
-                  // Check if data is available and is not empty
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Center(
                       child: TextCustom(
@@ -309,14 +211,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // Data present
                   if (snapshot.hasData && snapshot.data!.isNotEmpty ){
-                    // return Container(child: Text(snapshot.data![1].displayNameWOExt.toString(),style: TextStyle(color: foreground),),);
-                    return  SizedBox(
+                     return  SizedBox(
                       width: double.infinity,
                      height: 500,
-                      child: ListView.builder(padding: EdgeInsets.only(bottom: 55),
+                      child: ListView.builder(padding: const EdgeInsets.only(bottom: 55),
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        physics: ScrollPhysics(),
+                        physics: const ScrollPhysics(),
                         itemCount: snapshot.data!.length>=10?10:snapshot.data!.length,
                         itemBuilder: (context, index) {
                           return MusicWidget(
@@ -326,11 +227,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   }
-                 return SizedBox();
+                 return const SizedBox();
                 },
               )
-
-
               ],
               ),
             ),
@@ -339,3 +238,96 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: false);
   }
 }
+
+
+
+// Row(
+//   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//   crossAxisAlignment: CrossAxisAlignment.center,
+//   children: [
+//     Expanded(
+//         child: TextCustom(
+//             color: foreground,
+//             size: 18,
+//             fontWeight: FontWeight.bold,
+//             text: "Favorites Songs")),
+//     TextCustom(
+//         color: foreground,
+//         size: 12,
+//         fontWeight: FontWeight.normal,
+//         text: "See all"),
+//     sw10,
+//     const Icon(
+//       Icons.arrow_forward_ios,
+//       color: foreground,
+//       size: 15,
+//     )
+//   ],
+// ),
+// SizedBox(
+//   height: 160,
+//   child: ListView.builder(
+//     scrollDirection: Axis.horizontal,
+//     itemCount: 10,
+//     itemBuilder: (context, index) {
+//       return Padding(
+//         padding: const EdgeInsets.symmetric(
+//             horizontal: 8.0, vertical: 15),
+//         child: Column(
+//           children: [
+//             Container(
+//               width: 80,
+//               height: 80,
+//               decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.circular(8),
+//                 image: const DecorationImage(
+//                   image:
+//                       AssetImage('assets/images/music.png'),
+//                   fit: BoxFit.cover,
+//                 ),
+//               ),
+//             ),
+//             sh10,
+//             TextCustom(
+//               color: foreground,
+//               size: 15,
+//               fontWeight: FontWeight.bold,
+//               text: 'Flower',
+//               align: TextAlign.center,
+//             ),
+//             TextCustom(
+//               color: foreground,
+//               size: 13,
+//               fontWeight: FontWeight.w200,
+//               text: 'Post Melon',
+//               align: TextAlign.center,
+//             )
+//           ],
+//         ),
+//       );
+//     },
+//   ),
+// ),
+// Row(
+//   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//   crossAxisAlignment: CrossAxisAlignment.center,
+//   children: [
+//     Expanded(
+//         child: TextCustom(
+//             color: foreground,
+//             size: 18,
+//             fontWeight: FontWeight.bold,
+//             text: "Recently Played")),
+//     TextCustom(
+//         color: foreground,
+//         size: 12,
+//         fontWeight: FontWeight.normal,
+//         text: "See all"),
+//     sw10,
+//     const Icon(
+//       Icons.arrow_forward_ios,
+//       color: foreground,
+//       size: 15,
+//     )
+//   ],
+// ),

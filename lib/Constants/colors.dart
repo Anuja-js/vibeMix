@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 const white=Colors.white;
 const black=Colors.black;
 const foreground=white;

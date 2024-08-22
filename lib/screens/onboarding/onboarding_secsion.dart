@@ -1,14 +1,19 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/screens/onboarding/greeting_screen.dart';
 
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({Key? key}) : super(key: key);
+import '../../main.dart';
 
+class OnboardingScreen extends StatelessWidget {
+   OnboardingScreen({Key? key}) : super(key: key);
+  final _nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+
     return ScaffoldCustom(
       tittle: "",
       backButton: false,
@@ -45,12 +50,13 @@ class OnboardingScreen extends StatelessWidget {
               children: [
                 SizedBox(height: 50,width: MediaQuery.of(context).size.width,
                   child: TextFormField(scrollPhysics: const NeverScrollableScrollPhysics(),
+                    controller: _nameController,
                     decoration: InputDecoration(
                       fillColor: foreground,
                       filled: true,
                       focusColor: foreground,
                       prefixIconColor: background,
-                      labelText: 'Enter Your Name',
+                      labelText: 'Enter Your Name',floatingLabelBehavior: FloatingLabelBehavior.never,
                       floatingLabelStyle: const TextStyle(
                           color: textPink,
                           fontSize: 14,
@@ -77,8 +83,8 @@ class OnboardingScreen extends StatelessWidget {
                 sh25,
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (ctx) => const GreetingScreen()));
+                    checkLogIn(context);
+
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: containerPink,
@@ -104,5 +110,25 @@ class OnboardingScreen extends StatelessWidget {
       
       appBar: false,
     );
+  }
+
+  void checkLogIn(BuildContext ctx) async {
+    final username = _nameController.text;
+    if (username.isNotEmpty) {
+      final sharedprfs = await SharedPreferences.getInstance();
+      await sharedprfs.setBool(save_Key, true);
+
+      // ignore: use_build_context_synchronously
+      Navigator.of(ctx)
+          .pushReplacement(MaterialPageRoute(builder: (ctx) =>  GreetingScreen(name:_nameController.text.toString())));
+    } else {
+      if (kDebugMode) {
+        print("User name null");
+      }
+
+      Navigator.of(ctx)
+          .pushReplacement(MaterialPageRoute(builder: (ctx) =>  GreetingScreen(name:"User")));
+
+    }
   }
 }

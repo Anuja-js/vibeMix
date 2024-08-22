@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/screens/about_screen.dart';
+import 'package:vibemix/screens/favorite_screen.dart';
 import 'package:vibemix/screens/home_screen.dart';
 import 'package:vibemix/screens/library/library_screen.dart';
 import 'package:vibemix/screens/settings/settings_screen.dart';
 class NavBar extends StatefulWidget {
-  const NavBar({Key? key}) : super(key: key);
+
+   const NavBar({Key? key,}) : super(key: key);
 
   @override
   State<NavBar> createState() => _NavBarState();
 }
 List<Widget> data=[
-  HomeScreen(),
+  const HomeScreen(),
   LibraryScreen(),
-  HomeScreen(),
-  SettingScreen(),
-  AboutScreen()
+const FavoriteScreen(),
+  const SettingScreen(),
+  const AboutScreen()
 ];
+
+
 int index=0;
 class _NavBarState extends State<NavBar> {
   @override
@@ -24,7 +28,7 @@ class _NavBarState extends State<NavBar> {
     return Scaffold(
       body: data[index],
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(border: Border(top: BorderSide(color: foreground,width: 2))),
+        decoration: const BoxDecoration(border: Border(top: BorderSide(color: foreground,width: 2))),
         child: BottomNavigationBar(items: const <BottomNavigationBarItem>[
 
           BottomNavigationBarItem(
@@ -52,10 +56,10 @@ class _NavBarState extends State<NavBar> {
           currentIndex: index,
           backgroundColor: textPink,
           useLegacyColorScheme: false,elevation: 2,
-          unselectedLabelStyle: TextStyle(color: background,fontSize:12 ),
-          unselectedIconTheme: IconThemeData(color: background,size: 20),
-          selectedIconTheme:  IconThemeData(color: foreground,size: 22),
-          selectedLabelStyle: TextStyle(color: foreground,fontSize:12,fontWeight: FontWeight.bold ),
+          unselectedLabelStyle: const TextStyle(color: background,fontSize:12 ),
+          unselectedIconTheme: const IconThemeData(color: background,size: 20),
+          selectedIconTheme:  const IconThemeData(color: foreground,size: 22),
+          selectedLabelStyle: const TextStyle(color: foreground,fontSize:12,fontWeight: FontWeight.bold ),
           selectedItemColor: foreground,
           unselectedItemColor: background,
           type: BottomNavigationBarType.fixed,
