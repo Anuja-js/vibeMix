@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
+import 'package:vibemix/screens/onboarding/onboarding_secsion.dart';
 import 'package:vibemix/screens/onboarding/splash_screen.dart';
 import 'package:vibemix/screens/terms_screen.dart';
 
@@ -92,8 +93,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   onPressed: () async{
                     await sharedprfs.clear();
                     // ignore: use_build_context_synchronously
-                    Navigator.of(ctx).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (ctx1) => const SplashScreen()), (route) => false);
+                    Navigator.of(ctx).pushReplacement(
+                        MaterialPageRoute(builder: (ctx1) =>  OnboardingScreen()), );
                   },
                   child: const Text("Logout")),
             ],

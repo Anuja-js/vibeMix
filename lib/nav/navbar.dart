@@ -6,15 +6,15 @@ import 'package:vibemix/screens/home_screen.dart';
 import 'package:vibemix/screens/library/library_screen.dart';
 import 'package:vibemix/screens/settings/settings_screen.dart';
 class NavBar extends StatefulWidget {
-
-   const NavBar({Key? key,}) : super(key: key);
+  bool reset=false;
+    NavBar({Key? key,required this.reset}) : super(key: key);
 
   @override
   State<NavBar> createState() => _NavBarState();
 }
 List<Widget> data=[
   const HomeScreen(),
-  LibraryScreen(),
+  const LibraryScreen(),
 const FavoriteScreen(),
   const SettingScreen(),
   const AboutScreen()
@@ -23,6 +23,13 @@ const FavoriteScreen(),
 
 int index=0;
 class _NavBarState extends State<NavBar> {
+  @override
+  void initState() {
+if(widget.reset){
+  index=0;
+}
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

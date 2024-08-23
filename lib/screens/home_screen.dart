@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/music_widget.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
@@ -16,11 +17,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String name="Guest";
   bool _hasPermission=false;
   //use to fetch the audio from audio folder
   final OnAudioQuery _audioQuery = OnAudioQuery();
   @override
   void initState() {
+    getname();
     checkAndRequestPermissions();
    super.initState();
   }
@@ -71,17 +74,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         sw15,
-                         const Text.rich(
+                          Text.rich(
                           TextSpan(
                             text: "Hi There,\n",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: textPink,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                             children: <TextSpan>[
                               TextSpan(
-                                text:"Anuja",
-                                style: TextStyle(
+                                text:name,
+                                style: const TextStyle(
                                     color: foreground,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20),
@@ -236,6 +239,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         appBar: false);
+  }
+  void getname() async {
+    final sharedprfs = await SharedPreferences.getInstance();
+    name=sharedprfs.getString("name")?? "Guest";
   }
 }
 

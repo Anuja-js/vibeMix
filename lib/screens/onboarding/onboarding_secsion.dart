@@ -117,17 +117,18 @@ class OnboardingScreen extends StatelessWidget {
     if (username.isNotEmpty) {
       final sharedprfs = await SharedPreferences.getInstance();
       await sharedprfs.setBool(save_Key, true);
+      await sharedprfs.setString("name", _nameController.text.toString());
 
       // ignore: use_build_context_synchronously
       Navigator.of(ctx)
-          .pushReplacement(MaterialPageRoute(builder: (ctx) =>  GreetingScreen(name:_nameController.text.toString())));
+          .pushReplacement(MaterialPageRoute(builder: (ctx) =>  GreetingScreen()));
     } else {
       if (kDebugMode) {
         print("User name null");
       }
 
       Navigator.of(ctx)
-          .pushReplacement(MaterialPageRoute(builder: (ctx) =>  GreetingScreen(name:"User")));
+          .pushReplacement(MaterialPageRoute(builder: (ctx) =>  GreetingScreen()));
 
     }
   }

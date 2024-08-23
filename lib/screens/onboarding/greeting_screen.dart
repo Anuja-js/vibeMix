@@ -1,14 +1,28 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/nav/navbar.dart';
 
 import '../../Constants/colors.dart';
 // ignore: must_be_immutable
-class GreetingScreen extends StatelessWidget {
-  String name;
-   GreetingScreen({Key? key,required this.name}) : super(key: key);
+class GreetingScreen extends StatefulWidget {
 
+   GreetingScreen({Key? key,}) : super(key: key);
+
+  @override
+  State<GreetingScreen> createState() => _GreetingScreenState();
+}
+
+class _GreetingScreenState extends State<GreetingScreen> {
+   String name="Guest";
+@override
+  void initState() {
+    getname();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return ScaffoldCustom(tittle: "", backButton: false,
@@ -56,8 +70,12 @@ TextSpan(
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (ctx) =>  NavBar(
-                    )));
+                        .pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) {
+                          return  NavBar( reset: true,
+                    );
+                        }),(route) => false
+                    );
+
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: containerPink,
@@ -73,5 +91,10 @@ TextSpan(
           ),
         ),
        appBar: false,);
+  }
+
+  void getname() async {
+      final sharedprfs = await SharedPreferences.getInstance();
+      name=sharedprfs.getString("name")?? "Guest";
   }
 }

@@ -124,7 +124,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             child: Slider(
                               min: 0.0,
                               value: position.inSeconds.toDouble(),
-                              max: _audioPlayer.duration!.inSeconds.toDouble(),
+                              max: _audioPlayer.duration==null?Duration.zero.inSeconds.toDouble(): _audioPlayer.duration!.inSeconds.toDouble(),
                               onChanged: (value) {
                                 changeToSeconds(value.toInt());
                               },
@@ -136,7 +136,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             color: foreground,
                             size: 10,
                             fontWeight: FontWeight.w300,
-                            text: _audioPlayer.duration!.toString().split(".")[0],
+                            text:  _audioPlayer.duration==null?Duration.zero.toString().split(".")[0]: _audioPlayer.duration.toString().split(".")[0],
                           ),
                         ],
                       );

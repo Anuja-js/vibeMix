@@ -51,8 +51,9 @@ class _SplashScreenState extends State<SplashScreen> {
       gotoOnboarding();
     } else {
       // ignore: use_build_context_synchronously
+   await   Future.delayed(Duration(seconds: 3));
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (ctx) =>  NavBar()));
+          .pushReplacement(MaterialPageRoute(builder: (ctx) =>  NavBar(reset:  true,)));
     }
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
+import 'package:vibemix/screens/favorite_screen.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
 
 import '../../models/audio_player_model.dart';
@@ -56,6 +57,13 @@ class LibraryScreen extends StatelessWidget {
               fontWeight: FontWeight.normal,
               text: "Favorites",
             ),
+            onTap: (){
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) {
+                  return const FavoriteScreen();
+                }),
+              );
+            },
           ),
           ListTile(
             onTap: () {
