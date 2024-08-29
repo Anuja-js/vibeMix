@@ -62,7 +62,7 @@ List <Map>terms=[
       return sh10;
     }, itemCount: terms.length),
 
-         appBar: true);
+         appBar: true, actionIcon: Icon(Icons.arrow_back_ios_outlined,size: 25,color: foreground,),action: false,);
 
   }
 }

@@ -1,6 +1,12 @@
+
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
+import 'hive.dart';
+
+
+// Singleton class to manage the audio player and song storage
 class AudioPlayerSingleton {
   // Private constructor
   AudioPlayerSingleton._privateConstructor();
@@ -12,7 +18,8 @@ class AudioPlayerSingleton {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   // Variable to store the currently playing song
-  SongModel? _currentSong;
+  SongHiveModel? _currentSong;
+  // final Box<SongModel> _songBox = Hive.box<SongModel>('songs');
 
   // Factory constructor to return the single instance of AudioPlayerSingleton
   factory AudioPlayerSingleton() {
@@ -23,15 +30,15 @@ class AudioPlayerSingleton {
   AudioPlayer get audioPlayer => _audioPlayer;
 
   // Method to access the currently playing song
-  SongModel? get currentSong => _currentSong;
+  SongHiveModel? get currentSong => _currentSong;
 
   // Method to set the currently playing song
-  void setCurrentSong(SongModel song) {
+  void setCurrentSong(SongHiveModel song) {
     _currentSong = song;
   }
 
   // Method to play a song
-  Future<void> playSong(SongModel song) async {
+  Future<void> playSong(SongHiveModel song) async {
     try {
       await _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
       _currentSong = song;
@@ -65,4 +72,19 @@ class AudioPlayerSingleton {
   void dispose() {
     _audioPlayer.dispose();
   }
+
+  // // Method to store songs in Hive
+  // void saveSong(SongModel song) {
+  //   _songBox.put(song.id, song);
+  // }
+  //
+  // // Method to get all stored songs from Hive
+  // List<SongModel> getAllSongs() {
+  //   return _songBox.values.toList();
+  // }
+  //
+  // // Method to delete a song from Hive
+  // void deleteSong(int id) {
+  //   _songBox.delete(id);
+  // }
 }

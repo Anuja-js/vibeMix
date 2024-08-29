@@ -33,6 +33,6 @@ class AboutScreen extends StatelessWidget {
           TextCustom(color: foreground, size: 11, fontWeight: FontWeight.bold, text: "Made with Flutter and Hive"),
           sh25,
       ],),
-    ),     appBar: true);
+    ),     appBar: true, actionIcon: Icon(Icons.arrow_back_ios_outlined,size: 25,color: foreground,),action: false,);
   }
 }

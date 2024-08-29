@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
+import 'package:vibemix/playlist/playlist.dart';
 import 'package:vibemix/screens/favorite_screen.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
 
 import '../../models/audio_player_model.dart';
 import '../mymusic.dart';
 class LibraryScreen extends StatelessWidget {
-  const LibraryScreen({Key? key}) : super(key: key);
-
+   LibraryScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return ScaffoldCustom(
@@ -41,6 +41,13 @@ class LibraryScreen extends StatelessWidget {
             ),
           ),
           ListTile(
+            onTap: (){
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) {
+                  return const PlaylistScreen();
+                }),
+              );
+            },
             leading: const Icon(Icons.playlist_add, size: 25, color: foreground),
             title: TextCustom(
               color: foreground,

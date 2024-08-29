@@ -3,18 +3,20 @@ import 'package:vibemix/Constants/colors.dart';
 
 // ignore: must_be_immutable
 class ScaffoldCustom extends StatelessWidget {
-  String tittle;
+  String?tittle;
   bool backButton;
   Widget body;
+  Widget? actionIcon;
   bool appBar;
   bool? action;
   Color?color;
+  void Function()? onpress;
 
   ScaffoldCustom(
       {super.key,
-      required this.tittle,
-      required this.backButton,
-      required this.body,
+       this.tittle,
+      required this.backButton,this.onpress,
+      required this.body, this.actionIcon,
       required this.appBar,this.action,this.color});
 
   @override
@@ -25,15 +27,17 @@ class ScaffoldCustom extends StatelessWidget {
               backgroundColor: background,
               centerTitle: true,
               elevation: 0,
-              title: Text(
-                tittle,
+              title: appBar==true?Text(
+                tittle!,
                 style: const TextStyle(
                     color: foreground,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
-              ),
+              ):Text(""),
           actions: action==true?[
-          IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border_outlined,size: 25,color: iconFav,)),sw15      
+          IconButton(onPressed: onpress, icon: actionIcon!,
+
+          ),sw15
       ]:null,
               automaticallyImplyLeading: backButton,
               leading: backButton

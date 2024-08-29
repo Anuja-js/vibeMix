@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:vibemix/Constants/colors.dart';
@@ -7,9 +8,11 @@ import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 
 import '../../models/audio_player_model.dart';
+import '../../models/box.dart';
+import '../../models/hive.dart';
 
 class NowPlayingScreen extends StatefulWidget {
-  final SongModel song;
+  final SongHiveModel song;
   const NowPlayingScreen({Key? key, required this.song}) : super(key: key);
 
   @override
@@ -19,26 +22,68 @@ class NowPlayingScreen extends StatefulWidget {
 class _NowPlayingScreenState extends State<NowPlayingScreen> {
   final AudioPlayer _audioPlayer = AudioPlayerSingleton().audioPlayer;
   bool _isPlaying = false;
+  bool isFavorite = false;
+  double _currentVolume = 1.0; // Initial volume
+  String _volumeDisplay = "Volume: 100%"; // Initial volume display
 
   @override
   void initState() {
-    checkPlayButton();
     super.initState();
+    checkPlayButton();
+    getHiveMusic();
   }
-  checkPlayButton()async{
-    AudioPlayerSingleton().setCurrentSong(widget.song);
-   await  AudioPlayerSingleton().playSong(widget.song);
-   if (kDebugMode) {
-     print("';;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;${_audioPlayer.playing}");
-   }
-    if(_audioPlayer.playing){
-      setState(() {
-        _isPlaying=true;
-      });
+
+  List<SongHiveModel> favourite = [];
+  Box<SongHiveModel>? favsBox;
+
+  getHiveMusic() async {
+    favsBox = await HiveService.getFavBox();
+    favourite.addAll(favsBox!.values);
+    isFavorite = favourite.any((song) => song.id == widget.song.id);
+    print(isFavorite);
+    setState(() {});
+  }
+
+  checkPlayButton() async {
+    await _audioPlayer.setUrl(widget.song.uri.toString());
+    await _audioPlayer.play();
+    if (kDebugMode) {
+      print("Audio is playing: ${_audioPlayer.playing}");
+    }
+    setState(() {
+      _isPlaying = _audioPlayer.playing;
+    });
+  }
+
+  void _volumeUp() {
+    if (_currentVolume < 1.0) {
+      _currentVolume += 0.1;
+      _audioPlayer.setVolume(_currentVolume);
+      _updateVolumeDisplay();
     }
   }
 
+  void _volumeDown() {
+    if (_currentVolume > 0.0) {
+      _currentVolume -= 0.1;
+      _audioPlayer.setVolume(_currentVolume);
+      _updateVolumeDisplay();
+    }
+  }
 
+  void _updateVolumeDisplay() {
+    setState(() {
+      _volumeDisplay = "Volume: ${(_currentVolume * 100).toInt()}%";
+    });
+  }
+
+  void _skipNext() {
+    _audioPlayer.seekToNext();
+  }
+
+  void _skipPrevious() {
+    _audioPlayer.seekToPrevious();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +122,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
               color: foreground,
               size: 15,
               fontWeight: FontWeight.w300,
-              text: "${widget.song.artist}" == "<unknown>" ? "Unknown" : "${widget.song.artist}",
+              text: widget.song.artist == "<unknown>" ? "Unknown" : widget.song.artist!,
             ),
             const Spacer(),
             Row(
@@ -86,16 +131,17 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                 IconButton(
                   icon: const Icon(Icons.shuffle_outlined, color: foreground),
                   onPressed: () {
-                    // Add your volume down functionality here
+                    // Add shuffle functionality
                   },
                 ),
                 IconButton(
                   icon: const Icon(Icons.playlist_add, color: foreground),
                   onPressed: () {
-                    // Add your volume up functionality here
+                    // Add to playlist functionality
                   },
                 ),
-              ],),
+              ],
+            ),
             Container(
               height: 200,
               width: MediaQuery.of(context).size.width,
@@ -106,7 +152,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
               child: Column(
                 children: [
-                  //update the screen
                   StreamBuilder<Duration>(
                     stream: _audioPlayer.positionStream,
                     builder: (context, snapshot) {
@@ -124,7 +169,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             child: Slider(
                               min: 0.0,
                               value: position.inSeconds.toDouble(),
-                              max: _audioPlayer.duration==null?Duration.zero.inSeconds.toDouble(): _audioPlayer.duration!.inSeconds.toDouble(),
+                              max: _audioPlayer.duration?.inSeconds.toDouble() ?? 0.0,
                               onChanged: (value) {
                                 changeToSeconds(value.toInt());
                               },
@@ -136,7 +181,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             color: foreground,
                             size: 10,
                             fontWeight: FontWeight.w300,
-                            text:  _audioPlayer.duration==null?Duration.zero.toString().split(".")[0]: _audioPlayer.duration.toString().split(".")[0],
+                            text: _audioPlayer.duration?.toString().split(".")[0] ?? '00:00',
                           ),
                         ],
                       );
@@ -147,9 +192,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.skip_previous, color: foreground, size: 25),
-                        onPressed: () {
-                          // Add your skip previous functionality here
-                        },
+                        onPressed: _skipPrevious,
                       ),
                       IconButton(
                         icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow_outlined, color: foreground, size: 25),
@@ -166,27 +209,26 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.skip_next, color: foreground, size: 25),
-                        onPressed: () {
-                          // Add your skip next functionality here
-                        },
+                        onPressed: _skipNext,
                       ),
                     ],
                   ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.volume_down, color: foreground),
-                        onPressed: () {
-                          // Add your volume down functionality here
-                        },
+                        onPressed: _volumeDown,
+                      ),
+                      TextCustom(
+                        color: foreground,
+                        size: 15,
+                        fontWeight: FontWeight.w400,
+                        text: _volumeDisplay, // Volume display text
                       ),
                       IconButton(
                         icon: const Icon(Icons.volume_up, color: foreground),
-                        onPressed: () {
-                          // Add your volume up functionality here
-                        },
+                        onPressed: _volumeUp,
                       ),
                     ],
                   ),
@@ -199,6 +241,26 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
       ),
       appBar: true,
       action: true,
+      actionIcon: IconButton(
+        onPressed: () async {
+          favsBox = await HiveService.getFavBox();
+          if (isFavorite) {
+            favsBox!.delete(widget.song.id);
+            favourite.removeWhere((song) => song.id == widget.song.id);
+          } else {
+            favsBox!.put(widget.song.id, widget.song);
+            favourite.add(widget.song);
+          }
+          setState(() {
+            isFavorite = !isFavorite;
+          });
+        },
+        icon: Icon(
+          isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
+          color: foreground,
+          size: 24,
+        ),
+      ),
     );
   }
 

@@ -14,7 +14,7 @@ class NavBar extends StatefulWidget {
 }
 List<Widget> data=[
   const HomeScreen(),
-  const LibraryScreen(),
+   LibraryScreen(),
 const FavoriteScreen(),
   const SettingScreen(),
   const AboutScreen()

@@ -1,13 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/nav/navbar.dart';
 import 'package:vibemix/screens/onboarding/onboarding_secsion.dart';
-
+import '../../customs/icon_images.dart';
 import '../../main.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -22,38 +23,38 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return ScaffoldCustom(
-
-        backButton: false,
-        body: SafeArea(
-          child: Center(
-            child: Image.asset(
-              "assets/images/logo.png",
-              height: 200,
-              width: 200,
-            ),
+      action: false,
+      backButton: false,
+      body: SafeArea(
+        child: Center(
+          child: IconImage(
+            height: 200,
+            width: 200,
           ),
         ),
-         appBar: false, tittle: '',);
+      ),
+      appBar: false,
+    );
   }
-  Future<void> gotoOnboarding()async{
-    await Future.delayed(const Duration(seconds: 3));
-    // ignore: use_build_context_synchronously
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (ctx) =>  OnboardingScreen()));
 
+  Future<void> gotoOnboarding() async {
+    await Future.delayed(const Duration(seconds: 3));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (ctx) => OnboardingScreen()));
   }
+
   Future<void> checkUserLogedin() async {
     final sharedprfs = await SharedPreferences.getInstance();
     final userLoggedIn = sharedprfs.getBool(save_Key);
     if (userLoggedIn == null || userLoggedIn == false) {
       gotoOnboarding();
     } else {
-      // ignore: use_build_context_synchronously
-   await   Future.delayed(Duration(seconds: 3));
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (ctx) =>  NavBar(reset:  true,)));
+      await Future.delayed(const Duration(seconds: 3));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (ctx) => NavBar(
+                reset: true,
+              )));
     }
   }
 }
