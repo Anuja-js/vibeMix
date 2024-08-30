@@ -11,12 +11,14 @@ class ScaffoldCustom extends StatelessWidget {
   bool? action;
   Color?color;
   void Function()? onpress;
+  void Function()? onBack;
+
 
   ScaffoldCustom(
       {super.key,
        this.tittle,
       required this.backButton,this.onpress,
-      required this.body, this.actionIcon,
+      required this.body, this.actionIcon,this.onBack,
       required this.appBar,this.action,this.color});
 
   @override
@@ -42,8 +44,8 @@ class ScaffoldCustom extends StatelessWidget {
               automaticallyImplyLeading: backButton,
               leading: backButton
                   ? IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
+                      onPressed:onBack!=null?onBack: () {
+                      Navigator.of(context).pop();
                       },
                       icon: const Icon(
                         Icons.arrow_back,

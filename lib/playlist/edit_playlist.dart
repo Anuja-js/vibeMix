@@ -54,9 +54,12 @@ class _EditPlaylistState extends State<EditPlaylist> {
             }
             Box<String> playlistsBox = await Hive.openBox<String>('playlists');
             playlistsBox.put(playlistName, playlistName);
-            playlistsBox.delete(widget.name);
-            Box<SongHiveModel> oldPlaylist = await Hive.openBox<SongHiveModel>(widget.name);
-          oldPlaylist.deleteFromDisk();
+            if(widget.name!=playlistName){
+              playlistsBox.delete(widget.name);
+              Box<SongHiveModel> oldPlaylist = await Hive.openBox<SongHiveModel>(widget.name);
+              oldPlaylist.deleteFromDisk();
+            }
+
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx){
               return PlaylistScreen();
             }));

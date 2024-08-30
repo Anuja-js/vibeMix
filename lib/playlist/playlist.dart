@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:vibemix/playlist/sections_play.dart';
+import 'package:vibemix/screens/library/library_screen.dart';
 import '../Constants/colors.dart';
 import '../customs/scaffold_custom.dart';
 import '../customs/text_custom.dart';
@@ -17,10 +18,11 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   List<String> playlistNames = [];
 
   @override
-  void initState() {loadPlaylists();
+  void initState() {
+    loadPlaylists();
     super.initState();
-
   }
+
 
   Future<void> loadPlaylists() async {
     // Open the Hive box that contains playlist names
@@ -33,7 +35,11 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldCustom(
-      tittle: "Playlists",
+      tittle: "Playlists",onBack: (){
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx){
+return LibraryScreen();
+      }));
+    },
       action: true,
       onpress: () {
         Navigator.of(context).push(
@@ -50,6 +56,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         color: foreground,
       ),
       backButton: true,
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -65,7 +72,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                     onTap: (){
                       Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
                         return SecssionsEach(name: playlistNames[index],);
-                      }));
+                      })).then((_) {
+                        loadPlaylists();
+                      });
                     },
                     title:Text( playlistNames[index],style: TextStyle(color: foreground),),
                     trailing:  Icon(Icons.arrow_forward_ios_outlined,color: foreground,size: 18,),
