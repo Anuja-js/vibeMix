@@ -13,6 +13,7 @@ import '../../main.dart';
 class OnboardingScreen extends StatelessWidget {
   OnboardingScreen({super.key});
   final _nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldCustom(

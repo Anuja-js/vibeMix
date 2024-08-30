@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getname();
     checkAndRequestPermissions();
-    getHiveMusic();
+
   }
 
   @override
@@ -68,11 +68,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   trailing: "See all",
                   tittle: "My Music",
                 ),
+                if (_hasPermission)
                 if (songsBox == null || songsBox!.length == 0)
                   TextCustom(
                     text: "Songs Not found",
                   ),
-                if (songsBox != null)
+
+                if (_hasPermission)
                   ListOfMusic(
                       songsBox: songsBox,
                       count: songsBox!.length > 5 ? 5 : songsBox!.length)
@@ -86,10 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> checkAndRequestPermissions({bool retry = false}) async {
-    _hasPermission = await _audioQuery.checkAndRequest(retryRequest: retry);
+  checkAndRequestPermissions({bool retry = false}) async {
+    _hasPermission = await _audioQuery.checkAndRequest(
+      retryRequest: retry,
+    );
     if (_hasPermission) {
+      getHiveMusic();
       setState(() {});
+    } else {
     }
   }
 
@@ -101,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ignoreCase: true,
     );
     for (int i = 0; i < information.length; i++) {
+
       songsBox!.put(
           information[i].id,
           SongHiveModel(
@@ -109,6 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
               artist: information[i].artist,
               uri: information[i].uri));
     }
+    setState(() {
+
+    });
   }
 
   void getname() async {

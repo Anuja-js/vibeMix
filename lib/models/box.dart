@@ -3,6 +3,7 @@
 
 
 import 'package:hive/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/models/hive.dart';
 
 class HiveService {
@@ -21,5 +22,15 @@ class HiveService {
       _favBox = await Hive.openBox<SongHiveModel>('fav');
     }
     return _favBox!;
+  }
+  savePlayListName(String namePlay)async{
+   final  shared= await SharedPreferences.getInstance();
+   shared.setString("Playlistname", namePlay);
+  }
+  getPlayListName()async{
+    final  shared= await SharedPreferences.getInstance();
+     // ignore: non_constant_identifier_names
+     final PlayListName= await shared.get("Playlistname");
+    return  PlayListName;
   }
 }

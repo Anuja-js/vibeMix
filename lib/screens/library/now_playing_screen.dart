@@ -13,6 +13,7 @@ import '../../models/hive.dart';
 
 class NowPlayingScreen extends StatefulWidget {
   final SongHiveModel song;
+
   const NowPlayingScreen({Key? key, required this.song}) : super(key: key);
 
   @override
@@ -21,40 +22,54 @@ class NowPlayingScreen extends StatefulWidget {
 
 class _NowPlayingScreenState extends State<NowPlayingScreen> {
   final AudioPlayer _audioPlayer = AudioPlayerSingleton().audioPlayer;
-  bool _isPlaying = false;
+  bool _isPlaying = true;
   bool isFavorite = false;
-  double _currentVolume = 1.0; // Initial volume
-  String _volumeDisplay = "Volume: 100%"; // Initial volume display
+  double _currentVolume =0.0;
+  String _volumeDisplay = "";
+  SongHiveModel?current;
 
   @override
   void initState() {
-    super.initState();
+
     checkPlayButton();
     getHiveMusic();
+    fetchCurrentVolume();
+
+    super.initState();
   }
 
   List<SongHiveModel> favourite = [];
   Box<SongHiveModel>? favsBox;
+  List<String> playlistNames=[];
 
   getHiveMusic() async {
     favsBox = await HiveService.getFavBox();
     favourite.addAll(favsBox!.values);
     isFavorite = favourite.any((song) => song.id == widget.song.id);
-    print(isFavorite);
     setState(() {});
   }
 
   checkPlayButton() async {
-    await _audioPlayer.setUrl(widget.song.uri.toString());
-    await _audioPlayer.play();
-    if (kDebugMode) {
-      print("Audio is playing: ${_audioPlayer.playing}");
+    current= AudioPlayerSingleton().currentSong;
+    if
+    (current==null){
+      current=widget.song;
+      AudioPlayerSingleton().setCurrentSong(widget.song);
+      AudioPlayerSingleton().playSong(widget.song);
     }
-    setState(() {
-      _isPlaying = _audioPlayer.playing;
-    });
+   else if(  current!.id!=widget.song.id  ){
+  await AudioPlayerSingleton().playSong(widget.song);
+    }
+   else {
+      await _audioPlayer.play();
+    }
+    AudioPlayerSingleton().setCurrentSong(widget.song);
   }
 
+  fetchCurrentVolume(){
+  _currentVolume=_audioPlayer.volume.toDouble();
+  _updateVolumeDisplay();
+  }
   void _volumeUp() {
     if (_currentVolume < 1.0) {
       _currentVolume += 0.1;
@@ -64,8 +79,8 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   }
 
   void _volumeDown() {
-    if (_currentVolume > 0.0) {
-      _currentVolume -= 0.1;
+    if (_currentVolume > 0.1) {
+      _currentVolume = _currentVolume-0.1;
       _audioPlayer.setVolume(_currentVolume);
       _updateVolumeDisplay();
     }
@@ -76,6 +91,18 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
       _volumeDisplay = "Volume: ${(_currentVolume * 100).toInt()}%";
     });
   }
+
+  playlistsFuntion()async{
+    final playlist = ConcatenatingAudioSource(
+      useLazyPreparation: true,
+      shuffleOrder: DefaultShuffleOrder(),
+      children: [
+        AudioSource.uri(Uri.parse('https://example.com/track1.mp3')),
+        AudioSource.uri(Uri.parse('https://example.com/track2.mp3')),
+        AudioSource.uri(Uri.parse('https://example.com/track3.mp3')),
+      ],
+    );
+    await _audioPlayer.setAudioSource(playlist, initialIndex: 0, initialPosition: Duration.zero);  }
 
   void _skipNext() {
     _audioPlayer.seekToNext();
@@ -129,16 +156,76 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.shuffle_outlined, color: foreground),
+                  icon: const Icon(Icons.loop, color: foreground),
                   onPressed: () {
-                    // Add shuffle functionality
+
+                    setState(() {
+
+                    });
                   },
                 ),
                 IconButton(
                   icon: const Icon(Icons.playlist_add, color: foreground),
-                  onPressed: () {
-                    // Add to playlist functionality
-                  },
+                  onPressed: () async{
+                    Box<String> playlistsBox = await Hive.openBox<String>('playlists');
+                    setState(() {
+                      playlistNames = playlistsBox.values.toList();
+                    });
+                    showModalBottomSheet(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width,
+                        maxHeight: MediaQuery.of(context).size.height / 2,
+                      ),
+                      context: context,
+                      builder: (ctx) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.symmetric(vertical: 15,horizontal: 18),
+                          color: foreground,
+                          child: Column(
+                            children: [
+                             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                               children: [
+                                 TextCustom(text: "Choose PlayList",color: background,size: 18,fontWeight: FontWeight.bold,),
+                        
+                                 IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close_rounded,color: background,))
+                               ],
+                             ),
+
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: playlistNames.length,
+                                  itemBuilder: (ctx, index) {
+                                    return Column(
+                                      children: [
+                                        InkWell(onTap: ()async{
+
+                                          Box<SongHiveModel> playlistBox=await Hive.openBox(playlistNames[index]);
+                                          playlistBox.put(widget.song.id, widget.song);
+                                          Navigator.pop(context);
+                                        },
+                                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              TextCustom(
+                                                text: playlistNames[index],
+                                                color: background,size: 18,
+                                              ),
+                                              IconButton(onPressed: (){}, icon: Icon(Icons.arrow_forward_ios_outlined,color: background,size:18 ,))
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+
+                  }
                 ),
               ],
             ),

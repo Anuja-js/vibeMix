@@ -23,6 +23,7 @@ class _GreetingScreenState extends State<GreetingScreen> {
   @override
   void initState() {
     getname();
+
     super.initState();
   }
 
@@ -64,6 +65,10 @@ class _GreetingScreenState extends State<GreetingScreen> {
   void getname() async {
     final sharedprfs = await SharedPreferences.getInstance();
     name = sharedprfs.getString("name") ?? "Guest";
+    setState(() {
+
+    });
+
   }
 }
 

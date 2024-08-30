@@ -27,12 +27,7 @@ class _MusicWidgetState extends State<MusicWidget> {
   @override
   void initState() {
     super.initState();
-    // Set the current song only if the audio is playing
-    if (audio.playing) {
       current = AudioPlayerSingleton().currentSong;
-    }
-
-    // Listen to the player state changes
     audio.playerStateStream.listen((state) {
       current = AudioPlayerSingleton().currentSong;
     });
@@ -42,7 +37,7 @@ class _MusicWidgetState extends State<MusicWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPlaying = audio.playing && current?.id == widget.data.id;
+  bool  isPlaying=audio.playing && current?.id == widget.data.id;
 
     return ListTile(
       leading: CircleAvatar(
@@ -80,8 +75,6 @@ class _MusicWidgetState extends State<MusicWidget> {
           ),
           IconButton(
             onPressed: () async {
-              // Toggle favorite status
-              favsBox = await HiveService.getFavBox();
               if (isFavorite) {
                 favsBox!.delete(widget.data.id);
                 favourite.removeWhere((song) => song.id == widget.data.id);
@@ -103,11 +96,9 @@ class _MusicWidgetState extends State<MusicWidget> {
             onPressed: () async {
               if (isPlaying) {
                 await audio.pause();
-                isPlaying=false;
               } else {
-                AudioPlayerSingleton().setCurrentSong(widget.data);
-                await audio.play();
-                isPlaying=true;
+               await AudioPlayerSingleton().playSong(widget.data);
+
               }
               setState(() {});
             },
@@ -130,11 +121,25 @@ class _MusicWidgetState extends State<MusicWidget> {
         overflow: TextOverflow.ellipsis,
       ),
       onTap: () {
+
         Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
           return NowPlayingScreen(
             song: widget.data,
           );
-        }));
+        })).then((value){
+          getHiveMusic();
+         if( AudioPlayerSingleton().audioPlayer.playing&& widget.data.id==AudioPlayerSingleton().currentSong!.id){
+           isPlaying=true;
+           setState(() {
+
+           });
+         }else{
+           isPlaying=false;
+           setState(() {
+
+           });
+         }
+        });
       },
     );
   }

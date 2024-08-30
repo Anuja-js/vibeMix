@@ -20,7 +20,7 @@ class LibraryScreen extends StatelessWidget {
           ListTile(
             onTap: () {
               final currentSong = AudioPlayerSingleton().currentSong;
-              if (currentSong != null) {
+              if (currentSong != null&& AudioPlayerSingleton().audioPlayer.playing) {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (ctx) {
                     return NowPlayingScreen(song: currentSong);

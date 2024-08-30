@@ -37,7 +37,6 @@ class AudioPlayerSingleton {
     _currentSong = song;
   }
 
-  // Method to play a song
   Future<void> playSong(SongHiveModel song) async {
     try {
       await _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
