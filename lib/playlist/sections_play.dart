@@ -6,11 +6,10 @@ import 'package:vibemix/playlist/edit_playlist.dart';
 import '../customs/music_widget.dart';
 import '../customs/scaffold_custom.dart';
 import '../customs/text_custom.dart';
-import '../models/box.dart';
 import '../models/hive.dart';
 class SecssionsEach extends StatefulWidget {
   String name;
-   SecssionsEach({Key? key,required this.name}) : super(key: key);
+   SecssionsEach({super.key,required this.name});
 
   @override
   State<SecssionsEach> createState() => _SecssionsEachState();

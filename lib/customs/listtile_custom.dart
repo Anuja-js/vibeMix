@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vibemix/customs/text_custom.dart';
 
 import '../Constants/colors.dart';
-import '../screens/mymusic.dart';
+import '../screens/library/mymusic.dart';
 
 class ListTileCustom extends StatelessWidget {
 void Function()? onTap;

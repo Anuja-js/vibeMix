@@ -1,14 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/icon_images.dart';
-import 'package:vibemix/customs/music_widget.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/models/box.dart';
-import 'package:vibemix/screens/mymusic.dart';
+import 'package:vibemix/screens/library/mymusic.dart';
 
 import '../customs/container_custom.dart';
 import '../customs/list_of_allsongs.dart';
@@ -26,15 +30,15 @@ class _HomeScreenState extends State<HomeScreen> {
   String name = "Guest";
   bool _hasPermission = false;
   final OnAudioQuery _audioQuery = OnAudioQuery();
-  Box<SongHiveModel>? songsBox;
+  Box<SongHiveModel>? songsBox; File? imageFile;
 
   @override
   void initState() {
     super.initState();
     getname();
     checkAndRequestPermissions();
-
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   tittle: "My Music",
                 ),
                 if (_hasPermission)
-                if (songsBox == null || songsBox!.length == 0)
-                  TextCustom(
-                    text: "Songs Not found",
-                  ),
-
-                if (_hasPermission)
+                  if (songsBox == null || songsBox!.length == 0)
+                    TextCustom(
+                      text: "Songs Not found",
+                    ),
+                if (_hasPermission&& songsBox!=null)
                   ListOfMusic(
                       songsBox: songsBox,
                       count: songsBox!.length > 5 ? 5 : songsBox!.length)
@@ -86,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: false,
       action: false,
     );
-  }
 
+  }
   checkAndRequestPermissions({bool retry = false}) async {
     _hasPermission = await _audioQuery.checkAndRequest(
       retryRequest: retry,
@@ -95,10 +98,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_hasPermission) {
       getHiveMusic();
       setState(() {});
-    } else {
-    }
+    } else {}
   }
-
   getHiveMusic() async {
     songsBox = await HiveService.getSongsBox();
     List<SongModel> information = await _audioQuery.querySongs(
@@ -107,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ignoreCase: true,
     );
     for (int i = 0; i < information.length; i++) {
-
       songsBox!.put(
           information[i].id,
           SongHiveModel(
@@ -116,9 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
               artist: information[i].artist,
               uri: information[i].uri));
     }
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void getname() async {
@@ -129,44 +127,124 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class UserImageAndName extends StatelessWidget {
+
+
+class UserImageAndName extends StatefulWidget {
   const UserImageAndName({
     super.key,
     required this.name,
+    this.imageFile,
   });
 
   final String name;
+  final File? imageFile;
+
+  @override
+  State<UserImageAndName> createState() => _UserImageAndNameState();
+}
+
+class _UserImageAndNameState extends State<UserImageAndName> {
+  File? imageFile;
+
+  @override
+  void initState() {
+    super.initState();
+    loadImage();
+    imageFile = widget.imageFile;
+  }
+
+  @override
+  void didUpdateWidget(covariant UserImageAndName oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.imageFile != oldWidget.imageFile) {
+      setState(() {
+        imageFile = widget.imageFile;
+      });
+    }
+  }
+
+  Future<void> loadImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final imagePath = prefs.getString('user_image_path');
+    if (imagePath != null) {
+      setState(() {
+        imageFile = File(imagePath);
+      });
+    }
+  }
+
+  Future<void> saveImagePathToPreferences(File image) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_image_path', image.path);
+  }
+
+  Future<void> pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+      await saveImagePathToPreferences(imageFile!);
+    }
+  }
+
+  void showImageSourceDialog() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Wrap(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.camera),
+            title: TextCustom(text: 'Camera', color: background),
+            onTap: () {
+              Navigator.pop(context);
+              pickImage(ImageSource.camera);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_library),
+            title: TextCustom(text: 'Gallery', color: background),
+            onTap: () {
+              Navigator.pop(context);
+              pickImage(ImageSource.gallery);
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
               radius: 30,
-              child: Image.asset(
-                "assets/images/profile.png",
-                fit: BoxFit.cover,
-                width: 60,
-                height: 60,
-              ),
+              backgroundImage: imageFile != null
+                  ? FileImage(imageFile!)
+                  : const AssetImage("assets/images/profile.png") as ImageProvider,
             ),
-            sw15,
+            const SizedBox(width: 15),
             Text.rich(
               TextSpan(
                 text: "Hi There,\n",
                 style: const TextStyle(
-                    color: textPink, fontWeight: FontWeight.bold, fontSize: 20),
-                children: <TextSpan>[
+                  color: textPink,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                children: [
                   TextSpan(
-                    text: name,
+                    text: widget.name,
                     style: const TextStyle(
-                        color: foreground,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                      color: foreground,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
                   ),
                 ],
               ),
@@ -177,7 +255,7 @@ class UserImageAndName extends StatelessWidget {
           top: 18,
           left: 30,
           child: IconButton(
-            onPressed: () {},
+            onPressed: showImageSourceDialog,
             icon: const Icon(Icons.camera_alt_outlined),
             color: foreground,
           ),

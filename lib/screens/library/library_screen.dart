@@ -3,11 +3,12 @@ import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/playlist/playlist.dart';
-import 'package:vibemix/screens/favorite_screen.dart';
+import 'package:vibemix/screens/library/favorite_screen.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
+import 'package:vibemix/screens/recently_played_screen.dart';
 
 import '../../models/audio_player_model.dart';
-import '../mymusic.dart';
+import 'mymusic.dart';
 class LibraryScreen extends StatelessWidget {
    LibraryScreen({super.key});
   @override
@@ -87,7 +88,23 @@ class LibraryScreen extends StatelessWidget {
               fontWeight: FontWeight.normal,
               text: "My Music",
             ),
+          ),  ListTile(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) {
+                  return const RecentlyPlayedScreen();
+                }),
+              );
+            },
+            leading: const Icon(Icons.access_time_outlined, size: 25, color: foreground),
+            title: TextCustom(
+              color: foreground,
+              size: 18,
+              fontWeight: FontWeight.normal,
+              text: "Recently Played",
+            ),
           ),
+
         ],
       ),
       appBar: true,

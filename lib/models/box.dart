@@ -3,34 +3,31 @@
 
 
 import 'package:hive/hive.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/models/hive.dart';
+import 'package:vibemix/models/recent.dart';
 
 class HiveService {
-  static Box<SongHiveModel>? _songsBox;
-  static Box<SongHiveModel>? _favBox;
+  static Box<SongHiveModel>? songsBox;
+  static Box<SongHiveModel>? favBox;
+  static Box<RecentModel>? recentBox;
 
   // Singleton pattern to ensure the box is only opened once
   static Future<Box<SongHiveModel>> getSongsBox() async {
-    if (_songsBox == null || !_songsBox!.isOpen) {
-      _songsBox = await Hive.openBox<SongHiveModel>('songs');
+    if (songsBox == null || !songsBox!.isOpen) {
+      songsBox = await Hive.openBox<SongHiveModel>('songs');
     }
-    return _songsBox!;
+    return songsBox!;
   }
   static Future<Box<SongHiveModel>> getFavBox() async {
-    if (_favBox == null || !_favBox!.isOpen) {
-      _favBox = await Hive.openBox<SongHiveModel>('fav');
+    if (favBox == null || !favBox!.isOpen) {
+      favBox = await Hive.openBox<SongHiveModel>('fav');
     }
-    return _favBox!;
+    return favBox!;
   }
-  savePlayListName(String namePlay)async{
-   final  shared= await SharedPreferences.getInstance();
-   shared.setString("Playlistname", namePlay);
-  }
-  getPlayListName()async{
-    final  shared= await SharedPreferences.getInstance();
-     // ignore: non_constant_identifier_names
-     final PlayListName= await shared.get("Playlistname");
-    return  PlayListName;
+  static Future<Box<RecentModel>>  getRecentData()async{
+    if (recentBox == null || !recentBox!.isOpen) {
+      recentBox = await Hive.openBox<RecentModel>('recent');
+    }
+    return recentBox!;
   }
 }

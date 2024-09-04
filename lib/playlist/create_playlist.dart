@@ -2,40 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:vibemix/Constants/colors.dart';
-import 'package:vibemix/customs/music_widget.dart';
-import 'package:vibemix/nav/navbar.dart';
-import 'package:vibemix/screens/mymusic.dart';
-
 import '../customs/scaffold_custom.dart';
 import '../customs/text_custom.dart';
 import '../models/box.dart';
 import '../models/hive.dart';
-import '../screens/library/now_playing_screen.dart';
 class CreatePlaylist extends StatefulWidget {
   const CreatePlaylist({Key? key}) : super(key: key);
-
   @override
   State<CreatePlaylist> createState() => _CreatePlaylistState();
 }
-
-
 class _CreatePlaylistState extends State<CreatePlaylist> {
   Box<SongHiveModel>? songsBox;
   List<SongHiveModel> songs = [];
   TextEditingController textctr = TextEditingController();
-
   @override
   void initState() {
     getHiveMusic();
     super.initState();
   }
-
   getHiveMusic() async {
     songsBox = await HiveService.getSongsBox();
     songs.addAll(songsBox!.values);
     setState(() {});
   }
-
   List<SongHiveModel> selected = [];
 
   @override
@@ -47,8 +36,6 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
         onPressed: () async {
           String playlistName = textctr.text;
           if (playlistName.isEmpty) return;
-
-          // Open the Hive box to store the playlist
           Box<SongHiveModel> playlistSongsBox = await Hive.openBox<SongHiveModel>(playlistName);
 
           for (int i = 0; i < selected.length; i++) {
@@ -59,7 +46,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
 
           Navigator.of(context).pop(); // Go back to PlaylistScreen after saving
         },
-        icon: Icon(Icons.check_outlined, size: 25, color: foreground),
+        icon: const Icon(Icons.check_outlined, size: 25, color: foreground),
       ),
       backButton: true,
       body:
@@ -83,18 +70,18 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                       floatingLabelStyle: const TextStyle(
                           color: foreground, fontSize: 14, fontWeight: FontWeight.bold),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: background,
                         ),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: background),
+                        borderSide: const BorderSide(color: background),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: background),
+                        borderSide: const BorderSide(color: background),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                     ),
@@ -120,7 +107,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                             radius: 25,
                             backgroundColor: background,
                             child: QueryArtworkWidget(
-                              artworkBorder: BorderRadius.all(
+                              artworkBorder: const BorderRadius.all(
                                 Radius.circular(50),
                               ),
                               id: songs[index].id,
@@ -173,15 +160,11 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           onTap: () {
-
                           },
                         );
-
                       },
                     ),
                   ),
-
-
                 ],
               ),
             ),

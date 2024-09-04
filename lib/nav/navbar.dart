@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/screens/about_screen.dart';
-import 'package:vibemix/screens/favorite_screen.dart';
+import 'package:vibemix/screens/library/favorite_screen.dart';
 import 'package:vibemix/screens/home_screen.dart';
 import 'package:vibemix/screens/library/library_screen.dart';
 import 'package:vibemix/screens/settings/settings_screen.dart';

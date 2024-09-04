@@ -25,8 +25,6 @@ class _SearchMusicState extends State<SearchMusic> {
     fetchSongs();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,30 +45,51 @@ class _SearchMusicState extends State<SearchMusic> {
       ),
       body: Column(
         children: [
-          SearchTextField(onPress:(value) {
-            _filterSongs(value);
-          },),
-          if (filteredSongs.isNotEmpty)
+          SearchTextField(
+            onPress: (value) {
+              _filterSongs(value);
+            },
+          ),
+          if (searchQuery.isNotEmpty && filteredSongs.isNotEmpty)
             Expanded(
               child: ListView.builder(
                 itemCount: filteredSongs.length,
                 itemBuilder: (context, index) {
-                  return MusicWidget(data: filteredSongs[index],);
+                  return MusicWidget(
+                    data: filteredSongs[index],
+                    backGroundColor: background,
+                  );
                 },
               ),
             )
-          else
+          else if (searchQuery.isNotEmpty && filteredSongs.isEmpty)
             Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextCustom(text:    searchQuery.isEmpty ? "Start typing to search songs" : "No songs found for \"$searchQuery\"",color: foreground,)
-            ),
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height / 5,
+                  horizontal: MediaQuery.of(context).size.width / 3),
+              child: TextCustom(text: "Song Not Found"),
+            )
+          else
+            Expanded(
+              child: ListView.builder(
+                itemCount: allSongs.length,
+                itemBuilder: (context, index) {
+                  return MusicWidget(
+                    data: allSongs[index],
+                    backGroundColor: background,
+                  );
+                },
+              ),
+            )
         ],
       ),
     );
   }
+
   Future<void> fetchSongs() async {
     final Box<SongHiveModel> songsBox = await HiveService.getSongsBox();
     allSongs = songsBox.values.toList();
+    setState(() {});
   }
 
   void _filterSongs(String query) {
@@ -80,14 +99,17 @@ class _SearchMusicState extends State<SearchMusic> {
         // Filter songs based on the search query
         filteredSongs = allSongs
             .where((song) =>
-        song.displayNameWOExt.toLowerCase().contains(query.toLowerCase()) ||
-            (song.artist?.toLowerCase().contains(query.toLowerCase()) ?? false))
+                song.displayNameWOExt
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) ||
+                (song.artist?.toLowerCase().contains(query.toLowerCase()) ??
+                    false))
             .toList();
 
         // Update recent searches
         if (!recentSearches.contains(query)) {
           recentSearches.add(query);
-          if (recentSearches.length > 5) {  // Limit to 5 recent searches
+          if (recentSearches.length > 5) {
             recentSearches.removeAt(0);
           }
         }
@@ -102,9 +124,7 @@ class _SearchMusicState extends State<SearchMusic> {
 // ignore: must_be_immutable
 class SearchTextField extends StatelessWidget {
   void Function(dynamic)? onPress;
-   SearchTextField({
-    super.key, this.onPress
-  });
+  SearchTextField({super.key, this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -120,9 +140,7 @@ class SearchTextField extends StatelessWidget {
         floatingLabelStyle: const TextStyle(
             color: foreground, fontSize: 14, fontWeight: FontWeight.bold),
         labelStyle: const TextStyle(
-            color: foreground,
-            fontSize: 15,
-            fontWeight: FontWeight.normal),
+            color: foreground, fontSize: 15, fontWeight: FontWeight.normal),
         suffixIcon: const Icon(
           Icons.search,
         ),

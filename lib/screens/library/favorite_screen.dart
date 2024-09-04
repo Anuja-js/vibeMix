@@ -3,9 +3,12 @@ import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
+import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/models/box.dart';
-
-import '../models/hive.dart';
+import 'package:vibemix/nav/navbar.dart';
+import 'package:vibemix/screens/library/now_playing_screen.dart';
+import '../../models/audio_player_model.dart';
+import '../../models/hive.dart';
 
 class FavoriteScreen extends StatefulWidget {
    // ignore: use_key_in_widget_constructors
@@ -20,10 +23,17 @@ class FavoriteScreen extends StatefulWidget {
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
   Box<SongHiveModel>? favsBox;
-  List<SongHiveModel> favourite = [];
+  final audio = AudioPlayerSingleton().audioPlayer;
+  List<SongHiveModel> favourite = []; SongHiveModel? current;
+
 
   @override
   void initState() {
+
+    current = AudioPlayerSingleton().currentSong;
+    audio.playerStateStream.listen((state) {
+      current = AudioPlayerSingleton().currentSong;
+    });
     getHiveMusic();
     super.initState();
   }
@@ -36,24 +46,30 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    bool  isPlaying=audio.playing ;
     return ScaffoldCustom(
       tittle: "Favorites",
-      backButton: false,
-      body: ListView.builder(
+
+      backButton: true,
+      body:favourite.isNotEmpty? ListView.builder(
         padding: const EdgeInsets.only(bottom: 55, top: 20),
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         physics: const ScrollPhysics(),
         itemCount: favourite.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            leading: QueryArtworkWidget(
-              id: favourite[index].id,
-              type: ArtworkType.AUDIO,
-              nullArtworkWidget: const Icon(
-                Icons.music_note,
-                color: foreground,
-                size: 30,
+          return
+            ListTile(
+            leading: CircleAvatar(backgroundColor: textPink,radius: 25,
+              child: QueryArtworkWidget(
+                id: favourite[index].id,
+                type: ArtworkType.AUDIO,
+                nullArtworkWidget: const Icon(
+                  Icons.music_note,
+                  color: foreground,
+                  size: 30,
+                ),
               ),
             ),
             title: Row(
@@ -86,11 +102,17 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    // AudioPlayerSingleton().playSong(widget.data);
+                  onPressed: () async {
+                    if (isPlaying) {
+                      await audio.pause();
+                    } else {
+                      await AudioPlayerSingleton().playSong(favourite[index]);
+
+                    }
+                    setState(() {});
                   },
-                  icon: const Icon(
-                    Icons.play_circle_outline,
+                  icon: Icon(
+                    isPlaying ? Icons.pause : Icons.play_circle_outline,
                     color: foreground,
                     size: 24,
                   ),
@@ -108,18 +130,16 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               overflow: TextOverflow.ellipsis,
             ),
             onTap: () {
-              // Implement navigation to NowPlayingScreen if needed
+           Navigator.push(context, MaterialPageRoute(builder: (ctx){
+             return  NowPlayingScreen(song: favourite[index]);
+           }));
             },
           );
         },
-      ),
+      ): Center(child: TextCustom(text: "No Favorites Added",)),
       appBar: true,
-      actionIcon: const Icon(
-        Icons.favorite_border_outlined,
-        size: 25,
-        color: iconFav,
-      ),
-      action: true,
+
+      action: false,
     );
   }
 }

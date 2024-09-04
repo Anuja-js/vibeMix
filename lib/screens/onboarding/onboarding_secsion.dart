@@ -8,6 +8,7 @@ import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/screens/onboarding/greeting_screen.dart';
 
+import '../../constants/const.dart';
 import '../../main.dart';
 
 class OnboardingScreen extends StatelessWidget {

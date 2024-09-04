@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/nav/navbar.dart';
 import 'package:vibemix/screens/onboarding/onboarding_secsion.dart';
+import '../../constants/const.dart';
 import '../../customs/icon_images.dart';
 import '../../main.dart';
 

@@ -8,9 +8,10 @@ import 'package:vibemix/playlist/playlist.dart';
 import '../customs/scaffold_custom.dart';
 import '../models/box.dart';
 import '../models/hive.dart';
+
 class EditPlaylist extends StatefulWidget {
   String name;
-   EditPlaylist({Key? key, required this.name}) : super(key: key);
+  EditPlaylist({Key? key, required this.name}) : super(key: key);
 
   @override
   State<EditPlaylist> createState() => _EditPlaylistState();
@@ -23,20 +24,20 @@ class _EditPlaylistState extends State<EditPlaylist> {
 
   @override
   void initState() {
-    textctr.text=widget.name;
+    textctr.text = widget.name;
     getHiveMusic();
     super.initState();
-  }  List<SongHiveModel> selected = [];
+  }
+
+  List<SongHiveModel> selected = [];
 
   getHiveMusic() async {
     songsBox = await HiveService.getSongsBox();
     songs.addAll(songsBox!.values);
-    Box<SongHiveModel> temp= await Hive.openBox(widget.name);
+    Box<SongHiveModel> temp = await Hive.openBox(widget.name);
     selected.addAll(temp.values);
     setState(() {});
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -47,28 +48,31 @@ class _EditPlaylistState extends State<EditPlaylist> {
           onPressed: () async {
             String playlistName = textctr.text;
             if (playlistName.isEmpty) return;
-            Box<SongHiveModel> playlistSongsBox = await Hive.openBox<SongHiveModel>(playlistName);
+            Box<SongHiveModel> playlistSongsBox =
+                await Hive.openBox<SongHiveModel>(playlistName);
 
             for (int i = 0; i < selected.length; i++) {
               playlistSongsBox.put(selected[i].id.toString(), selected[i]);
             }
             Box<String> playlistsBox = await Hive.openBox<String>('playlists');
             playlistsBox.put(playlistName, playlistName);
-            if(widget.name!=playlistName){
+            if (widget.name != playlistName) {
               playlistsBox.delete(widget.name);
-              Box<SongHiveModel> oldPlaylist = await Hive.openBox<SongHiveModel>(widget.name);
+              Box<SongHiveModel> oldPlaylist =
+                  await Hive.openBox<SongHiveModel>(widget.name);
               oldPlaylist.deleteFromDisk();
             }
 
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx){
-              return PlaylistScreen();
+            // ignore: use_build_context_synchronously
+            Navigator.of(context)
+                .pushReplacement(MaterialPageRoute(builder: (ctx) {
+              return const PlaylistScreen();
             }));
           },
-          icon: Icon(Icons.check_outlined, size: 25, color: foreground),
+          icon: const Icon(Icons.check_outlined, size: 25, color: foreground),
         ),
         backButton: true,
-        body:
-        SafeArea(
+        body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: SingleChildScrollView(
@@ -76,7 +80,11 @@ class _EditPlaylistState extends State<EditPlaylist> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextCustom(color: foreground, size: 18, fontWeight: FontWeight.normal, text: "PlayList Name"),
+                  TextCustom(
+                      color: foreground,
+                      size: 18,
+                      fontWeight: FontWeight.normal,
+                      text: "PlayList Name"),
                   sh25,
                   TextFormField(
                     controller: textctr,
@@ -86,46 +94,46 @@ class _EditPlaylistState extends State<EditPlaylist> {
                       filled: true,
                       focusColor: textPink,
                       floatingLabelStyle: const TextStyle(
-                          color: foreground, fontSize: 14, fontWeight: FontWeight.bold),
+                          color: foreground,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: background,
                         ),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: background),
+                        borderSide: const BorderSide(color: background),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: background),
+                        borderSide: const BorderSide(color: background),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                     ),
                   ),
-                  Container(margin: const EdgeInsets.only(bottom: 55,top: 25),
-                    height: 560,width: MediaQuery.of(context).size.width,
-
-
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 55, top: 25),
+                    height: 560,
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                         color: textPink,
                         shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(15)
-                    ),
+                        borderRadius: BorderRadius.circular(15)),
                     child: ListView.builder(
-
                       shrinkWrap: true,
                       physics: const ScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      itemCount:songs.length,
+                      itemCount: songs.length,
                       itemBuilder: (context, index) {
                         return ListTile(
                           leading: CircleAvatar(
                             radius: 25,
                             backgroundColor: background,
                             child: QueryArtworkWidget(
-                              artworkBorder: BorderRadius.all(
+                              artworkBorder: const BorderRadius.all(
                                 Radius.circular(50),
                               ),
                               id: songs[index].id,
@@ -154,17 +162,18 @@ class _EditPlaylistState extends State<EditPlaylist> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              Checkbox(value:selected.any((song) => song.id == songs[index].id) , onChanged: (value){
-                                if(value==true){
-                                  selected.add(songs[index]);
-                                }
-                                else{
-                                  selected.removeWhere((song)=>song.id==songs[index].id);
-                                }
-                                setState(() {
-
-                                });
-                              })
+                              Checkbox(
+                                  value: selected.any(
+                                      (song) => song.id == songs[index].id),
+                                  onChanged: (value) {
+                                    if (value == true) {
+                                      selected.add(songs[index]);
+                                    } else {
+                                      selected.removeWhere(
+                                          (song) => song.id == songs[index].id);
+                                    }
+                                    setState(() {});
+                                  })
                             ],
                           ),
                           subtitle: Text(
@@ -177,16 +186,11 @@ class _EditPlaylistState extends State<EditPlaylist> {
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          onTap: () {
-
-                          },
+                          onTap: () {},
                         );
-
                       },
                     ),
                   ),
-
-
                 ],
               ),
             ),

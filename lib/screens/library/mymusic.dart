@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 
-import '../Constants/colors.dart';
-import '../customs/container_custom.dart';
-import '../customs/list_of_allsongs.dart';
-import '../customs/text_custom.dart';
-import '../models/box.dart';
-import '../models/hive.dart';
+import '../../Constants/colors.dart';
+import '../../customs/container_custom.dart';
+import '../../customs/list_of_allsongs.dart';
+import '../../customs/text_custom.dart';
+import '../../models/box.dart';
+import '../../models/hive.dart';
 class MyMusic extends StatefulWidget {
   const MyMusic({super.key});
 
