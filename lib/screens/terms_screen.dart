@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
+
+import '../global.dart';
 class TermsAndCondition extends StatelessWidget {
    TermsAndCondition({Key? key}) : super(key: key);
 List <Map>terms=[
@@ -48,7 +49,7 @@ List <Map>terms=[
   Widget build(BuildContext context) {
 
     return ScaffoldCustom(tittle: "Terms and Condition", backButton: true, body: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 5,vertical: 15),
+        padding: EdgeInsets.symmetric(horizontal: 18,vertical: 15),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         physics: ScrollPhysics(),

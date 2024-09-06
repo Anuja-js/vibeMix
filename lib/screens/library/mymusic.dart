@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
-
-import '../../Constants/colors.dart';
 import '../../customs/container_custom.dart';
 import '../../customs/list_of_allsongs.dart';
 import '../../customs/text_custom.dart';
+import '../../global.dart';
 import '../../models/box.dart';
 import '../../models/hive.dart';
 class MyMusic extends StatefulWidget {
@@ -30,6 +29,7 @@ class _MyMusicState extends State<MyMusic> {
       child: SingleChildScrollView(
         child: Column(children: [
            const ContainerForSearch(),
+          sh10,
           if(songs.isEmpty )
             TextCustom(color: foreground, size: 18, fontWeight: FontWeight.normal, text: "Songs Not found"),
           ListOfMusic(songsBox: songsBox,count: songs.length)

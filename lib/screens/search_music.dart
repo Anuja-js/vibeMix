@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/music_widget.dart';
 import 'package:vibemix/customs/text_custom.dart';
+import 'package:vibemix/global.dart';
 import 'package:vibemix/models/hive.dart';
 import 'package:vibemix/models/box.dart';
 
@@ -36,7 +36,7 @@ class _SearchMusicState extends State<SearchMusic> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(
+          icon:  Icon(
             Icons.arrow_back_ios_new_outlined,
             color: foreground,
             size: 20,
@@ -50,14 +50,15 @@ class _SearchMusicState extends State<SearchMusic> {
               _filterSongs(value);
             },
           ),
+          sh10,
           if (searchQuery.isNotEmpty && filteredSongs.isNotEmpty)
             Expanded(
               child: ListView.builder(
-                itemCount: filteredSongs.length,
+                itemCount: filteredSongs.length,padding: EdgeInsets.symmetric(horizontal: 18,),
                 itemBuilder: (context, index) {
                   return MusicWidget(
                     data: filteredSongs[index],
-                    backGroundColor: background,
+                    backGroundColor: background, color: foreground,
                   );
                 },
               ),
@@ -67,7 +68,7 @@ class _SearchMusicState extends State<SearchMusic> {
               padding: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height / 5,
                   horizontal: MediaQuery.of(context).size.width / 3),
-              child: TextCustom(text: "Song Not Found"),
+              child: TextCustom(text: "Song Not Found", color: foreground,),
             )
           else
             Expanded(
@@ -76,7 +77,7 @@ class _SearchMusicState extends State<SearchMusic> {
                 itemBuilder: (context, index) {
                   return MusicWidget(
                     data: allSongs[index],
-                    backGroundColor: background,
+                    backGroundColor: background, color: foreground
                   );
                 },
               ),
@@ -137,26 +138,26 @@ class SearchTextField extends StatelessWidget {
         focusColor: foreground,
         suffixIconColor: foreground,
         labelText: 'Search for anything ...',
-        floatingLabelStyle: const TextStyle(
+        floatingLabelStyle:  TextStyle(
             color: foreground, fontSize: 14, fontWeight: FontWeight.bold),
-        labelStyle: const TextStyle(
+        labelStyle:  TextStyle(
             color: foreground, fontSize: 15, fontWeight: FontWeight.normal),
         suffixIcon: const Icon(
           Icons.search,
         ),
         enabledBorder: UnderlineInputBorder(
-          borderSide: const BorderSide(
+          borderSide:  BorderSide(
             color: foreground,
           ),
           borderRadius: BorderRadius.circular(15.0),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide: const BorderSide(color: foreground),
+          borderSide:  BorderSide(color: foreground),
           borderRadius: BorderRadius.circular(15.0),
         ),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         border: UnderlineInputBorder(
-          borderSide: const BorderSide(color: foreground),
+          borderSide:  BorderSide(color: foreground),
           borderRadius: BorderRadius.circular(15.0),
         ),
       ),

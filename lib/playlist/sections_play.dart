@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/playlist/edit_playlist.dart';
 
 import '../customs/music_widget.dart';
 import '../customs/scaffold_custom.dart';
 import '../customs/text_custom.dart';
+import '../global.dart';
 import '../models/hive.dart';
 class SecssionsEach extends StatefulWidget {
   String name;
@@ -55,7 +55,7 @@ class _SecssionsEachState extends State<SecssionsEach> {
                   padding: const EdgeInsets.only(bottom: 55),shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
 
                   itemBuilder: (context,index) {
-                    return MusicWidget(data:playlist!.getAt(index)!);
+                    return MusicWidget(data:playlist!.getAt(index)!, backGroundColor: textPink, color: foreground,);
 
                   }),
 

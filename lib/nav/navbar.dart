@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/screens/about_screen.dart';
 import 'package:vibemix/screens/library/favorite_screen.dart';
 import 'package:vibemix/screens/home_screen.dart';
 import 'package:vibemix/screens/library/library_screen.dart';
 import 'package:vibemix/screens/settings/settings_screen.dart';
+
+import '../global.dart';
 class NavBar extends StatefulWidget {
   bool reset=false;
     NavBar({Key? key,required this.reset}) : super(key: key);
@@ -35,7 +36,7 @@ if(widget.reset){
     return Scaffold(
       body: data[index],
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(border: Border(top: BorderSide(color: foreground,width: 2))),
+        decoration:  BoxDecoration(border: Border(top: BorderSide(color: foreground,width: 2))),
         child: BottomNavigationBar(items: const <BottomNavigationBarItem>[
 
           BottomNavigationBarItem(
@@ -63,10 +64,10 @@ if(widget.reset){
           currentIndex: index,
           backgroundColor: textPink,
           useLegacyColorScheme: false,elevation: 2,
-          unselectedLabelStyle: const TextStyle(color: background,fontSize:12 ),
-          unselectedIconTheme: const IconThemeData(color: background,size: 20),
-          selectedIconTheme:  const IconThemeData(color: foreground,size: 22),
-          selectedLabelStyle: const TextStyle(color: foreground,fontSize:12,fontWeight: FontWeight.bold ),
+          unselectedLabelStyle:  TextStyle(color: background,fontSize:12 ),
+          unselectedIconTheme:  IconThemeData(color: background,size: 20),
+          selectedIconTheme:   IconThemeData(color: foreground,size: 22),
+          selectedLabelStyle:  TextStyle(color: foreground,fontSize:12,fontWeight: FontWeight.bold ),
           selectedItemColor: foreground,
           unselectedItemColor: background,
           type: BottomNavigationBarType.fixed,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vibemix/Constants/colors.dart';
+import 'package:vibemix/customs/icon_images.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
+
+import '../global.dart';
 class AboutScreen extends StatelessWidget {
   const AboutScreen({Key? key}) : super(key: key);
 
@@ -15,7 +17,7 @@ class AboutScreen extends StatelessWidget {
         children: [
           Stack(
             children: [
-              Image.asset("assets/images/logo.png",width: 300,height: 300,),
+              IconImage(width: 300,height: 300,),
 
               Positioned(
                   top: 200,left: 100,

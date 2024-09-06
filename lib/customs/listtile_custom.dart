@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/customs/text_custom.dart';
-
-import '../Constants/colors.dart';
-import '../screens/library/mymusic.dart';
-
+import '../../global.dart';
 class ListTileCustom extends StatelessWidget {
 void Function()? onTap;
 String? trailing;
@@ -16,7 +13,7 @@ String? tittle;
   Widget build(BuildContext context) {
     return ListTile(
       onTap:onTap,
-      title: TextCustom(
+      title: TextCustom(color: foreground,
         size: 18,
         fontWeight: FontWeight.bold,
         text:tittle??"",
@@ -27,10 +24,10 @@ String? tittle;
         children: [
           TextCustom(
             size: 12,
-            text:trailing??"",
+            text:trailing??"", color: foreground,
           ),
           sw10,
-          const Icon(
+           Icon(
             Icons.arrow_forward_ios,
             color: foreground,
             size: 15,

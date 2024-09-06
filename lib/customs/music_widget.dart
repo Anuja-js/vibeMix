@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:on_audio_query/on_audio_query.dart';
-import 'package:vibemix/Constants/colors.dart';
+import 'package:on_audio_query/on_audio_query.dart';import '../../global.dart';
+import 'package:vibemix/customs/custom_elevated_button.dart';
 import 'package:vibemix/customs/text_custom.dart';
+import 'package:vibemix/playlist/create_playlist.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
 
 import '../models/audio_player_model.dart';
@@ -11,14 +12,14 @@ import '../models/hive.dart';
 
 class MusicWidget extends StatefulWidget {
   final SongHiveModel data;
-  Color? color;
-  Color? backGroundColor;
+  Color color;
+  Color backGroundColor;
 
   MusicWidget(
       {super.key,
       required this.data,
-      this.color = foreground,
-      this.backGroundColor = textPink});
+      required this.color ,
+      required this.backGroundColor});
 
   @override
   State<MusicWidget> createState() => _MusicWidgetState();
@@ -30,6 +31,7 @@ class _MusicWidgetState extends State<MusicWidget> {
   bool isFavorite = false;
   List<SongHiveModel> favourite = [];
   Box<SongHiveModel>? favsBox;
+
 
   @override
   void initState() {
@@ -75,7 +77,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                 width: MediaQuery.of(context).size.width / 2.5,
                 child: Text(
                   widget.data.displayNameWOExt,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     color: foreground,
                     fontWeight: FontWeight.bold,
@@ -86,12 +88,17 @@ class _MusicWidgetState extends State<MusicWidget> {
               ),
               IconButton(
                 onPressed: () async {
-                  if (isPlaying) {
+                  if (isPlaying &&current!.id==widget.data) {
                     await audio.pause();
+
                   } else {
                     await AudioPlayerSingleton().playSong(widget.data);
-                  }
-                  setState(() {});
+                  } isPlaying=!isPlaying;
+                  current = widget.data;
+                  setState(() {
+
+
+                  });
                 },
                 icon: Icon(
                   isPlaying ? Icons.pause : Icons.play_circle_outline,
@@ -115,6 +122,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                                 .removeWhere((song) => song.id == widget.data.id);
                             setState(() {
                               isFavorite=!isFavorite;
+
                             });
 
                           } else {
@@ -180,7 +188,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
-                                            icon: const Icon(
+                                            icon:  Icon(
                                               Icons.close_rounded,
                                               color: background,
                                             ))
@@ -218,7 +226,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                                                     ),
                                                     IconButton(
                                                         onPressed: () {},
-                                                        icon: const Icon(
+                                                        icon:  Icon(
                                                           Icons
                                                               .arrow_forward_ios_outlined,
                                                           color: background,
@@ -232,13 +240,22 @@ class _MusicWidgetState extends State<MusicWidget> {
                                         },
                                       ),
                                     )
-                                        : Center(heightFactor: 10,
-                                      child: TextCustom(
-                                        text:
-                                        "No PlayList Available Create One",
-                                        color: background,
-                                      ),
-                                    ),
+                                        : Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                          sh50,
+                                            TextCustom(
+                                              text:
+                                              "No PlayList Available Create One",
+                                              color: background,
+                                            ),
+                                            sh10,
+                                            ElevatedCustomButton(buttonName: "Create Playlist",onpress: (){
+                                              Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                                                return CreatePlaylist();
+                                              }));
+                                            },)
+                                          ],
+                                        ),
                                   ],
                                 ),
                               );
@@ -254,7 +271,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                     ],
                   );
                 },
-                icon: const Icon(
+                icon:  Icon(
                   Icons.more_vert_outlined,
                   color: foreground,
                   size: 24,
@@ -262,14 +279,15 @@ class _MusicWidgetState extends State<MusicWidget> {
               ),
 
             ],
-          ),   SizedBox(
+          ),
+          SizedBox(
             width: MediaQuery.of(context).size.width / 2.5,
             child: Text(
               "${widget.data.artist}",
-              style: const TextStyle(
+              style:  TextStyle(
                 fontSize: 13,
                 color: foreground,
-                fontWeight: FontWeight.w200,
+                fontWeight: FontWeight.w400,
               ),
               textAlign: TextAlign.start,
               overflow: TextOverflow.ellipsis,
@@ -279,20 +297,32 @@ class _MusicWidgetState extends State<MusicWidget> {
       ),
 
       onTap: () {
+if(audio.playing){
+  audio.stop();
+
+}
         Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
           return NowPlayingScreen(
             song: widget.data,
           );
-        })).then((value) {
+        })).then((value) async{
           getHiveMusic();
-          if (AudioPlayerSingleton().audioPlayer.playing &&
-              widget.data.id == AudioPlayerSingleton().currentSong!.id) {
-            isPlaying = true;
-            setState(() {});
-          } else {
-            isPlaying = false;
-            setState(() {});
-          }
+          setState(() {
+            current=AudioPlayerSingleton().currentSong;
+          });
+// final currentsong=await AudioPlayerSingleton().currentSong!.id;
+//           if (audio.playing &&
+//               widget.data.id == currentsong) {
+//
+//             isPlaying = true;
+//             setState(() {});
+//           } else {
+//             isPlaying = false;
+//             setState(() {});
+//           }
+
+          print(isPlaying);
+          print(AudioPlayerSingleton().currentSong!.displayNameWOExt.toString());
         });
       },
     );

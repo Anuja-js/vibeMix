@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/customs/text_custom.dart';
 
-import '../Constants/colors.dart';
-import '../nav/navbar.dart';
+import '../../global.dart';
 class ElevatedCustomButton extends StatelessWidget {
   String buttonName;
   void Function()?   onpress;

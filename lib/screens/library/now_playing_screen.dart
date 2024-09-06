@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/network/lyrics_network.dart';
 
+import '../../global.dart';
 import '../../models/audio_player_model.dart';
 import '../../models/box.dart';
 import '../../models/hive.dart';
@@ -62,7 +62,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     lyrics = await LyricsNetwork()
         .getLyrics(widget.song.artist.toString(), widget.song.displayNameWOExt);
     lyricsLines = lyrics.split('\n');
-    setState(() {});
+
   }
 
   getHiveMusic() async {
@@ -79,7 +79,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
       AudioPlayerSingleton().setCurrentSong(widget.song);
       AudioPlayerSingleton().playSong(widget.song);
     } else if (current!.id != widget.song.id) {
+
       await AudioPlayerSingleton().playSong(widget.song);
+
     } else {
       await audioPlayer.play();
     }
@@ -113,13 +115,26 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     });
   }
 
-  void skipNext() {
-    audioPlayer.seekToNext();
+  void skipNext() async {
+    try {
+      if (audioPlayer.hasNext) {
+        await audioPlayer.seekToNext();
+      }
+    } catch (e) {
+      print('Error skipping to next track: $e');
+    }
   }
 
-  void skipPrevious() {
-    audioPlayer.seekToPrevious();
+  void skipPrevious() async {
+    try {
+      if (audioPlayer.hasPrevious) {
+        await audioPlayer.seekToPrevious();
+      }
+    } catch (e) {
+      print('Error skipping to previous track: $e');
+    }
   }
+
 
   void onAudioPositionChanged(Duration position) {
     for (int i = 0; i < lyricsLines.length; i++) {
@@ -157,7 +172,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
               id: widget.song.id,
               type: ArtworkType.AUDIO,
               nullArtworkWidget:
-                  const Icon(Icons.music_note, color: foreground, size: 150),
+                   Icon(Icons.music_note, color: foreground, size: 150),
               artworkFit: BoxFit.cover,
               artworkWidth: 250,
               artworkHeight: 210,
@@ -166,7 +181,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
             sh25,
             Text(
               widget.song.displayNameWOExt,
-              style: const TextStyle(
+              style:  TextStyle(
                 color: foreground,
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -202,7 +217,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.lyrics_outlined, color: foreground),
+                  icon:  Icon(Icons.lyrics_outlined, color: foreground),
                   onPressed: () {
                     showModalBottomSheet(
                       constraints: BoxConstraints(
@@ -241,7 +256,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                   },
                 ),
                 IconButton(
-                    icon: const Icon(Icons.playlist_add, color: foreground),
+                    icon:  Icon(Icons.playlist_add, color: foreground),
                     onPressed: () async {
                       Box<String> playlistsBox =
                           await Hive.openBox<String>('playlists');
@@ -276,7 +291,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        icon: const Icon(
+                                        icon:  Icon(
                                           Icons.close_rounded,
                                           color: background,
                                         ))
@@ -309,7 +324,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                                 ),
                                                 IconButton(
                                                     onPressed: () {},
-                                                    icon: const Icon(
+                                                    icon:  Icon(
                                                       Icons
                                                           .arrow_forward_ios_outlined,
                                                       color: background,
@@ -384,7 +399,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.skip_previous,
+                        icon:  Icon(Icons.skip_previous,
                             color: foreground, size: 25),
                         onPressed: skipPrevious,
                       ),
@@ -405,7 +420,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.skip_next,
+                        icon:  Icon(Icons.skip_next,
                             color: foreground, size: 25),
                         onPressed: skipNext,
                       ),
@@ -415,7 +430,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.volume_down, color: foreground),
+                        icon:  Icon(Icons.volume_down, color: foreground),
                         onPressed: volumeDown,
                       ),
                       TextCustom(
@@ -425,7 +440,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                         text: volumeDisplay, // Volume display text
                       ),
                       IconButton(
-                        icon: const Icon(Icons.volume_up, color: foreground),
+                        icon:  Icon(Icons.volume_up, color: foreground),
                         onPressed: volumeUp,
                       ),
                     ],

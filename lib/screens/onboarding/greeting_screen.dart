@@ -4,9 +4,8 @@ import 'package:vibemix/customs/icon_images.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/nav/navbar.dart';
-
-import '../../Constants/colors.dart';
 import '../../customs/custom_elevated_button.dart';
+import '../../global.dart';
 
 // ignore: must_be_immutable
 class GreetingScreen extends StatefulWidget {
@@ -94,9 +93,9 @@ class MiddleWidget extends StatelessWidget {
         Text.rich(
           TextSpan(
             text: name,
-            style: const TextStyle(
+            style:  TextStyle(
                 color: foreground, fontWeight: FontWeight.bold, fontSize: 45),
-            children: const <TextSpan>[
+            children:  <TextSpan>[
               TextSpan(
                 text: '!\n',
                 style: TextStyle(

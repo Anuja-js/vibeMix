@@ -3,10 +3,10 @@ import 'package:hive/hive.dart';
 import 'package:vibemix/models/box.dart';
 import 'package:vibemix/nav/navbar.dart';
 import 'package:vibemix/playlist/sections_play.dart';
-import '../Constants/colors.dart';
 import '../customs/custom_elevated_button.dart';
 import '../customs/scaffold_custom.dart';
 import '../customs/text_custom.dart';
+import '../global.dart';
 import '../models/hive.dart';
 import 'create_playlist.dart';
 
@@ -52,7 +52,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           loadPlaylists();
         });
       },
-      actionIcon: const Icon(
+      actionIcon: Icon(
         Icons.add_circle_outline_outlined,
         size: 25,
         color: foreground,
@@ -67,7 +67,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             children: [
               playlistNames.isEmpty
                   ?  Center(heightFactor:20.2,
-                  child: TextCustom(text: "No Playlist Available"))
+                  child: TextCustom(text: "No Playlist Available", color: foreground,))
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -143,9 +143,10 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                           },
                           title: Text(
                             playlistNames[index],
-                            style: const TextStyle(color: foreground),
+                            style:
+                            TextStyle(color: foreground),
                           ),
-                          trailing: const Icon(
+                          trailing:  Icon(
                             Icons.arrow_forward_ios_outlined,
                             color: foreground,
                             size: 18,

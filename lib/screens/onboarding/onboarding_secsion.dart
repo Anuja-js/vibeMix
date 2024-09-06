@@ -1,14 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/custom_elevated_button.dart';
 import 'package:vibemix/customs/icon_images.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
+import 'package:vibemix/global.dart';
 import 'package:vibemix/screens/onboarding/greeting_screen.dart';
-
-import '../../constants/const.dart';
 import '../../main.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -44,11 +42,11 @@ class OnboardingScreen extends StatelessWidget {
                   },
                 ),
                 sh10,
-                TextCustom(fontWeight: FontWeight.bold, text: "Disclaimer:"),
+                TextCustom(fontWeight: FontWeight.bold, text: "Disclaimer:", color: foreground,),
                 TextCustom(
                     size: 14,
                     text:
-                        "We respect your privacy more than anything else.\nOnly your name, which you will enter here, will be recorded."),
+                        "We respect your privacy more than anything else.\nOnly your name, which you will enter here, will be recorded.", color: foreground,),
                 sh10
               ],
             ),
@@ -95,7 +93,10 @@ class TextForm extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       child: TextFormField(
         scrollPhysics: const NeverScrollableScrollPhysics(),
-        controller: _nameController,
+        controller: _nameController,style:TextStyle(
+          color: grey,
+          fontSize: 15,
+          fontWeight: FontWeight.normal) ,
         decoration: InputDecoration(
           fillColor: foreground,
           filled: true,
@@ -103,21 +104,21 @@ class TextForm extends StatelessWidget {
           prefixIconColor: background,
           labelText: 'Enter Your Name',
           floatingLabelBehavior: FloatingLabelBehavior.never,
-          floatingLabelStyle: const TextStyle(
+          floatingLabelStyle:  TextStyle(
               color: textPink,
               fontSize: 14,
               fontWeight: FontWeight.bold),
-          labelStyle: const TextStyle(
-              color: background,
+          labelStyle:  TextStyle(
+              color: grey,
               fontSize: 15,
               fontWeight: FontWeight.normal),
           prefixIcon: const Icon(
             Icons.perm_identity_outlined,
           ),
-          enabledBorder: const OutlineInputBorder(
+          enabledBorder:  OutlineInputBorder(
             borderSide: BorderSide(color: containerPink),
           ),
-          focusedBorder: const OutlineInputBorder(
+          focusedBorder:  OutlineInputBorder(
             borderSide: BorderSide(color: containerPink),
           ),
           border: OutlineInputBorder(
@@ -145,7 +146,7 @@ class AppName extends StatelessWidget {
             size: 45,
             fontWeight: FontWeight.bold,
             text: "VIBE MIX"),
-        TextCustom(size: 45, fontWeight: FontWeight.bold, text: "MUSIC."),
+        TextCustom(size: 45, fontWeight: FontWeight.bold, text: "MUSIC.", color: foreground,),
       ],
     );
   }

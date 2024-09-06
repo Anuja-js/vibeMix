@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:vibemix/Constants/colors.dart';
+import 'package:flutter/material.dart';import '../../global.dart';
 
 // ignore: must_be_immutable
 class ScaffoldCustom extends StatelessWidget {
@@ -31,7 +30,7 @@ class ScaffoldCustom extends StatelessWidget {
               elevation: 0,
               title: appBar==true?Text(
                 tittle!,
-                style: const TextStyle(
+                style:  TextStyle(
                     color: foreground,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
@@ -47,7 +46,7 @@ class ScaffoldCustom extends StatelessWidget {
                       onPressed:onBack!=null?onBack: () {
                       Navigator.of(context).pop();
                       },
-                      icon: const Icon(
+                      icon:  Icon(
                         Icons.arrow_back,
                         color: foreground,
                         size: 25,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vibemix/global.dart';
 class IconImage extends StatelessWidget {
   double height;
   double width;
@@ -8,7 +9,11 @@ class IconImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
+    return background==Colors.white?Image.asset(
+      "assets/images/whiteLogo.png",
+      height: height,
+      width: width,
+    ): Image.asset(
       "assets/images/logo.png",
       height: height,
       width: width,

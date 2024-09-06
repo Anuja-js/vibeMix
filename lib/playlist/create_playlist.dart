@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:vibemix/Constants/colors.dart';
 import '../customs/scaffold_custom.dart';
 import '../customs/text_custom.dart';
+import '../global.dart';
 import '../models/box.dart';
 import '../models/hive.dart';
 class CreatePlaylist extends StatefulWidget {
@@ -46,7 +46,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
 
           Navigator.of(context).pop(); // Go back to PlaylistScreen after saving
         },
-        icon: const Icon(Icons.check_outlined, size: 25, color: foreground),
+        icon:  Icon(Icons.check_outlined, size: 25, color: foreground),
       ),
       backButton: true,
       body:
@@ -67,21 +67,21 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                       fillColor: textPink,
                       filled: true,
                       focusColor: textPink,
-                      floatingLabelStyle: const TextStyle(
+                      floatingLabelStyle:  TextStyle(
                           color: foreground, fontSize: 14, fontWeight: FontWeight.bold),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: const BorderSide(
+                        borderSide:  BorderSide(
                           color: background,
                         ),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: const BorderSide(color: background),
+                        borderSide:  BorderSide(color: background),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       border: UnderlineInputBorder(
-                        borderSide: const BorderSide(color: background),
+                        borderSide:  BorderSide(color: background),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                     ),
@@ -112,7 +112,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                               ),
                               id: songs[index].id,
                               type: ArtworkType.AUDIO,
-                              nullArtworkWidget: const Icon(
+                              nullArtworkWidget:  Icon(
                                 Icons.music_note,
                                 color: foreground,
                                 size: 30,
@@ -127,7 +127,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                                 width: MediaQuery.of(context).size.width / 2.5,
                                 child: Text(
                                   songs[index].displayNameWOExt,
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     fontSize: 15,
                                     color: foreground,
                                     fontWeight: FontWeight.bold,
@@ -151,7 +151,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                           ),
                           subtitle: Text(
                             "${songs[index].artist}",
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 13,
                               color: foreground,
                               fontWeight: FontWeight.w200,

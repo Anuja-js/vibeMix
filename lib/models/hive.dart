@@ -24,4 +24,5 @@ class SongHiveModel {
     required this.artist,
     required this.uri,
   });
+
 }

@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/icon_images.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
@@ -17,6 +14,7 @@ import 'package:vibemix/screens/library/mymusic.dart';
 import '../customs/container_custom.dart';
 import '../customs/list_of_allsongs.dart';
 import '../customs/listtile_custom.dart';
+import '../global.dart';
 import '../models/hive.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -30,7 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String name = "Guest";
   bool _hasPermission = false;
   final OnAudioQuery _audioQuery = OnAudioQuery();
-  Box<SongHiveModel>? songsBox; File? imageFile;
+  Box<SongHiveModel>? songsBox;
+  File? imageFile;
 
   @override
   void initState() {
@@ -38,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
     getname();
     checkAndRequestPermissions();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (_hasPermission)
                   if (songsBox == null || songsBox!.length == 0)
                     TextCustom(
-                      text: "Songs Not found",
+                      text: "Songs Not found", color: foreground,
                     ),
-                if (_hasPermission&& songsBox!=null)
+                if (_hasPermission && songsBox != null)
                   ListOfMusic(
                       songsBox: songsBox,
                       count: songsBox!.length > 5 ? 5 : songsBox!.length)
@@ -89,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: false,
       action: false,
     );
-
   }
+
   checkAndRequestPermissions({bool retry = false}) async {
     _hasPermission = await _audioQuery.checkAndRequest(
       retryRequest: retry,
@@ -100,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {});
     } else {}
   }
+
   getHiveMusic() async {
     songsBox = await HiveService.getSongsBox();
     List<SongModel> information = await _audioQuery.querySongs(
@@ -126,8 +125,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 }
-
-
 
 class UserImageAndName extends StatefulWidget {
   const UserImageAndName({
@@ -226,13 +223,14 @@ class _UserImageAndNameState extends State<UserImageAndName> {
               radius: 30,
               backgroundImage: imageFile != null
                   ? FileImage(imageFile!)
-                  : const AssetImage("assets/images/profile.png") as ImageProvider,
+                  : const AssetImage("assets/images/profile.png")
+                      as ImageProvider,
             ),
             const SizedBox(width: 15),
             Text.rich(
               TextSpan(
                 text: "Hi There,\n",
-                style: const TextStyle(
+                style:  TextStyle(
                   color: textPink,
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -240,7 +238,7 @@ class _UserImageAndNameState extends State<UserImageAndName> {
                 children: [
                   TextSpan(
                     text: widget.name,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       color: foreground,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,

@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:vibemix/constants/const.dart';
+
+import '../global.dart';
 
 class LyricsNetwork {
   Future<String> getLyrics(String artist, String name) async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:vibemix/global.dart';
 
 import '../models/hive.dart';
 import 'music_widget.dart';
@@ -20,7 +21,7 @@ class ListOfMusic extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          return MusicWidget(data: songsBox!.getAt(index)!);
+          return MusicWidget(data: songsBox!.getAt(index)!, color: foreground,backGroundColor: textPink,);
         });
   }
 }

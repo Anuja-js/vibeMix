@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:vibemix/Constants/colors.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/models/box.dart';
-import 'package:vibemix/nav/navbar.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
+import '../../global.dart';
 import '../../models/audio_player_model.dart';
 import '../../models/hive.dart';
 
@@ -53,7 +52,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
       backButton: true,
       body:favourite.isNotEmpty? ListView.builder(
-        padding: const EdgeInsets.only(bottom: 55, top: 20),
+        padding: const EdgeInsets.only(bottom: 55, top: 20,left: 18,right: 18),
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         physics: const ScrollPhysics(),
@@ -65,7 +64,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               child: QueryArtworkWidget(
                 id: favourite[index].id,
                 type: ArtworkType.AUDIO,
-                nullArtworkWidget: const Icon(
+                nullArtworkWidget:  Icon(
                   Icons.music_note,
                   color: foreground,
                   size: 30,
@@ -79,7 +78,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 Expanded(
                   child: Text(
                     favourite[index].displayNameWOExt,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 15,
                       color: foreground,
                       fontWeight: FontWeight.bold,
@@ -95,7 +94,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     favourite.removeAt(index);
                     setState(() {});
                   },
-                  icon: const Icon(
+                  icon:  Icon(
                     Icons.close_rounded,
                     size: 24,
                     color: foreground,
@@ -121,7 +120,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             ),
             subtitle: Text(
               favourite[index].artist.toString(),
-              style: const TextStyle(
+              style:  TextStyle(
                 fontSize: 13,
                 color: foreground,
                 fontWeight: FontWeight.w200,
@@ -136,7 +135,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             },
           );
         },
-      ): Center(child: TextCustom(text: "No Favorites Added",)),
+      ): Center(child: TextCustom(text: "No Favorites Added", color: foreground,)),
       appBar: true,
 
       action: false,

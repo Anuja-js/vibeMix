@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/customs/text_custom.dart';
-
-import '../Constants/colors.dart';
+import '../../global.dart';
 import '../screens/search_music.dart';
 class ContainerForSearch extends StatelessWidget {
   const ContainerForSearch({
@@ -38,7 +37,7 @@ class ContainerForSearch extends StatelessWidget {
           fontWeight: FontWeight.bold,
           text: "Search for anything ...",
         ),
-        trailing: const Icon(
+        trailing:  Icon(
           Icons.search,
           color: background,
           size: 20,
