@@ -40,6 +40,7 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
     DateTime now = DateTime.now();
 
     for (var song in recentList) {
+
       Duration difference = now.difference(song.time);
 
       if (difference.inMinutes < 5) {

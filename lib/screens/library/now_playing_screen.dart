@@ -27,7 +27,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   final AudioPlayer audioPlayer = AudioPlayerSingleton().audioPlayer;
   final ScrollController lyricsScrollController = ScrollController();
   bool isLooping = false;
-
   bool isPlaying = true;
   bool isFavorite = false;
   double currentVolume = 0.0;
@@ -113,26 +112,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     setState(() {
       volumeDisplay = "Volume: ${(currentVolume * 100).toInt()}%";
     });
-  }
-
-  void skipNext() async {
-    try {
-      if (audioPlayer.hasNext) {
-        await audioPlayer.seekToNext();
-      }
-    } catch (e) {
-      print('Error skipping to next track: $e');
-    }
-  }
-
-  void skipPrevious() async {
-    try {
-      if (audioPlayer.hasPrevious) {
-        await audioPlayer.seekToPrevious();
-      }
-    } catch (e) {
-      print('Error skipping to previous track: $e');
-    }
   }
 
 
@@ -372,7 +351,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                           Expanded(
                             child: Slider(
                               min: 0.0,
-                              value: position.inSeconds.toDouble(),
+                              value:audioPlayer.duration==null?0.0: position.inSeconds.toDouble(),
                               max: audioPlayer.duration?.inSeconds.toDouble() ??
                                   0.0,
                               onChanged: (value) {
@@ -401,7 +380,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                       IconButton(
                         icon:  Icon(Icons.skip_previous,
                             color: foreground, size: 25),
-                        onPressed: skipPrevious,
+                        onPressed: (){
+                          AudioPlayerSingleton().skipPrevious(context);
+                        },
                       ),
                       IconButton(
                         icon: Icon(
@@ -422,7 +403,10 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                       IconButton(
                         icon:  Icon(Icons.skip_next,
                             color: foreground, size: 25),
-                        onPressed: skipNext,
+                        onPressed: (){
+                          AudioPlayerSingleton().skipNext(context);
+
+                        },
                       ),
                     ],
                   ),

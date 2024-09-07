@@ -7,6 +7,7 @@ import '../customs/custom_elevated_button.dart';
 import '../customs/scaffold_custom.dart';
 import '../customs/text_custom.dart';
 import '../global.dart';
+import '../models/audio_player_model.dart';
 import '../models/hive.dart';
 import 'create_playlist.dart';
 
@@ -75,6 +76,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                       itemBuilder: (ctx, index) {
                         return ListTile(
                           onTap: () {
+                            AudioPlayerSingleton().setCurrentPlaylist(playlistNames[index]);
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (ctx) {
                               return SecssionsEach(

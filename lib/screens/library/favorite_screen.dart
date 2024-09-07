@@ -28,7 +28,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   void initState() {
-
+    AudioPlayerSingleton().setCurrentPlaylist("fav");
     current = AudioPlayerSingleton().currentSong;
     audio.playerStateStream.listen((state) {
       current = AudioPlayerSingleton().currentSong;
@@ -40,6 +40,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   getHiveMusic() async {
     favsBox = await HiveService.getFavBox();
     favourite.addAll(favsBox!.values);
+
     setState(() {});
   }
 

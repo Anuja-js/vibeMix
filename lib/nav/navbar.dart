@@ -6,6 +6,7 @@ import 'package:vibemix/screens/library/library_screen.dart';
 import 'package:vibemix/screens/settings/settings_screen.dart';
 
 import '../global.dart';
+import '../models/audio_player_model.dart';
 class NavBar extends StatefulWidget {
   bool reset=false;
     NavBar({Key? key,required this.reset}) : super(key: key);
@@ -72,8 +73,10 @@ if(widget.reset){
           unselectedItemColor: background,
           type: BottomNavigationBarType.fixed,
           onTap: (value){
+
           setState(() {
             index=value;
+
           });
           },
 

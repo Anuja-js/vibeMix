@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/customs/icon_images.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
+import 'package:vibemix/models/audio_player_model.dart';
 import 'package:vibemix/models/box.dart';
 import 'package:vibemix/screens/library/mymusic.dart';
 
@@ -94,7 +95,8 @@ class _HomeScreenState extends State<HomeScreen> {
       retryRequest: retry,
     );
     if (_hasPermission) {
-      getHiveMusic();
+     await getHiveMusic();
+      AudioPlayerSingleton().setCurrentPlaylist("songs");
       setState(() {});
     } else {}
   }

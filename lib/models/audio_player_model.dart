@@ -1,12 +1,16 @@
 
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/models/box.dart';
 import 'package:vibemix/models/recent.dart';
+import 'package:vibemix/screens/library/now_playing_screen.dart';
 
 import 'hive.dart';
 class AudioPlayerSingleton {
-  // Private constructor
+  List<SongHiveModel> playlistList=[];
+  int currentIndex=0;
   AudioPlayerSingleton._privateConstructor();
 
   // The single instance of AudioPlayerSingleton
@@ -20,6 +24,9 @@ class AudioPlayerSingleton {
   factory AudioPlayerSingleton() {
     return _instance;
   }
+ConcatenatingAudioSource currentPlaylist=ConcatenatingAudioSource(children: [
+
+]);
 
   // Method to access the AudioPlayer instance
   AudioPlayer get audioPlayer => _audioPlayer;
@@ -29,12 +36,16 @@ class AudioPlayerSingleton {
 
   // Method to set the currently playing song
   void setCurrentSong(SongHiveModel song) {
+
     _currentSong = song;
   }
 
   Future<void> playSong(SongHiveModel song) async {
     try {
-      await _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(song.uri!)));
+      currentIndex=playlistList.indexWhere((element)=>element==song);
+
+      await _audioPlayer.setAudioSource(currentPlaylist, initialIndex: currentIndex, initialPosition: Duration.zero);
+    print("0000000000000000000000000000000000000000000000000000000${currentIndex}");
       _currentSong = song;
       _audioPlayer.play();
       saveToRecent(song);
@@ -53,8 +64,68 @@ class AudioPlayerSingleton {
   void stop() {
     _audioPlayer.stop();
   }
+  void setCurrentPlaylist(String playlistName)async{
+    if(playlistName=="recent"){
+      currentPlaylist.clear();
+      playlistList.clear();
+      final shared = await SharedPreferences.getInstance();
+      shared.setString('currentPlaylist', playlistName);
+      Box<RecentModel> playlist = await HiveService.getRecentData();
+      for (int i = 0; i < playlist.length; i++) {
+        playlistList.add(playlist.getAt(i)!.song);
+      }
+      for (int i = 0; i < playlistList.length; i++) {
+        currentPlaylist.add(AudioSource.uri(Uri.parse(playlistList[i].uri!)));
+      }
+    }
+  else  {
+      currentPlaylist.clear();
+      playlistList.clear();
+      final shared = await SharedPreferences.getInstance();
+      shared.setString('currentPlaylist', playlistName);
+      Box<SongHiveModel> playlist = await Hive.openBox(playlistName);
+      playlistList.addAll(playlist.values);
+      for (int i = 0; i < playlistList.length; i++) {
+        currentPlaylist.add(AudioSource.uri(Uri.parse(playlistList[i].uri!)));
+      }
+    }
+  }
+  void skipNext(context) async {
 
-  // Method to seek to a specific position in the currently playing song
+    try {
+    if(_audioPlayer.hasNext){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+        return NowPlayingScreen(song:playlistList[currentIndex+1]);
+      }));
+
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('PlayList reached the Limit')),
+      );
+     }
+     } catch (e) {
+      print('Error skipping to next track: $e');
+    }
+  }
+  void skipPrevious(context) async {
+
+    try {
+      if(_audioPlayer.hasPrevious){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+          return NowPlayingScreen(song:playlistList[currentIndex-1]);
+        }));
+
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('PlayList reached the Limit')),
+        );
+      }
+    } catch (e) {
+      print('Error skipping to next track: $e');
+    }
+  }
+
+
   void seek(Duration position) {
     _audioPlayer.seek(position);
   }

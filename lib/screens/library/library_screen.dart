@@ -60,6 +60,7 @@ class LibraryScreen extends StatelessWidget {
               ),
             ),
             ListTile(
+
               leading:  Icon(Icons.favorite_border_outlined, size: 25, color: foreground),
               title: TextCustom(
                 color: foreground,
@@ -68,6 +69,7 @@ class LibraryScreen extends StatelessWidget {
                 text: "Favorites",
               ),
               onTap: (){
+                AudioPlayerSingleton().setCurrentPlaylist("fav");
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (ctx) {
                     return const FavoriteScreen();
@@ -77,6 +79,7 @@ class LibraryScreen extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
+                AudioPlayerSingleton().setCurrentPlaylist("songs");
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (ctx) {
                     return const MyMusic();
@@ -92,6 +95,7 @@ class LibraryScreen extends StatelessWidget {
               ),
             ),  ListTile(
               onTap: () {
+                AudioPlayerSingleton().setCurrentPlaylist("recent");
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (ctx) {
                     return const RecentlyPlayedScreen();
