@@ -111,16 +111,18 @@ class _MusicWidgetState extends State<MusicWidget> {
               ),
               IconButton(
                 onPressed: () async {
-                  AudioPlayerSingleton().setCurrentPlaylist(widget.playlistName);
+     await           AudioPlayerSingleton().setCurrentPlaylist(widget.playlistName);
                   if(audio.playing){
-                    await audio.pause();
+                     AudioPlayerSingleton().pause();
+                    if(AudioPlayerSingleton().currentSong!=widget.data){
+                   await   AudioPlayerSingleton().playSong(widget.data);
+                    }
                   }else{
                     await AudioPlayerSingleton().playSong(widget.data);
                   }
                   current = widget.data;
                   RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
                   setState(() {
-
 
                   });
                 },
@@ -280,7 +282,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                                             sh10,
                                             ElevatedCustomButton(buttonName: "Create Playlist",onpress: (){
                                               Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                                                return CreatePlaylist();
+                                                return const CreatePlaylist();
                                               }));
                                             },)
                                           ],
@@ -325,12 +327,13 @@ class _MusicWidgetState extends State<MusicWidget> {
         ],
       ),
 
-      onTap: () {
+      onTap: ()async {
 if(audio.playing){
   audio.stop();
 
 }
-AudioPlayerSingleton().setCurrentPlaylist("songs");
+await AudioPlayerSingleton().setCurrentPlaylist(widget.playlistName);
+
 Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
 
           return NowPlayingScreen(
@@ -341,19 +344,6 @@ Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
           setState(() {
             current=AudioPlayerSingleton().currentSong;
           });
-// final currentsong=await AudioPlayerSingleton().currentSong!.id;
-//           if (audio.playing &&
-//               widget.data.id == currentsong) {
-//
-//             isPlaying = true;
-//             setState(() {});
-//           } else {
-//             isPlaying = false;
-//             setState(() {});
-//           }
-
-          print(isPlaying);
-          print(AudioPlayerSingleton().currentSong!.displayNameWOExt.toString());
         });
       },
     );

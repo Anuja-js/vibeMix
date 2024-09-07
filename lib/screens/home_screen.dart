@@ -116,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
               artist: information[i].artist,
               uri: information[i].uri));
     }
+    // AudioPlayerSingleton().setCurrentPlaylist("songs");
     setState(() {});
   }
 

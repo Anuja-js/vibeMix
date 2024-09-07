@@ -39,6 +39,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   getHiveMusic() async {
     favsBox = await HiveService.getFavBox();
     favourite.addAll(favsBox!.values);
+    // AudioPlayerSingleton().setCurrentPlaylist("fav");
     setState(() {});
   }
 
@@ -67,109 +68,4 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     );
   }
 
-}
-class ListileWidget extends StatefulWidget {
-  SongHiveModel data;
-  int index;
-  void Function()? remove;
-  void Function()? playPause;
-   ListileWidget({super.key,required this.data, required this.index,this.remove,this.playPause});
-
-
-  @override
-  State<ListileWidget> createState() => _ListileWidgetState();
-}
-
-class _ListileWidgetState extends State<ListileWidget> {
-  bool  isPlaying=false;
-  final audio = AudioPlayerSingleton().audioPlayer;
-  @override
-  void initState() {
-    RefreshNotifier().notifier.addListener(checkIsPlaying);
-    checkIsPlaying();
-    super.initState();
-  }
-  @override
-  void dispose() {
-    RefreshNotifier().notifier.removeListener(checkIsPlaying);
-    super.dispose();
-  }
-  void checkIsPlaying() {
-    if (!audio.playing || AudioPlayerSingleton().currentSong == null) {
-      isPlaying = false;
-    }
-    else if (audio.playing && AudioPlayerSingleton().currentSong == widget.data) {
-      isPlaying = true;
-    } else {
-      isPlaying = false;
-    }
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return   ListTile(
-      leading: CircleAvatar(backgroundColor: textPink,radius: 25,
-        child: QueryArtworkWidget(
-          id: widget.data.id,
-          type: ArtworkType.AUDIO,
-          nullArtworkWidget:  Icon(
-            Icons.music_note,
-            color: foreground,
-            size: 30,
-          ),
-        ),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Text(
-              widget.data.displayNameWOExt,
-              style:  TextStyle(
-                fontSize: 15,
-                color: foreground,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.start,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          IconButton(
-            onPressed: widget.remove,
-            icon:  Icon(
-              Icons.close_rounded,
-              size: 24,
-              color: foreground,
-            ),
-          ),
-          IconButton(
-            onPressed: widget.playPause,
-            icon: Icon(
-              isPlaying ? Icons.pause : Icons.play_circle_outline,
-              color: foreground,
-              size: 24,
-            ),
-          ),
-        ],
-      ),
-      subtitle: Text(
-       widget.data.artist.toString(),
-        style:  TextStyle(
-          fontSize: 13,
-          color: foreground,
-          fontWeight: FontWeight.w200,
-        ),
-        textAlign: TextAlign.start,
-        overflow: TextOverflow.ellipsis,
-      ),
-      onTap: () {
-        AudioPlayerSingleton().setCurrentPlaylist("fav");
-        Navigator.push(context, MaterialPageRoute(builder: (ctx){
-          return  NowPlayingScreen(song: widget.data);
-        }));
-      },
-    );;
-  }
 }
