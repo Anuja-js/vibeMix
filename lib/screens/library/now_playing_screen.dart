@@ -13,11 +13,12 @@ import '../../global.dart';
 import '../../models/audio_player_model.dart';
 import '../../models/box.dart';
 import '../../models/hive.dart';
+import '../../utils/notifier.dart';
 
 class NowPlayingScreen extends StatefulWidget {
   final SongHiveModel song;
 
-  const NowPlayingScreen({Key? key, required this.song}) : super(key: key);
+  const NowPlayingScreen({super.key, required this.song});
 
   @override
   State<NowPlayingScreen> createState() => _NowPlayingScreenState();
@@ -77,12 +78,15 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
       current = widget.song;
       AudioPlayerSingleton().setCurrentSong(widget.song);
       AudioPlayerSingleton().playSong(widget.song);
+      print("11111111111111111111111111111111111");
     } else if (current!.id != widget.song.id) {
 
       await AudioPlayerSingleton().playSong(widget.song);
+      print("22222222222222222222222222222222222222222222222222");
 
     } else {
       await audioPlayer.play();
+      print("33333333333333333333333333333333333333333333");
     }
     AudioPlayerSingleton().setCurrentSong(widget.song);
   }
@@ -139,7 +143,10 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   Widget build(BuildContext context) {
     return ScaffoldCustom(
       tittle: "",
-      backButton: true,
+      backButton: true,onBack: (){
+      RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
+      Navigator.pop(context);
+    },
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Column(
@@ -397,6 +404,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                               audioPlayer.play();
                             }
                             isPlaying = !isPlaying;
+                            RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
                           });
                         },
                       ),

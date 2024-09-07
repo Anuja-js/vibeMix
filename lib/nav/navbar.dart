@@ -17,7 +17,6 @@ class NavBar extends StatefulWidget {
 List<Widget> data=[
   const HomeScreen(),
    LibraryScreen(),
-const FavoriteScreen(),
   const SettingScreen(),
   const AboutScreen()
 ];
@@ -47,10 +46,6 @@ if(widget.reset){
           BottomNavigationBarItem(
             icon: Icon(Icons.library_music_outlined),
             label: 'Library',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border_outlined),
-            label: 'Favorites',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings_outlined),

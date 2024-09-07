@@ -28,10 +28,10 @@ class _SearchMusicState extends State<SearchMusic> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: textPink,
+      backgroundColor: background,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: textPink,
+        backgroundColor: background,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -58,7 +58,7 @@ class _SearchMusicState extends State<SearchMusic> {
                 itemBuilder: (context, index) {
                   return MusicWidget(
                     data: filteredSongs[index],
-                    backGroundColor: background, color: foreground,
+                    backGroundColor: background, color: foreground, playlistName: 'songs',
                   );
                 },
               ),
@@ -77,7 +77,7 @@ class _SearchMusicState extends State<SearchMusic> {
                 itemBuilder: (context, index) {
                   return MusicWidget(
                     data: allSongs[index],
-                    backGroundColor: background, color: foreground
+                    backGroundColor: textPink, color: foreground, playlistName: 'songs',
                   );
                 },
               ),
@@ -130,13 +130,15 @@ class SearchTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      onChanged: onPress,
+      onChanged: onPress,style:  TextStyle(
+        color: foreground, fontSize: 15, fontWeight: FontWeight.normal),
       scrollPhysics: const NeverScrollableScrollPhysics(),
       decoration: InputDecoration(
-        fillColor: textPink,
+        fillColor: background,
         filled: true,
-        focusColor: foreground,
+        focusColor: background,
         suffixIconColor: foreground,
+
         labelText: 'Search for anything ...',
         floatingLabelStyle:  TextStyle(
             color: foreground, fontSize: 14, fontWeight: FontWeight.bold),

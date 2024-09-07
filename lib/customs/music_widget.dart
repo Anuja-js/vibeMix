@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:on_audio_query/on_audio_query.dart';import '../../global.dart';
+import 'package:on_audio_query/on_audio_query.dart';
+import 'package:vibemix/screens/library/favorite_screen.dart';import '../../global.dart';
 import 'package:vibemix/customs/custom_elevated_button.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/playlist/create_playlist.dart';
@@ -9,16 +10,18 @@ import 'package:vibemix/screens/library/now_playing_screen.dart';
 import '../models/audio_player_model.dart';
 import '../models/box.dart';
 import '../models/hive.dart';
+import '../utils/notifier.dart';
 
 class MusicWidget extends StatefulWidget {
   final SongHiveModel data;
+  String playlistName;
   Color color;
   Color backGroundColor;
 
   MusicWidget(
       {super.key,
       required this.data,
-      required this.color ,
+      required this.color ,required this.playlistName,
       required this.backGroundColor});
 
   @override
@@ -31,6 +34,7 @@ class _MusicWidgetState extends State<MusicWidget> {
   bool isFavorite = false;
   List<SongHiveModel> favourite = [];
   Box<SongHiveModel>? favsBox;
+  bool isPlaying = false;
 
 
   @override
@@ -40,14 +44,33 @@ class _MusicWidgetState extends State<MusicWidget> {
     audio.playerStateStream.listen((state) {
       current = AudioPlayerSingleton().currentSong;
     });
-
+    RefreshNotifier().notifier.addListener(checkIsPlaying);
     getHiveMusic();
+    checkIsPlaying();
   }
+
+  @override
+  void dispose() {
+    RefreshNotifier().notifier.removeListener(checkIsPlaying);
+    super.dispose();
+  }
+
+  void checkIsPlaying() {
+    if (!audio.playing || AudioPlayerSingleton().currentSong == null) {
+      isPlaying = false;
+    }
+    else if (audio.playing && AudioPlayerSingleton().currentSong == widget.data) {
+      isPlaying = true;
+    } else {
+      isPlaying = false;
+    }
+    setState(() {});
+  }
+
 
   List<String> playlistNames = [];
   @override
   Widget build(BuildContext context) {
-    bool isPlaying = audio.playing && current?.id == widget.data.id;
 
     return ListTile(
       leading: CircleAvatar(
@@ -88,13 +111,14 @@ class _MusicWidgetState extends State<MusicWidget> {
               ),
               IconButton(
                 onPressed: () async {
-                  if (isPlaying &&current!.id==widget.data) {
+                  AudioPlayerSingleton().setCurrentPlaylist(widget.playlistName);
+                  if(audio.playing){
                     await audio.pause();
-
-                  } else {
+                  }else{
                     await AudioPlayerSingleton().playSong(widget.data);
-                  } isPlaying=!isPlaying;
+                  }
                   current = widget.data;
+                  RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
                   setState(() {
 
 
@@ -109,7 +133,7 @@ class _MusicWidgetState extends State<MusicWidget> {
               IconButton(
                 onPressed: () {
                   showMenu(
-                    context: context,
+                    context: context,surfaceTintColor: textPink,color: textPink,
                     position: const RelativeRect.fromLTRB(
                         80, 350, 80, 10), // Position of the menu
                     items: [
@@ -132,6 +156,11 @@ class _MusicWidgetState extends State<MusicWidget> {
                               isFavorite=!isFavorite;
                             });
 
+                          }
+                          if(widget.playlistName=="fav") {
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+                            return FavoriteScreen();
+                          }));
                           }
 
                         },
@@ -171,7 +200,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                                 width: MediaQuery.of(context).size.width,
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 18),
-                                color: foreground,
+                                color: textPink,
                                 child: Column(
                                   children: [
                                     Row(
@@ -301,7 +330,9 @@ if(audio.playing){
   audio.stop();
 
 }
-        Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+AudioPlayerSingleton().setCurrentPlaylist("songs");
+Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+
           return NowPlayingScreen(
             song: widget.data,
           );

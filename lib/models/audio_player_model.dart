@@ -7,6 +7,7 @@ import 'package:vibemix/models/box.dart';
 import 'package:vibemix/models/recent.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
 
+import '../utils/notifier.dart';
 import 'hive.dart';
 class AudioPlayerSingleton {
   List<SongHiveModel> playlistList=[];
@@ -41,14 +42,16 @@ ConcatenatingAudioSource currentPlaylist=ConcatenatingAudioSource(children: [
   }
 
   Future<void> playSong(SongHiveModel song) async {
+
     try {
+
       currentIndex=playlistList.indexWhere((element)=>element==song);
 
       await _audioPlayer.setAudioSource(currentPlaylist, initialIndex: currentIndex, initialPosition: Duration.zero);
-    print("0000000000000000000000000000000000000000000000000000000${currentIndex}");
       _currentSong = song;
       _audioPlayer.play();
       saveToRecent(song);
+      RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
     } catch (e) {
       print("Error playing song: $e");
     }
@@ -65,9 +68,9 @@ ConcatenatingAudioSource currentPlaylist=ConcatenatingAudioSource(children: [
     _audioPlayer.stop();
   }
   void setCurrentPlaylist(String playlistName)async{
+    List<AudioSource> newPlaylist=[];
+    playlistList.clear();
     if(playlistName=="recent"){
-      currentPlaylist.clear();
-      playlistList.clear();
       final shared = await SharedPreferences.getInstance();
       shared.setString('currentPlaylist', playlistName);
       Box<RecentModel> playlist = await HiveService.getRecentData();
@@ -75,20 +78,25 @@ ConcatenatingAudioSource currentPlaylist=ConcatenatingAudioSource(children: [
         playlistList.add(playlist.getAt(i)!.song);
       }
       for (int i = 0; i < playlistList.length; i++) {
-        currentPlaylist.add(AudioSource.uri(Uri.parse(playlistList[i].uri!)));
+        newPlaylist.add(AudioSource.uri(Uri.parse(playlistList[i].uri!)));
       }
     }
   else  {
-      currentPlaylist.clear();
-      playlistList.clear();
       final shared = await SharedPreferences.getInstance();
       shared.setString('currentPlaylist', playlistName);
       Box<SongHiveModel> playlist = await Hive.openBox(playlistName);
       playlistList.addAll(playlist.values);
       for (int i = 0; i < playlistList.length; i++) {
-        currentPlaylist.add(AudioSource.uri(Uri.parse(playlistList[i].uri!)));
+        newPlaylist.add(AudioSource.uri(Uri.parse(playlistList[i].uri!)));
       }
     }
+  currentPlaylist.clear();
+      currentPlaylist.addAll(newPlaylist);
+// if(currentPlaylist!=newPlaylist)
+//     {
+//
+//
+//     }
   }
   void skipNext(context) async {
 

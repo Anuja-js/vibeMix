@@ -69,7 +69,7 @@ class LibraryScreen extends StatelessWidget {
                 text: "Favorites",
               ),
               onTap: (){
-                AudioPlayerSingleton().setCurrentPlaylist("fav");
+
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (ctx) {
                     return const FavoriteScreen();
@@ -79,7 +79,7 @@ class LibraryScreen extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                AudioPlayerSingleton().setCurrentPlaylist("songs");
+
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (ctx) {
                     return const MyMusic();
@@ -95,7 +95,7 @@ class LibraryScreen extends StatelessWidget {
               ),
             ),  ListTile(
               onTap: () {
-                AudioPlayerSingleton().setCurrentPlaylist("recent");
+
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (ctx) {
                     return const RecentlyPlayedScreen();

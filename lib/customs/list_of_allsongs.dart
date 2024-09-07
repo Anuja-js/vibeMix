@@ -21,7 +21,7 @@ class ListOfMusic extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
-          return MusicWidget(data: songsBox!.getAt(index)!, color: foreground,backGroundColor: textPink,);
+          return MusicWidget(data: songsBox!.getAt(index)!, color: foreground,backGroundColor: textPink, playlistName: 'songs',);
         });
   }
 }

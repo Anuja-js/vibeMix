@@ -27,8 +27,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String name = "Guest";
-  bool _hasPermission = false;
-  final OnAudioQuery _audioQuery = OnAudioQuery();
+  bool hasPermission = false;
+  final OnAudioQuery audioQuery = OnAudioQuery();
   Box<SongHiveModel>? songsBox;
   File? imageFile;
 
@@ -71,12 +71,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   trailing: "See all",
                   tittle: "My Music",
                 ),
-                if (_hasPermission)
+                if (hasPermission)
                   if (songsBox == null || songsBox!.length == 0)
                     TextCustom(
                       text: "Songs Not found", color: foreground,
                     ),
-                if (_hasPermission && songsBox != null)
+                if (hasPermission && songsBox != null)
                   ListOfMusic(
                       songsBox: songsBox,
                       count: songsBox!.length > 5 ? 5 : songsBox!.length)
@@ -91,19 +91,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   checkAndRequestPermissions({bool retry = false}) async {
-    _hasPermission = await _audioQuery.checkAndRequest(
+    hasPermission = await audioQuery.checkAndRequest(
       retryRequest: retry,
     );
-    if (_hasPermission) {
+    if (hasPermission) {
      await getHiveMusic();
-      AudioPlayerSingleton().setCurrentPlaylist("songs");
       setState(() {});
     } else {}
   }
 
   getHiveMusic() async {
     songsBox = await HiveService.getSongsBox();
-    List<SongModel> information = await _audioQuery.querySongs(
+    List<SongModel> information = await audioQuery.querySongs(
       orderType: OrderType.ASC_OR_SMALLER,
       uriType: UriType.EXTERNAL,
       ignoreCase: true,
@@ -191,11 +190,11 @@ class _UserImageAndNameState extends State<UserImageAndName> {
 
   void showImageSourceDialog() {
     showModalBottomSheet(
-      context: context,
+      context: context,backgroundColor: textPink,
       builder: (context) => Wrap(
         children: [
           ListTile(
-            leading: const Icon(Icons.camera),
+            leading: Icon(Icons.camera,color: background,),
             title: TextCustom(text: 'Camera', color: background),
             onTap: () {
               Navigator.pop(context);
@@ -203,7 +202,7 @@ class _UserImageAndNameState extends State<UserImageAndName> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.photo_library),
+            leading:  Icon(Icons.photo_library,color: background,),
             title: TextCustom(text: 'Gallery', color: background),
             onTap: () {
               Navigator.pop(context);

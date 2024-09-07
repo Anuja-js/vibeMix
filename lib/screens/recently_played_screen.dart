@@ -93,7 +93,7 @@ class RecentCustom extends StatelessWidget {
             shrinkWrap: true,
             itemCount: recentList.length,
             itemBuilder: (ctx,index){
-          return MusicWidget(data: recentList[index].song, color: foreground, backGroundColor: textPink,);
+          return MusicWidget(data: recentList[index].song, color: foreground, backGroundColor: textPink, playlistName: 'recent',);
         })
       ],
     );

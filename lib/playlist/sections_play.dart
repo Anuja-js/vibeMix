@@ -55,7 +55,7 @@ class _SecssionsEachState extends State<SecssionsEach> {
                   padding: const EdgeInsets.only(bottom: 55),shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
 
                   itemBuilder: (context,index) {
-                    return MusicWidget(data:playlist!.getAt(index)!, backGroundColor: textPink, color: foreground,);
+                    return MusicWidget(data:playlist!.getAt(index)!, backGroundColor: textPink, color: foreground, playlistName: widget.name,);
 
                   }),
 
