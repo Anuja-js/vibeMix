@@ -46,35 +46,21 @@ class AudioPlayerSingleton {
     _currentSong = song;
   }
 
-  // Play a specific song
   Future<void> playSong(SongHiveModel song) async {
     try {
-      // Check if the current song is the same as the song to be played
-      if (_currentSong == song) {
-        // Resume if the song is already playing or paused
-        if (_audioPlayer.playing) {
-          // _audioPlayer.pause();
-        } else {
-          AudioPlayerSingleton().resume();
-        }
-      } else {
-        // If the song is different, set it as the new source and play
-        currentIndex = playlistList.indexWhere((element) => element == song);
-        await _audioPlayer.setAudioSource(
-          currentPlaylist,
-          initialIndex: currentIndex,
-          initialPosition: Duration.zero,
-        );
-        _currentSong = song;
-        await _audioPlayer.play();
-        saveToRecent(song);
-        RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
-      }
+      currentIndex = playlistList.indexWhere((element) => element == song);
+
+      await _audioPlayer.setAudioSource(currentPlaylist,
+          initialIndex: currentIndex, initialPosition: Duration.zero);
+      _currentSong = song;
+      _audioPlayer.play();
+      saveToRecent(song);
+      RefreshNotifier().notifier.value =
+      !RefreshNotifier().notifier.value;
     } catch (e) {
       print("Error playing song: $e");
     }
   }
-
 
   // Pause the currently playing song
   void pause() {
