@@ -8,11 +8,9 @@ import 'package:vibemix/models/box.dart';
 
 class SearchMusic extends StatefulWidget {
   const SearchMusic({super.key});
-
   @override
   State<SearchMusic> createState() => _SearchMusicState();
 }
-
 class _SearchMusicState extends State<SearchMusic> {
   String searchQuery = "";
   List<SongHiveModel> allSongs = [];
@@ -36,7 +34,7 @@ class _SearchMusicState extends State<SearchMusic> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon:  Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_outlined,
             color: foreground,
             size: 20,
@@ -54,11 +52,16 @@ class _SearchMusicState extends State<SearchMusic> {
           if (searchQuery.isNotEmpty && filteredSongs.isNotEmpty)
             Expanded(
               child: ListView.builder(
-                itemCount: filteredSongs.length,padding: EdgeInsets.symmetric(horizontal: 18,),
+                itemCount: filteredSongs.length,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                ),
                 itemBuilder: (context, index) {
                   return MusicWidget(
                     data: filteredSongs[index],
-                    backGroundColor: background, color: foreground, playlistName: 'songs',
+                    backGroundColor: background,
+                    color: foreground,
+                    playlistName: 'songs',
                   );
                 },
               ),
@@ -68,7 +71,10 @@ class _SearchMusicState extends State<SearchMusic> {
               padding: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height / 5,
                   horizontal: MediaQuery.of(context).size.width / 3),
-              child: TextCustom(text: "Song Not Found", color: foreground,),
+              child: TextCustom(
+                text: "Song Not Found",
+                color: foreground,
+              ),
             )
           else
             Expanded(
@@ -77,7 +83,9 @@ class _SearchMusicState extends State<SearchMusic> {
                 itemBuilder: (context, index) {
                   return MusicWidget(
                     data: allSongs[index],
-                    backGroundColor: textPink, color: foreground, playlistName: 'songs',
+                    backGroundColor: textPink,
+                    color: foreground,
+                    playlistName: 'songs',
                   );
                 },
               ),
@@ -130,36 +138,36 @@ class SearchTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      onChanged: onPress,style:  TextStyle(
-        color: foreground, fontSize: 15, fontWeight: FontWeight.normal),
+      onChanged: onPress,
+      style: TextStyle(
+          color: foreground, fontSize: 15, fontWeight: FontWeight.normal),
       scrollPhysics: const NeverScrollableScrollPhysics(),
       decoration: InputDecoration(
         fillColor: background,
         filled: true,
         focusColor: background,
         suffixIconColor: foreground,
-
         labelText: 'Search for anything ...',
-        floatingLabelStyle:  TextStyle(
+        floatingLabelStyle: TextStyle(
             color: foreground, fontSize: 14, fontWeight: FontWeight.bold),
-        labelStyle:  TextStyle(
+        labelStyle: TextStyle(
             color: foreground, fontSize: 15, fontWeight: FontWeight.normal),
         suffixIcon: const Icon(
           Icons.search,
         ),
         enabledBorder: UnderlineInputBorder(
-          borderSide:  BorderSide(
+          borderSide: BorderSide(
             color: foreground,
           ),
           borderRadius: BorderRadius.circular(15.0),
         ),
         focusedBorder: UnderlineInputBorder(
-          borderSide:  BorderSide(color: foreground),
+          borderSide: BorderSide(color: foreground),
           borderRadius: BorderRadius.circular(15.0),
         ),
         floatingLabelBehavior: FloatingLabelBehavior.never,
         border: UnderlineInputBorder(
-          borderSide:  BorderSide(color: foreground),
+          borderSide: BorderSide(color: foreground),
           borderRadius: BorderRadius.circular(15.0),
         ),
       ),

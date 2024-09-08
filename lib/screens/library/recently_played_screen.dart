@@ -6,7 +6,7 @@ import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/global.dart';
 import 'package:vibemix/models/recent.dart';
 
-import '../models/box.dart';
+import '../../models/box.dart';
 class RecentlyPlayedScreen extends StatefulWidget {
   const RecentlyPlayedScreen({Key? key}) : super(key: key);
 

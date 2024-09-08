@@ -83,11 +83,20 @@ class _EditPlaylistState extends State<EditPlaylist> {
             }
             Box<String> playlistsBox = await Hive.openBox<String>('playlists');
             playlistsBox.put(playlistName, playlistName);
+
             if (widget.name != playlistName) {
               playlistsBox.delete(widget.name);
               Box<SongHiveModel> oldPlaylist =
                   await Hive.openBox<SongHiveModel>(widget.name);
               oldPlaylist.deleteFromDisk();
+            }
+            else{
+              for (int i = 0; i < playlistSongsBox.length; i++) {
+                playlistSongsBox.deleteAt(i);
+              }
+              for(int i=0;i<selected.length;i++){
+                playlistSongsBox.put(selected[i].id.toString(), selected[i]);
+              }
             }
 
             // ignore: use_build_context_synchronously
