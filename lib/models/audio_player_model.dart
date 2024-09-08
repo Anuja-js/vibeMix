@@ -17,7 +17,8 @@ class AudioPlayerSingleton {
   AudioPlayerSingleton._privateConstructor();
 
   // Single instance of AudioPlayerSingleton
-  static final AudioPlayerSingleton _instance = AudioPlayerSingleton._privateConstructor();
+  static final AudioPlayerSingleton _instance =
+      AudioPlayerSingleton._privateConstructor();
 
   // AudioPlayer instance
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -31,7 +32,8 @@ class AudioPlayerSingleton {
   }
 
   // ConcatenatingAudioSource to handle the playlist
-  ConcatenatingAudioSource currentPlaylist = ConcatenatingAudioSource(children: []);
+  ConcatenatingAudioSource currentPlaylist =
+      ConcatenatingAudioSource(children: []);
 
   // Method to get the AudioPlayer instance
   AudioPlayer get audioPlayer => _audioPlayer;
@@ -47,16 +49,32 @@ class AudioPlayerSingleton {
   // Play a specific song
   Future<void> playSong(SongHiveModel song) async {
     try {
-      currentIndex = playlistList.indexWhere((element) => element == song);
-      await _audioPlayer.setAudioSource(currentPlaylist, initialIndex: currentIndex, initialPosition: Duration.zero);
-      _currentSong = song;
-      _audioPlayer.play();
-      saveToRecent(song); // Save song to the recent list
-      RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value; // Refresh UI
+      // Check if the current song is the same as the song to be played
+      if (_currentSong == song) {
+        // Resume if the song is already playing or paused
+        if (_audioPlayer.playing) {
+          // _audioPlayer.pause();
+        } else {
+          AudioPlayerSingleton().resume();
+        }
+      } else {
+        // If the song is different, set it as the new source and play
+        currentIndex = playlistList.indexWhere((element) => element == song);
+        await _audioPlayer.setAudioSource(
+          currentPlaylist,
+          initialIndex: currentIndex,
+          initialPosition: Duration.zero,
+        );
+        _currentSong = song;
+        await _audioPlayer.play();
+        saveToRecent(song);
+        RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
+      }
     } catch (e) {
       print("Error playing song: $e");
     }
   }
+
 
   // Pause the currently playing song
   void pause() {
@@ -75,7 +93,6 @@ class AudioPlayerSingleton {
 
   // Set the current playlist based on the name
   Future<void> setCurrentPlaylist(String playlistName) async {
-
     try {
       playlistList.clear();
       currentPlaylist.clear();
@@ -101,7 +118,8 @@ class AudioPlayerSingleton {
     } catch (e) {
       print("Error setting playlist: $e");
     }
-    if(_audioPlayer.playing && playlistList.contains(AudioPlayerSingleton().currentSong)){
+    if (_audioPlayer.playing &&
+        playlistList.contains(AudioPlayerSingleton().currentSong)) {
       // currentIndex=playlistList.indexWhere((element)=>element==AudioPlayerSingleton().currentSong);
     }
   }
@@ -134,7 +152,8 @@ class AudioPlayerSingleton {
         }));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Reached the beginning of the playlist')),
+          const SnackBar(
+              content: Text('Reached the beginning of the playlist')),
         );
       }
     } catch (e) {
@@ -154,7 +173,8 @@ class AudioPlayerSingleton {
     if (index != -1) {
       await recent.deleteAt(index);
     }
-    recent.put(DateTime.now().toString(), RecentModel(time: DateTime.now(), song: song));
+    recent.put(DateTime.now().toString(),
+        RecentModel(time: DateTime.now(), song: song));
   }
 
   // Dispose of the AudioPlayer instance

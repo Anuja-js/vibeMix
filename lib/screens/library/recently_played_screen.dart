@@ -64,9 +64,9 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
         child: Column(
           children: [
          if (lastSession.isNotEmpty) RecentCustom(recentList: lastSession, text: 'Last Session',),
-            if (oneHourAgo.isNotEmpty)   RecentCustom(recentList: oneHourAgo, text: 'One Hour Ago',),
-            if (sixHoursAgo.isNotEmpty)  RecentCustom(recentList: sixHoursAgo, text: 'Six Hour Ago',),
-            if (twelveHoursAgo.isNotEmpty) RecentCustom(recentList: twelveHoursAgo, text: '12 Hour Ago',),
+            if (oneHourAgo.isNotEmpty)   RecentCustom(recentList: oneHourAgo, text: 'With in One Hour',),
+            if (sixHoursAgo.isNotEmpty)  RecentCustom(recentList: sixHoursAgo, text: 'With in Six Hour',),
+            if (twelveHoursAgo.isNotEmpty) RecentCustom(recentList: twelveHoursAgo, text: 'With in 12 Hour',),
             if (yesterdayPlayed.isNotEmpty)  RecentCustom(recentList: yesterdayPlayed, text: 'Played Yesterday',),
           ],
         ),

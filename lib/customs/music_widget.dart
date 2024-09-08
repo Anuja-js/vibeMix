@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:vibemix/screens/library/favorite_screen.dart';import '../../global.dart';
+import 'package:vibemix/screens/library/favorite_screen.dart';
+import '../../global.dart';
 import 'package:vibemix/customs/custom_elevated_button.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
@@ -21,7 +22,8 @@ class MusicWidget extends StatefulWidget {
   MusicWidget(
       {super.key,
       required this.data,
-      required this.color ,required this.playlistName,
+      required this.color,
+      required this.playlistName,
       required this.backGroundColor});
 
   @override
@@ -35,7 +37,6 @@ class _MusicWidgetState extends State<MusicWidget> {
   List<SongHiveModel> favourite = [];
   Box<SongHiveModel>? favsBox;
   bool isPlaying = false;
-
 
   @override
   void initState() {
@@ -58,8 +59,8 @@ class _MusicWidgetState extends State<MusicWidget> {
   void checkIsPlaying() {
     if (!audio.playing || AudioPlayerSingleton().currentSong == null) {
       isPlaying = false;
-    }
-    else if (audio.playing && AudioPlayerSingleton().currentSong == widget.data) {
+    } else if (audio.playing &&
+        AudioPlayerSingleton().currentSong == widget.data) {
       isPlaying = true;
     } else {
       isPlaying = false;
@@ -67,11 +68,9 @@ class _MusicWidgetState extends State<MusicWidget> {
     setState(() {});
   }
 
-
   List<String> playlistNames = [];
   @override
   Widget build(BuildContext context) {
-
     return ListTile(
       leading: CircleAvatar(
         radius: 25,
@@ -92,8 +91,8 @@ class _MusicWidgetState extends State<MusicWidget> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
@@ -111,20 +110,20 @@ class _MusicWidgetState extends State<MusicWidget> {
               ),
               IconButton(
                 onPressed: () async {
-     await           AudioPlayerSingleton().setCurrentPlaylist(widget.playlistName);
-                  if(audio.playing){
-                     AudioPlayerSingleton().pause();
-                    if(AudioPlayerSingleton().currentSong!=widget.data){
-                   await   AudioPlayerSingleton().playSong(widget.data);
+                  await AudioPlayerSingleton()
+                      .setCurrentPlaylist(widget.playlistName);
+                  if (audio.playing) {
+                    AudioPlayerSingleton().pause();
+                    if (AudioPlayerSingleton().currentSong != widget.data) {
+                      await AudioPlayerSingleton().playSong(widget.data);
                     }
-                  }else{
+                  } else {
                     await AudioPlayerSingleton().playSong(widget.data);
                   }
                   current = widget.data;
-                  RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
-                  setState(() {
-
-                  });
+                  RefreshNotifier().notifier.value =
+                      !RefreshNotifier().notifier.value;
+                  setState(() {});
                 },
                 icon: Icon(
                   isPlaying ? Icons.pause : Icons.play_circle_outline,
@@ -135,7 +134,8 @@ class _MusicWidgetState extends State<MusicWidget> {
               IconButton(
                 onPressed: () {
                   showMenu(
-                    context: context,surfaceTintColor: textPink,color: textPink,
+                    context: context, surfaceTintColor: textPink,
+                    color: textPink,
                     position: const RelativeRect.fromLTRB(
                         80, 350, 80, 10), // Position of the menu
                     items: [
@@ -144,27 +144,24 @@ class _MusicWidgetState extends State<MusicWidget> {
                         onTap: () {
                           if (isFavorite) {
                             favsBox!.delete(widget.data.id);
-                            favourite
-                                .removeWhere((song) => song.id == widget.data.id);
+                            favourite.removeWhere(
+                                (song) => song.id == widget.data.id);
                             setState(() {
-                              isFavorite=!isFavorite;
-
+                              isFavorite = !isFavorite;
                             });
-
                           } else {
                             favsBox!.put(widget.data.id, widget.data);
                             favourite.add(widget.data);
                             setState(() {
-                              isFavorite=!isFavorite;
+                              isFavorite = !isFavorite;
                             });
-
                           }
-                          if(widget.playlistName=="fav") {
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
-                            return FavoriteScreen();
-                          }));
+                          if (widget.playlistName == "fav") {
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (ctx) {
+                              return FavoriteScreen();
+                            }));
                           }
-
                         },
                         child: ListTile(
                           leading: Icon(
@@ -175,19 +172,19 @@ class _MusicWidgetState extends State<MusicWidget> {
                           ),
                           title: isFavorite
                               ? TextCustom(
-                            text: 'Remove From Favorite',
-                            color: background,
-                          )
+                                  text: 'Remove From Favorite',
+                                  color: background,
+                                )
                               : TextCustom(
-                            text: 'Add to Favorite',
-                            color: background,
-                          ),
+                                  text: 'Add to Favorite',
+                                  color: background,
+                                ),
                         ),
                       ),
                       PopupMenuItem(
                         onTap: () async {
                           Box<String> playlistsBox =
-                          await Hive.openBox<String>('playlists');
+                              await Hive.openBox<String>('playlists');
                           setState(() {
                             playlistNames = playlistsBox.values.toList();
                           });
@@ -207,7 +204,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         TextCustom(
                                           text: "Choose PlayList",
@@ -219,7 +216,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
-                                            icon:  Icon(
+                                            icon: Icon(
                                               Icons.close_rounded,
                                               color: background,
                                             ))
@@ -227,66 +224,74 @@ class _MusicWidgetState extends State<MusicWidget> {
                                     ),
                                     playlistNames.isNotEmpty
                                         ? Expanded(
-                                      child: ListView.builder(
-                                        itemCount: playlistNames.length,
-                                        itemBuilder: (ctx, index) {
-                                          return Column(
-                                            children: [
-                                              InkWell(
-                                                onTap: () async {
-                                                  Box<SongHiveModel>
-                                                  playlistBox =
-                                                  await Hive.openBox(
-                                                      playlistNames[
-                                                      index]);
-                                                  playlistBox.put(
-                                                      widget.data.id,
-                                                      widget.data);
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                            child: ListView.builder(
+                                              itemCount: playlistNames.length,
+                                              itemBuilder: (ctx, index) {
+                                                return Column(
                                                   children: [
-                                                    TextCustom(
-                                                      text: playlistNames[
-                                                      index],
-                                                      color: background,
-                                                      size: 18,
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        Box<SongHiveModel>
+                                                            playlistBox =
+                                                            await Hive.openBox(
+                                                                playlistNames[
+                                                                    index]);
+                                                        playlistBox.put(
+                                                            widget.data.id,
+                                                            widget.data);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          TextCustom(
+                                                            text: playlistNames[
+                                                                index],
+                                                            color: background,
+                                                            size: 18,
+                                                          ),
+                                                          IconButton(
+                                                              onPressed: () {},
+                                                              icon: Icon(
+                                                                Icons
+                                                                    .arrow_forward_ios_outlined,
+                                                                color:
+                                                                    background,
+                                                                size: 18,
+                                                              ))
+                                                        ],
+                                                      ),
                                                     ),
-                                                    IconButton(
-                                                        onPressed: () {},
-                                                        icon:  Icon(
-                                                          Icons
-                                                              .arrow_forward_ios_outlined,
-                                                          color: background,
-                                                          size: 18,
-                                                        ))
                                                   ],
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    )
-                                        : Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                          sh50,
-                                            TextCustom(
-                                              text:
-                                              "No PlayList Available Create One",
-                                              color: background,
+                                                );
+                                              },
                                             ),
-                                            sh10,
-                                            ElevatedCustomButton(buttonName: "Create Playlist",onpress: (){
-                                              Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                                                return const CreatePlaylist();
-                                              }));
-                                            },)
-                                          ],
-                                        ),
+                                          )
+                                        : Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              sh50,
+                                              TextCustom(
+                                                text:
+                                                    "No PlayList Available Create One",
+                                                color: background,
+                                              ),
+                                              sh10,
+                                              ElevatedCustomButton(
+                                                buttonName: "Create Playlist",
+                                                onpress: () {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (ctx) {
+                                                    return const CreatePlaylist();
+                                                  }));
+                                                },
+                                              )
+                                            ],
+                                          ),
                                   ],
                                 ),
                               );
@@ -302,20 +307,19 @@ class _MusicWidgetState extends State<MusicWidget> {
                     ],
                   );
                 },
-                icon:  Icon(
+                icon: Icon(
                   Icons.more_vert_outlined,
                   color: foreground,
                   size: 24,
                 ),
               ),
-
             ],
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width / 2.5,
             child: Text(
               "${widget.data.artist}",
-              style:  TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 color: foreground,
                 fontWeight: FontWeight.w400,
@@ -326,23 +330,20 @@ class _MusicWidgetState extends State<MusicWidget> {
           ),
         ],
       ),
+      onTap: () async {
+        if (audio.playing) {
+          AudioPlayerSingleton().pause();
+        }
+        await AudioPlayerSingleton().setCurrentPlaylist(widget.playlistName);
 
-      onTap: ()async {
-if(audio.playing){
-  audio.stop();
-
-}
-await AudioPlayerSingleton().setCurrentPlaylist(widget.playlistName);
-
-Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-
+        Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
           return NowPlayingScreen(
             song: widget.data,
           );
-        })).then((value) async{
+        })).then((value) async {
           getHiveMusic();
           setState(() {
-            current=AudioPlayerSingleton().currentSong;
+            current = AudioPlayerSingleton().currentSong;
           });
         });
       },

@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
@@ -9,16 +7,21 @@ import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/network/lyrics_network.dart';
 
+import '../../customs/custom_elevated_button.dart';
 import '../../global.dart';
 import '../../models/audio_player_model.dart';
 import '../../models/box.dart';
 import '../../models/hive.dart';
 import '../../utils/notifier.dart';
+import '../playlist/create_playlist.dart';
 
 class NowPlayingScreen extends StatefulWidget {
   final SongHiveModel song;
 
-  const NowPlayingScreen({super.key, required this.song});
+  const NowPlayingScreen({
+    super.key,
+    required this.song,
+  });
 
   @override
   State<NowPlayingScreen> createState() => _NowPlayingScreenState();
@@ -62,7 +65,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     lyrics = await LyricsNetwork()
         .getLyrics(widget.song.artist.toString(), widget.song.displayNameWOExt);
     lyricsLines = lyrics.split('\n');
-
   }
 
   getHiveMusic() async {
@@ -77,16 +79,11 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     if (current == null) {
       current = widget.song;
       AudioPlayerSingleton().setCurrentSong(widget.song);
-      AudioPlayerSingleton().playSong(widget.song);
-      print("11111111111111111111111111111111111");
+     await AudioPlayerSingleton().playSong(widget.song);
     } else if (current!.id != widget.song.id) {
-
       await AudioPlayerSingleton().playSong(widget.song);
-      print("22222222222222222222222222222222222222222222222222");
-
     } else {
-      await audioPlayer.play();
-      print("33333333333333333333333333333333333333333333");
+      await AudioPlayerSingleton().playSong(widget.song);
     }
     AudioPlayerSingleton().setCurrentSong(widget.song);
   }
@@ -118,7 +115,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     });
   }
 
-
   void onAudioPositionChanged(Duration position) {
     for (int i = 0; i < lyricsLines.length; i++) {
       if (position.inSeconds >= i * 5 && position.inSeconds < (i + 1) * 5) {
@@ -143,10 +139,11 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   Widget build(BuildContext context) {
     return ScaffoldCustom(
       tittle: "",
-      backButton: true,onBack: (){
-      RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
-      Navigator.pop(context);
-    },
+      backButton: true,
+      onBack: () {
+        RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
+        Navigator.pop(context);
+      },
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Column(
@@ -158,7 +155,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
               id: widget.song.id,
               type: ArtworkType.AUDIO,
               nullArtworkWidget:
-                   Icon(Icons.music_note, color: foreground, size: 150),
+                  Icon(Icons.music_note, color: foreground, size: 150),
               artworkFit: BoxFit.cover,
               artworkWidth: 250,
               artworkHeight: 210,
@@ -167,7 +164,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
             sh25,
             Text(
               widget.song.displayNameWOExt,
-              style:  TextStyle(
+              style: TextStyle(
                 color: foreground,
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -203,7 +200,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                   },
                 ),
                 IconButton(
-                  icon:  Icon(Icons.lyrics_outlined, color: foreground),
+                  icon: Icon(Icons.lyrics_outlined, color: foreground),
                   onPressed: () {
                     showModalBottomSheet(
                       constraints: BoxConstraints(
@@ -242,10 +239,10 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                   },
                 ),
                 IconButton(
-                    icon:  Icon(Icons.playlist_add, color: foreground),
-                    onPressed: () async {
+                    icon: Icon(Icons.playlist_add, color: foreground),
+                    onPressed: ()async {
                       Box<String> playlistsBox =
-                          await Hive.openBox<String>('playlists');
+                      await Hive.openBox<String>('playlists');
                       setState(() {
                         playlistNames = playlistsBox.values.toList();
                       });
@@ -260,12 +257,12 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             width: MediaQuery.of(context).size.width,
                             padding: const EdgeInsets.symmetric(
                                 vertical: 15, horizontal: 18),
-                            color: foreground,
+                            color: textPink,
                             child: Column(
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     TextCustom(
                                       text: "Choose PlayList",
@@ -277,13 +274,14 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        icon:  Icon(
+                                        icon: Icon(
                                           Icons.close_rounded,
                                           color: background,
                                         ))
                                   ],
                                 ),
-                                Expanded(
+                                playlistNames.isNotEmpty
+                                    ? Expanded(
                                   child: ListView.builder(
                                     itemCount: playlistNames.length,
                                     itemBuilder: (ctx, index) {
@@ -291,29 +289,34 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                         children: [
                                           InkWell(
                                             onTap: () async {
-                                              Box<SongHiveModel> playlistBox =
-                                                  await Hive.openBox(
-                                                      playlistNames[index]);
+                                              Box<SongHiveModel>
+                                              playlistBox =
+                                              await Hive.openBox(
+                                                  playlistNames[
+                                                  index]);
                                               playlistBox.put(
-                                                  widget.song.id, widget.song);
+                                                  widget.song.id,
+                                                  widget.song);
                                               Navigator.pop(context);
                                             },
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                              MainAxisAlignment
+                                                  .spaceBetween,
                                               children: [
                                                 TextCustom(
-                                                  text: playlistNames[index],
+                                                  text: playlistNames[
+                                                  index],
                                                   color: background,
                                                   size: 18,
                                                 ),
                                                 IconButton(
                                                     onPressed: () {},
-                                                    icon:  Icon(
+                                                    icon: Icon(
                                                       Icons
                                                           .arrow_forward_ios_outlined,
-                                                      color: background,
+                                                      color:
+                                                      background,
                                                       size: 18,
                                                     ))
                                               ],
@@ -323,13 +326,36 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                       );
                                     },
                                   ),
+                                )
+                                    : Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    sh50,
+                                    TextCustom(
+                                      text:
+                                      "No PlayList Available Create One",
+                                      color: background,
+                                    ),
+                                    sh10,
+                                    ElevatedCustomButton(
+                                      buttonName: "Create Playlist",
+                                      onpress: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (ctx) {
+                                                  return const CreatePlaylist();
+                                                }));
+                                      },
+                                    )
+                                  ],
                                 ),
                               ],
                             ),
                           );
                         },
                       );
-                    }),
+                    },),
               ],
             ),
             Container(
@@ -358,12 +384,22 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                           Expanded(
                             child: Slider(
                               min: 0.0,
-                              value:audioPlayer.duration==null?0.0: position.inSeconds.toDouble(),
+                              value: audioPlayer.duration == null
+                                  ? 0.0
+                                  : position.inSeconds.toDouble(),
                               max: audioPlayer.duration?.inSeconds.toDouble() ??
                                   0.0,
                               onChanged: (value) {
                                 changeToSeconds(value.toInt());
+                                Duration duration =
+                                    Duration(seconds: value.toInt());
+                                if (duration.inSeconds.toDouble() ==
+                                    audioPlayer.duration!.inSeconds
+                                        .toDouble()) {
+                                  AudioPlayerSingleton().skipNext(context);
+                                }
                               },
+
                               activeColor: background,
                               inactiveColor: foreground,
                             ),
@@ -385,9 +421,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       IconButton(
-                        icon:  Icon(Icons.skip_previous,
+                        icon: Icon(Icons.skip_previous,
                             color: foreground, size: 25),
-                        onPressed: (){
+                        onPressed: () {
                           AudioPlayerSingleton().skipPrevious(context);
                         },
                       ),
@@ -404,16 +440,16 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                               audioPlayer.play();
                             }
                             isPlaying = !isPlaying;
-                            RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
+                            RefreshNotifier().notifier.value =
+                                !RefreshNotifier().notifier.value;
                           });
                         },
                       ),
                       IconButton(
-                        icon:  Icon(Icons.skip_next,
-                            color: foreground, size: 25),
-                        onPressed: (){
+                        icon:
+                            Icon(Icons.skip_next, color: foreground, size: 25),
+                        onPressed: () {
                           AudioPlayerSingleton().skipNext(context);
-
                         },
                       ),
                     ],
@@ -422,7 +458,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon:  Icon(Icons.volume_down, color: foreground),
+                        icon: Icon(Icons.volume_down, color: foreground),
                         onPressed: volumeDown,
                       ),
                       TextCustom(
@@ -432,7 +468,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                         text: volumeDisplay, // Volume display text
                       ),
                       IconButton(
-                        icon:  Icon(Icons.volume_up, color: foreground),
+                        icon: Icon(Icons.volume_up, color: foreground),
                         onPressed: volumeUp,
                       ),
                     ],
