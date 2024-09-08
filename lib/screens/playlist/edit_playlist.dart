@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import 'package:vibemix/playlist/playlist.dart';
+import 'package:vibemix/screens/playlist/playlist.dart';
 
-import '../customs/scaffold_custom.dart';
-import '../global.dart';
-import '../models/box.dart';
-import '../models/hive.dart';
+import '../../customs/scaffold_custom.dart';
+import '../../global.dart';
+import '../../models/box.dart';
+import '../../models/hive.dart';
 
 class EditPlaylist extends StatefulWidget {
   String name;
@@ -36,6 +36,33 @@ class _EditPlaylistState extends State<EditPlaylist> {
     songs.addAll(songsBox!.values);
     Box<SongHiveModel> temp = await Hive.openBox(widget.name);
     selected.addAll(temp.values);
+    sortMusicList();
+    setState(() {});
+  }
+
+  void sortMusicList() {
+    // Filter the non-selected songs from the songs list
+    List<SongHiveModel> nonSelectedSongs =
+        songs.where((song) => !selected.contains(song)).toList();
+
+    // Clear the songs list to prepare for reordering
+    songs.clear();
+
+    // Add only unique selected songs to the songs list
+    for (var song in selected) {
+      if (!songs.contains(song)) {
+        songs.add(song);
+      }
+    }
+
+    // Add only unique non-selected songs to the songs list
+    for (var song in nonSelectedSongs) {
+      if (!songs.contains(song)) {
+        songs.add(song);
+      }
+    }
+
+    // Update the UI or any dependent state if needed
     setState(() {});
   }
 
@@ -69,7 +96,7 @@ class _EditPlaylistState extends State<EditPlaylist> {
               return const PlaylistScreen();
             }));
           },
-          icon:  Icon(Icons.check_outlined, size: 25, color: foreground),
+          icon: Icon(Icons.check_outlined, size: 25, color: foreground),
         ),
         backButton: true,
         body: SafeArea(
@@ -93,23 +120,23 @@ class _EditPlaylistState extends State<EditPlaylist> {
                       fillColor: textPink,
                       filled: true,
                       focusColor: textPink,
-                      floatingLabelStyle:  TextStyle(
+                      floatingLabelStyle: TextStyle(
                           color: foreground,
                           fontSize: 14,
                           fontWeight: FontWeight.bold),
                       enabledBorder: UnderlineInputBorder(
-                        borderSide:  BorderSide(
+                        borderSide: BorderSide(
                           color: background,
                         ),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide:  BorderSide(color: background),
+                        borderSide: BorderSide(color: background),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       border: UnderlineInputBorder(
-                        borderSide:  BorderSide(color: background),
+                        borderSide: BorderSide(color: background),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                     ),
@@ -138,7 +165,7 @@ class _EditPlaylistState extends State<EditPlaylist> {
                               ),
                               id: songs[index].id,
                               type: ArtworkType.AUDIO,
-                              nullArtworkWidget:  Icon(
+                              nullArtworkWidget: Icon(
                                 Icons.music_note,
                                 color: foreground,
                                 size: 30,
@@ -153,7 +180,7 @@ class _EditPlaylistState extends State<EditPlaylist> {
                                 width: MediaQuery.of(context).size.width / 2.5,
                                 child: Text(
                                   songs[index].displayNameWOExt,
-                                  style:  TextStyle(
+                                  style: TextStyle(
                                     fontSize: 15,
                                     color: foreground,
                                     fontWeight: FontWeight.bold,
@@ -178,7 +205,7 @@ class _EditPlaylistState extends State<EditPlaylist> {
                           ),
                           subtitle: Text(
                             "${songs[index].artist}",
-                            style:  TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
                               color: foreground,
                               fontWeight: FontWeight.w200,

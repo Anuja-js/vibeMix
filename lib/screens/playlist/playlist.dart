@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:vibemix/models/box.dart';
+import 'package:vibemix/customs/custom_elevated_button.dart';
 import 'package:vibemix/nav/navbar.dart';
-import 'package:vibemix/playlist/sections_play.dart';
-import '../customs/custom_elevated_button.dart';
-import '../customs/scaffold_custom.dart';
-import '../customs/text_custom.dart';
-import '../global.dart';
-import '../models/audio_player_model.dart';
-import '../models/hive.dart';
+import 'package:vibemix/screens/playlist/sections_play.dart';
+import '../../customs/scaffold_custom.dart';
+import '../../customs/text_custom.dart';
+import '../../global.dart';
+import '../../models/audio_player_model.dart';
+import '../../models/hive.dart';
 import 'create_playlist.dart';
 
 class PlaylistScreen extends StatefulWidget {
@@ -67,8 +66,12 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               playlistNames.isEmpty
-                  ?  Center(heightFactor:20.2,
-                  child: TextCustom(text: "No Playlist Available", color: foreground,))
+                  ? Center(
+                      heightFactor: 20.2,
+                      child: TextCustom(
+                        text: "No Playlist Available",
+                        color: foreground,
+                      ))
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -76,7 +79,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                       itemBuilder: (ctx, index) {
                         return ListTile(
                           onTap: () {
-                            AudioPlayerSingleton().setCurrentPlaylist(playlistNames[index]);
+                            AudioPlayerSingleton()
+                                .setCurrentPlaylist(playlistNames[index]);
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (ctx) {
                               return SecssionsEach(
@@ -100,7 +104,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                   padding: EdgeInsets.symmetric(
                                       vertical: 15, horizontal: 18),
                                   color: foreground,
-                                  child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -123,20 +129,23 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                               ))
                                         ],
                                       ),
-                                      ElevatedCustomButton(buttonName: "Delete",onpress: ()async {
-                                        Box<SongHiveModel> oldPlaylist =
-                                        await Hive.openBox<
-                                            SongHiveModel>(
-                                            playlistNames[index]);
+                                      ElevatedCustomButton(
+                                        buttonName: "Delete",
+                                        onpress: () async {
+                                          Box<SongHiveModel> oldPlaylist =
+                                              await Hive.openBox<SongHiveModel>(
+                                                  playlistNames[index]);
 
-                                      Box<String>playlists=await Hive.openBox("playlists");
-                                      playlists.delete(playlistNames[index]);
-                                        oldPlaylist.deleteFromDisk();
-                                        playlistNames.removeAt(index);
-                                        setState(() {});
-                                        Navigator.of(context).pop();
-                                      },)
-
+                                          Box<String> playlists =
+                                              await Hive.openBox("playlists");
+                                          playlists
+                                              .delete(playlistNames[index]);
+                                          oldPlaylist.deleteFromDisk();
+                                          playlistNames.removeAt(index);
+                                          setState(() {});
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
                                     ],
                                   ),
                                 );
@@ -145,10 +154,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                           },
                           title: Text(
                             playlistNames[index],
-                            style:
-                            TextStyle(color: foreground),
+                            style: TextStyle(color: foreground),
                           ),
-                          trailing:  Icon(
+                          trailing: Icon(
                             Icons.arrow_forward_ios_outlined,
                             color: foreground,
                             size: 18,

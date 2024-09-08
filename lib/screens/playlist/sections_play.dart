@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:vibemix/playlist/edit_playlist.dart';
+import 'package:vibemix/customs/scaffold_custom.dart';
+import 'package:vibemix/models/hive.dart';
 
-import '../customs/music_widget.dart';
-import '../customs/scaffold_custom.dart';
-import '../customs/text_custom.dart';
-import '../global.dart';
-import '../models/hive.dart';
+import '../../customs/music_widget.dart';
+import '../../customs/text_custom.dart';
+import '../../global.dart';
+import 'edit_playlist.dart';
 class SecssionsEach extends StatefulWidget {
   String name;
    SecssionsEach({super.key,required this.name});

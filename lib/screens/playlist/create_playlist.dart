@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import '../customs/scaffold_custom.dart';
-import '../customs/text_custom.dart';
-import '../global.dart';
-import '../models/box.dart';
-import '../models/hive.dart';
+import 'package:vibemix/models/box.dart';
+import 'package:vibemix/models/hive.dart';
+
+import '../../customs/scaffold_custom.dart';
+import '../../customs/text_custom.dart';
+import '../../global.dart';
 class CreatePlaylist extends StatefulWidget {
   const CreatePlaylist({Key? key}) : super(key: key);
   @override

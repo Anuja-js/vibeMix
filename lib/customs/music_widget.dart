@@ -4,12 +4,12 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:vibemix/screens/library/favorite_screen.dart';import '../../global.dart';
 import 'package:vibemix/customs/custom_elevated_button.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import 'package:vibemix/playlist/create_playlist.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
 
 import '../models/audio_player_model.dart';
 import '../models/box.dart';
 import '../models/hive.dart';
+import '../screens/playlist/create_playlist.dart';
 import '../utils/notifier.dart';
 
 class MusicWidget extends StatefulWidget {

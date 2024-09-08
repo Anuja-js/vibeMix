@@ -13,21 +13,41 @@ void main() async {
   Hive.registerAdapter(SongHiveModelAdapter());
   Hive.registerAdapter(RecentModelAdapter());
   getModeData();
+  getAccentData();
   runApp(const MyApp());
 }
-Future<void> getModeData()async{
+
+Future<void> getModeData() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
- final mode= prefs.getBool('dark')??true;
- dark=mode;
- if(mode){
-   background=Colors.black;
-   foreground=Colors.white;
- }
- else{
-   foreground=Colors.black;
-   background=Colors.white;
- }
+  final mode = prefs.getBool('dark') ?? true;
+  dark = mode;
+  if (mode) {
+    background = Colors.black;
+    foreground = Colors.white;
+  } else {
+    foreground = Colors.black;
+    background = Colors.white;
+  }
 }
+
+Future<void> getAccentData() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final accent = prefs.getString("accent") ?? "0xffE07373";
+  if (accent == "0xffE07373") {
+    textPink = const Color(0xffE07373);
+  } else if (accent == "blue") {
+    textPink = Colors.blue;
+  } else if (accent == "red") {
+    textPink = Colors.red;
+  } else if (accent == "green") {
+    textPink = Colors.green;
+  } else if (accent == "0xffE07373") {
+    textPink = const Color(0xffE07373);
+  } else if (accent == "purple") {
+    textPink = Colors.purple;
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

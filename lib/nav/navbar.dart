@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/screens/about_screen.dart';
-import 'package:vibemix/screens/library/favorite_screen.dart';
 import 'package:vibemix/screens/home_screen.dart';
 import 'package:vibemix/screens/library/library_screen.dart';
 import 'package:vibemix/screens/settings/settings_screen.dart';
+import 'package:vibemix/utils/color_notifier.dart';
 
 import '../global.dart';
-import '../models/audio_player_model.dart';
 class NavBar extends StatefulWidget {
   bool reset=false;
     NavBar({Key? key,required this.reset}) : super(key: key);
@@ -26,10 +25,21 @@ int index=0;
 class _NavBarState extends State<NavBar> {
   @override
   void initState() {
+    AccentNotifier().notifier.addListener(updateAccent);
 if(widget.reset){
   index=0;
 }
     super.initState();
+  }
+  @override
+  void dispose() {
+    AccentNotifier().notifier.removeListener(updateAccent);
+    super.dispose();
+  }
+  void updateAccent(){
+    setState(() {
+
+    });
   }
   @override
   Widget build(BuildContext context) {

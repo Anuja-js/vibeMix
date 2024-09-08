@@ -4,6 +4,7 @@ import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/main.dart';
 import 'package:vibemix/screens/onboarding/onboarding_secsion.dart';
 import 'package:vibemix/screens/terms_screen.dart';
+import 'package:vibemix/utils/color_notifier.dart';
 
 import '../../customs/text_custom.dart';
 import '../../global.dart';
@@ -101,20 +102,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   maxHeight: 30,
                   maxWidth: 60,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(radius: 6, backgroundColor: textPink),
-                    sw10,
-                    TextCustom(
-                      color: textPink,
-                      size: 18,
-                      fontWeight: FontWeight.normal,
-                      text: "Red",
-                    ),
-                  ],
-                ),
+                child: CircleAvatar(radius: 10, backgroundColor: textPink),
               ),
               title: TextCustom(
                 color: foreground,
@@ -122,6 +110,9 @@ class _SettingScreenState extends State<SettingScreen> {
                 fontWeight: FontWeight.normal,
                 text: "Accent Colour",
               ),
+              onTap: (){
+                showAccentColor(context);
+              },
             ),
             ListTile(
               trailing: Icon(Icons.arrow_forward_ios_outlined,
@@ -225,5 +216,146 @@ class _SettingScreenState extends State<SettingScreen> {
         );
       },
     );
+  }
+  showAccentColor(ctx){
+    showModalBottomSheet(
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height/2,maxWidth: MediaQuery.of(context).size.width),
+        context: ctx, builder: (BuildContext ctx){
+
+      return Container(color: foreground,
+        height:  MediaQuery.of(context).size.height/2,width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 15,horizontal: 18),
+        child: Column(
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextCustom(color: background, text: "Choose Accent Color",fontWeight: FontWeight.bold,size: 20,),
+                IconButton(onPressed: (){
+                  Navigator.pop(context);
+                }, icon: Icon(Icons.close_rounded,color: background,))
+              ],
+
+            ),sh10,
+            InkWell(onTap: (){
+              AccentNotifier().notifier.value=!AccentNotifier().notifier.value;
+              textPink=Colors.blue;
+              setState(() {
+
+              });
+              updateColor(Colors.blue);
+              Navigator.pop(context);
+            },
+              child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(radius: 6, backgroundColor: Colors.blue),sw10,
+                    TextCustom(color: Colors.blue, text: "Blue",size: 18,),
+                    Spacer(),
+                    textPink==Colors.blue?
+                    Icon(Icons.check_rounded,color: background,):sh10
+
+                  ],
+                ),
+            ),   Divider(height: 15,),  InkWell(onTap: (){
+              AccentNotifier().notifier.value=!AccentNotifier().notifier.value;
+              textPink=Colors.red;
+              setState(() {
+
+              });
+              updateColor(Colors.red);
+              Navigator.pop(context);
+            },
+              child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(radius: 6, backgroundColor: Colors.red),sw10,
+                    TextCustom(color: Colors.red, text: "Red",size: 18,),
+                    Spacer(),
+                    textPink==Colors.red?
+                    Icon(Icons.check_rounded,color: background,):sh10
+
+                  ],
+                ),
+            ),Divider(height: 15,),
+            InkWell(onTap: (){
+              AccentNotifier().notifier.value=!AccentNotifier().notifier.value;
+              textPink=Colors.green;
+              setState(() {
+
+              });
+              updateColor(Colors.green);
+              Navigator.pop(context);
+            },
+              child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(radius: 6, backgroundColor: Colors.green),sw10,
+                  TextCustom(color: Colors.green, text: "Green",size: 18,),
+                  Spacer(),
+                  textPink==Colors.green?
+                  Icon(Icons.check_rounded,color: background,):sh10
+
+                ],
+              ),
+            ),
+            Divider(height: 15,),
+            InkWell(onTap: (){
+              AccentNotifier().notifier.value=!AccentNotifier().notifier.value;
+              textPink=Color(0xffE07373);
+              setState(() {
+
+              });
+              updateColor(Color(0xffE07373));
+              Navigator.pop(context);
+            },
+              child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(radius: 6, backgroundColor: Color(0xffE07373)),sw10,
+                  TextCustom(color: Color(0xffE07373), text: "Default Color",size: 18,),
+                  Spacer(),
+                  textPink==Color(0xffE07373)?
+                  Icon(Icons.check_rounded,color: background,):sh10
+
+                ],
+              ),
+            ),
+            Divider(height: 15,),
+            InkWell(onTap: (){
+              AccentNotifier().notifier.value=!AccentNotifier().notifier.value;
+              textPink=Colors.purple;
+              setState(() {
+
+              });
+              updateColor(Colors.purple);
+              Navigator.pop(context);
+            },
+              child: Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(radius: 6, backgroundColor: Colors.purple),sw10,
+                  TextCustom(color: Colors.purple, text: "Purple",size: 18,),
+                  Spacer(),
+                  textPink==Colors.purple?
+                  Icon(Icons.check_rounded,color: background,):sh10
+
+                ],
+              ),
+            ),
+            Divider(height: 15,),
+          ],
+        ),
+      );
+    });
+  }
+  Future<void> updateColor(Color color)async{
+    final shared =await SharedPreferences.getInstance();
+    if(color==Colors.blue){
+      shared.setString("accent", "blue");
+    }
+    if(color==Colors.red){
+      shared.setString("accent", "red");
+    }if(color==Colors.green){
+      shared.setString("accent", "green");
+    }if(color==const Color(0xffE07373)){
+      shared.setString("accent", "0xffE07373");
+    }if(color== Colors.purple){
+      shared.setString("accent", "purple");
+    }
   }
 }
