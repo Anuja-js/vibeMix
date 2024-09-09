@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,37 +7,30 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/customs/icon_images.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import 'package:vibemix/models/audio_player_model.dart';
 import 'package:vibemix/models/box.dart';
 import 'package:vibemix/screens/library/mymusic.dart';
-
 import '../customs/container_custom.dart';
 import '../customs/list_of_allsongs.dart';
 import '../customs/listtile_custom.dart';
 import '../global.dart';
 import '../models/hive.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
 class _HomeScreenState extends State<HomeScreen> {
   String name = "Guest";
   bool hasPermission = false;
   final OnAudioQuery audioQuery = OnAudioQuery();
   Box<SongHiveModel>? songsBox;
   File? imageFile;
-
   @override
   void initState() {
     super.initState();
     getname();
     checkAndRequestPermissions();
   }
-
   @override
   Widget build(BuildContext context) {
     return ScaffoldCustom(

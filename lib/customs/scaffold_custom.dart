@@ -43,7 +43,7 @@ class ScaffoldCustom extends StatelessWidget {
               automaticallyImplyLeading: backButton,
               leading: backButton
                   ? IconButton(
-                      onPressed:onBack!=null?onBack: () {
+                      onPressed:onBack ?? () {
                       Navigator.of(context).pop();
                       },
                       icon:  Icon(

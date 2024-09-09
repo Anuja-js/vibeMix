@@ -7,11 +7,10 @@ import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/global.dart';
 import 'package:vibemix/screens/onboarding/greeting_screen.dart';
-import '../../main.dart';
 
 class OnboardingScreen extends StatelessWidget {
   OnboardingScreen({super.key});
-  final _nameController = TextEditingController();
+  final nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class OnboardingScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextForm(nameController: _nameController),
+                TextForm(nameController: nameController),
                 sh25,
                 ElevatedCustomButton(
                   buttonName: "Get Started....",
@@ -42,11 +41,17 @@ class OnboardingScreen extends StatelessWidget {
                   },
                 ),
                 sh10,
-                TextCustom(fontWeight: FontWeight.bold, text: "Disclaimer:", color: foreground,),
                 TextCustom(
-                    size: 14,
-                    text:
-                        "We respect your privacy more than anything else.\nOnly your name, which you will enter here, will be recorded.", color: foreground,),
+                  fontWeight: FontWeight.bold,
+                  text: "Disclaimer:",
+                  color: foreground,
+                ),
+                TextCustom(
+                  size: 14,
+                  text:
+                      "We respect your privacy more than anything else.\nOnly your name, which you will enter here, will be recorded.",
+                  color: foreground,
+                ),
                 sh10
               ],
             ),
@@ -58,11 +63,11 @@ class OnboardingScreen extends StatelessWidget {
   }
 
   void checkLogIn(BuildContext ctx) async {
-    final username = _nameController.text;
+    final username = nameController.text;
     if (username.isNotEmpty) {
       final sharedprfs = await SharedPreferences.getInstance();
       await sharedprfs.setBool(save_Key, true);
-      await sharedprfs.setString("name", _nameController.text.toString());
+      await sharedprfs.setString("name", nameController.text.toString());
 
       // ignore: use_build_context_synchronously
       Navigator.of(ctx).pushReplacement(
@@ -93,10 +98,9 @@ class TextForm extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       child: TextFormField(
         scrollPhysics: const NeverScrollableScrollPhysics(),
-        controller: _nameController,style:TextStyle(
-          color: grey,
-          fontSize: 15,
-          fontWeight: FontWeight.normal) ,
+        controller: _nameController,
+        style:
+            TextStyle(color: grey, fontSize: 15, fontWeight: FontWeight.normal),
         decoration: InputDecoration(
           fillColor: foreground,
           filled: true,
@@ -104,21 +108,17 @@ class TextForm extends StatelessWidget {
           prefixIconColor: background,
           labelText: 'Enter Your Name',
           floatingLabelBehavior: FloatingLabelBehavior.never,
-          floatingLabelStyle:  TextStyle(
-              color: textPink,
-              fontSize: 14,
-              fontWeight: FontWeight.bold),
-          labelStyle:  TextStyle(
-              color: grey,
-              fontSize: 15,
-              fontWeight: FontWeight.normal),
+          floatingLabelStyle: TextStyle(
+              color: textPink, fontSize: 14, fontWeight: FontWeight.bold),
+          labelStyle: TextStyle(
+              color: grey, fontSize: 15, fontWeight: FontWeight.normal),
           prefixIcon: const Icon(
             Icons.perm_identity_outlined,
           ),
-          enabledBorder:  OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: containerPink),
           ),
-          focusedBorder:  OutlineInputBorder(
+          focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: containerPink),
           ),
           border: OutlineInputBorder(
@@ -146,7 +146,12 @@ class AppName extends StatelessWidget {
             size: 45,
             fontWeight: FontWeight.bold,
             text: "VIBE MIX"),
-        TextCustom(size: 45, fontWeight: FontWeight.bold, text: "MUSIC.", color: foreground,),
+        TextCustom(
+          size: 45,
+          fontWeight: FontWeight.bold,
+          text: "MUSIC.",
+          color: foreground,
+        ),
       ],
     );
   }

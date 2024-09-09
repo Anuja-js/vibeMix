@@ -6,7 +6,6 @@ import 'package:vibemix/nav/navbar.dart';
 import 'package:vibemix/screens/onboarding/onboarding_secsion.dart';
 import '../../customs/icon_images.dart';
 import '../../global.dart';
-import '../../main.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -38,13 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
       appBar: false,
     );
   }
-
-  Future<void> gotoOnboarding() async {
-    await Future.delayed(const Duration(seconds: 3));
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (ctx) => OnboardingScreen()));
-  }
-
   Future<void> checkUserLogedin() async {
     final sharedprfs = await SharedPreferences.getInstance();
     final userLoggedIn = sharedprfs.getBool(save_Key);
@@ -58,4 +50,10 @@ class _SplashScreenState extends State<SplashScreen> {
               )));
     }
   }
+  Future<void> gotoOnboarding() async {
+    await Future.delayed(const Duration(seconds: 3));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (ctx) => OnboardingScreen()));
+  }
+
 }

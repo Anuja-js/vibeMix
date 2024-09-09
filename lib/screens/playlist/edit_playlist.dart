@@ -11,7 +11,7 @@ import '../../models/hive.dart';
 
 class EditPlaylist extends StatefulWidget {
   String name;
-  EditPlaylist({Key? key, required this.name}) : super(key: key);
+  EditPlaylist({super.key, required this.name});
 
   @override
   State<EditPlaylist> createState() => _EditPlaylistState();
@@ -21,16 +21,13 @@ class _EditPlaylistState extends State<EditPlaylist> {
   Box<SongHiveModel>? songsBox;
   List<SongHiveModel> songs = [];
   TextEditingController textctr = TextEditingController();
-
   @override
   void initState() {
     textctr.text = widget.name;
     getHiveMusic();
     super.initState();
   }
-
   List<SongHiveModel> selected = [];
-
   getHiveMusic() async {
     songsBox = await HiveService.getSongsBox();
     songs.addAll(songsBox!.values);

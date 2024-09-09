@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/main.dart';
@@ -206,6 +207,9 @@ class _SettingScreenState extends State<SettingScreen> {
             TextButton(
               onPressed: () async {
                 await sharedprfs.clear();
+            await   Hive.deleteBoxFromDisk('fav');
+                await    Hive.deleteBoxFromDisk('songs');
+                await   Hive.deleteBoxFromDisk('playlists');
                 Navigator.of(ctx).pushReplacement(
                   MaterialPageRoute(builder: (ctx1) => OnboardingScreen()),
                 );

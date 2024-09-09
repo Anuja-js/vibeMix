@@ -7,8 +7,9 @@ import 'package:vibemix/global.dart';
 import 'package:vibemix/models/recent.dart';
 
 import '../../models/box.dart';
+
 class RecentlyPlayedScreen extends StatefulWidget {
-  const RecentlyPlayedScreen({Key? key}) : super(key: key);
+  const RecentlyPlayedScreen({super.key});
 
   @override
   State<RecentlyPlayedScreen> createState() => _RecentlyPlayedScreenState();
@@ -16,7 +17,7 @@ class RecentlyPlayedScreen extends StatefulWidget {
 
 class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
   Box<RecentModel>? recent;
-  List<RecentModel> recentList=[];
+  List<RecentModel> recentList = [];
   List<RecentModel> lastSession = [];
   List<RecentModel> oneHourAgo = [];
   List<RecentModel> sixHoursAgo = [];
@@ -28,19 +29,18 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
 
     super.initState();
   }
+
   getRecentMusic() async {
     recent = await HiveService.getRecentData();
     recentList.addAll(recent!.values);
     sortSongs();
-    setState(() {
-
-    });
+    setState(() {});
   }
+
   void sortSongs() {
     DateTime now = DateTime.now();
 
     for (var song in recentList) {
-
       Duration difference = now.difference(song.time);
 
       if (difference.inMinutes < 5) {
@@ -56,45 +56,82 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    return ScaffoldCustom(backButton: true, body: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 18),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-         if (lastSession.isNotEmpty) RecentCustom(recentList: lastSession, text: 'Last Session',),
-            if (oneHourAgo.isNotEmpty)   RecentCustom(recentList: oneHourAgo, text: 'With in One Hour',),
-            if (sixHoursAgo.isNotEmpty)  RecentCustom(recentList: sixHoursAgo, text: 'With in Six Hour',),
-            if (twelveHoursAgo.isNotEmpty) RecentCustom(recentList: twelveHoursAgo, text: 'With in 12 Hour',),
-            if (yesterdayPlayed.isNotEmpty)  RecentCustom(recentList: yesterdayPlayed, text: 'Played Yesterday',),
-          ],
+    return ScaffoldCustom(
+      backButton: true,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 18),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              if (lastSession.isNotEmpty)
+                RecentCustom(
+                  recentList: lastSession,
+                  text: 'Last Session',
+                ),
+              if (oneHourAgo.isNotEmpty)
+                RecentCustom(
+                  recentList: oneHourAgo,
+                  text: 'With in One Hour',
+                ),
+              if (sixHoursAgo.isNotEmpty)
+                RecentCustom(
+                  recentList: sixHoursAgo,
+                  text: 'With in Six Hour',
+                ),
+              if (twelveHoursAgo.isNotEmpty)
+                RecentCustom(
+                  recentList: twelveHoursAgo,
+                  text: 'With in 12 Hour',
+                ),
+              if (yesterdayPlayed.isNotEmpty)
+                RecentCustom(
+                  recentList: yesterdayPlayed,
+                  text: 'Played Yesterday',
+                ),
+            ],
+          ),
         ),
       ),
-    ), appBar: true,tittle: "Recently Played",);
+      appBar: true,
+      tittle: "Recently Played",
+    );
   }
 }
 
+// ignore: must_be_immutable
 class RecentCustom extends StatelessWidget {
   String text;
-   List<RecentModel> recentList;
-   RecentCustom({
-    super.key,required this.text,
+  List<RecentModel> recentList;
+  RecentCustom({
+    super.key,
+    required this.text,
     required this.recentList,
   });
 
-
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextCustom(text: text,size: 18, color: foreground,),
+        TextCustom(
+          text: text,
+          size: 18,
+          color: foreground,
+        ),
         ListView.builder(
             shrinkWrap: true,
             itemCount: recentList.length,
-            itemBuilder: (ctx,index){
-          return MusicWidget(data: recentList[index].song, color: foreground, backGroundColor: textPink, playlistName: 'recent',);
-        })
+            itemBuilder: (ctx, index) {
+              return MusicWidget(
+                data: recentList[index].song,
+                color: foreground,
+                backGroundColor: textPink,
+                playlistName: 'recent',
+              );
+            })
       ],
     );
   }

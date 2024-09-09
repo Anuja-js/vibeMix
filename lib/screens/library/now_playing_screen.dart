@@ -6,7 +6,6 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/network/lyrics_network.dart';
-
 import '../../customs/custom_elevated_button.dart';
 import '../../global.dart';
 import '../../models/audio_player_model.dart';
@@ -40,7 +39,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   List<String> lyricsLines = [];
   int currentLineIndex = 0;
   Timer? timer;
-
+  List<SongHiveModel> favourite = [];
+  Box<SongHiveModel>? favsBox;
+  List<String> playlistNames = [];
   @override
   void initState() {
     checkPlayButton();
@@ -56,83 +57,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     lyricsScrollController.dispose();
     timer?.cancel();
     super.dispose();
-  }
-
-  List<SongHiveModel> favourite = [];
-  Box<SongHiveModel>? favsBox;
-  List<String> playlistNames = [];
-  getLyricsData() async {
-    lyrics = await LyricsNetwork()
-        .getLyrics(widget.song.artist.toString(), widget.song.displayNameWOExt);
-    lyricsLines = lyrics.split('\n');
-  }
-
-  getHiveMusic() async {
-    favsBox = await HiveService.getFavBox();
-    favourite.addAll(favsBox!.values);
-    isFavorite = favourite.any((song) => song.id == widget.song.id);
-    setState(() {});
-  }
-
-  checkPlayButton() async {
-    current = AudioPlayerSingleton().currentSong;
-    if (current == null) {
-      current = widget.song;
-      AudioPlayerSingleton().setCurrentSong(widget.song);
-     await AudioPlayerSingleton().playSong(widget.song);
-    } else if (current!.id != widget.song.id) {
-      await AudioPlayerSingleton().playSong(widget.song);
-    } else {
-      await AudioPlayerSingleton().playSong(widget.song);
-    }
-    AudioPlayerSingleton().setCurrentSong(widget.song);
-  }
-
-  fetchCurrentVolume() {
-    currentVolume = audioPlayer.volume.toDouble();
-    updateVolumeDisplay();
-  }
-
-  void volumeUp() {
-    if (currentVolume < 1.0) {
-      currentVolume += 0.1;
-      audioPlayer.setVolume(currentVolume);
-      updateVolumeDisplay();
-    }
-  }
-
-  void volumeDown() {
-    if (currentVolume > 0.1) {
-      currentVolume = currentVolume - 0.1;
-      audioPlayer.setVolume(currentVolume);
-      updateVolumeDisplay();
-    }
-  }
-
-  void updateVolumeDisplay() {
-    setState(() {
-      volumeDisplay = "Volume: ${(currentVolume * 100).toInt()}%";
-    });
-  }
-
-  void onAudioPositionChanged(Duration position) {
-    for (int i = 0; i < lyricsLines.length; i++) {
-      if (position.inSeconds >= i * 5 && position.inSeconds < (i + 1) * 5) {
-        currentLineIndex = i;
-        scrollToCurrentLine();
-        break;
-      }
-    }
-  }
-
-  void scrollToCurrentLine() {
-    if (lyricsScrollController.hasClients) {
-      lyricsScrollController.animateTo(
-        currentLineIndex * 40.0,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    }
   }
 
   @override
@@ -151,16 +75,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             sh25,
-            QueryArtworkWidget(
-              id: widget.song.id,
-              type: ArtworkType.AUDIO,
-              nullArtworkWidget:
-                  Icon(Icons.music_note, color: foreground, size: 150),
-              artworkFit: BoxFit.cover,
-              artworkWidth: 250,
-              artworkHeight: 210,
-              artworkBorder: BorderRadius.circular(15),
-            ),
+            ArtworkImage(widget: widget),
             sh25,
             Text(
               widget.song.displayNameWOExt,
@@ -175,7 +90,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
             sh10,
             TextCustom(
               color: foreground,
-              size: 15,
               fontWeight: FontWeight.w300,
               text: widget.song.artist == "<unknown>"
                   ? "Unknown"
@@ -239,123 +153,25 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                   },
                 ),
                 IconButton(
-                    icon: Icon(Icons.playlist_add, color: foreground),
-                    onPressed: ()async {
-                      Box<String> playlistsBox =
-                      await Hive.openBox<String>('playlists');
-                      setState(() {
-                        playlistNames = playlistsBox.values.toList();
-                      });
-                      showModalBottomSheet(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width,
-                          maxHeight: MediaQuery.of(context).size.height / 2,
-                        ),
-                        context: context,
-                        builder: (ctx) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 18),
-                            color: textPink,
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextCustom(
-                                      text: "Choose PlayList",
-                                      color: background,
-                                      size: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        icon: Icon(
-                                          Icons.close_rounded,
-                                          color: background,
-                                        ))
-                                  ],
-                                ),
-                                playlistNames.isNotEmpty
-                                    ? Expanded(
-                                  child: ListView.builder(
-                                    itemCount: playlistNames.length,
-                                    itemBuilder: (ctx, index) {
-                                      return Column(
-                                        children: [
-                                          InkWell(
-                                            onTap: () async {
-                                              Box<SongHiveModel>
-                                              playlistBox =
-                                              await Hive.openBox(
-                                                  playlistNames[
-                                                  index]);
-                                              playlistBox.put(
-                                                  widget.song.id,
-                                                  widget.song);
-                                              Navigator.pop(context);
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                TextCustom(
-                                                  text: playlistNames[
-                                                  index],
-                                                  color: background,
-                                                  size: 18,
-                                                ),
-                                                IconButton(
-                                                    onPressed: () {},
-                                                    icon: Icon(
-                                                      Icons
-                                                          .arrow_forward_ios_outlined,
-                                                      color:
-                                                      background,
-                                                      size: 18,
-                                                    ))
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                )
-                                    : Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    sh50,
-                                    TextCustom(
-                                      text:
-                                      "No PlayList Available Create One",
-                                      color: background,
-                                    ),
-                                    sh10,
-                                    ElevatedCustomButton(
-                                      buttonName: "Create Playlist",
-                                      onpress: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (ctx) {
-                                                  return const CreatePlaylist();
-                                                }));
-                                      },
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },),
+                  icon: Icon(Icons.playlist_add, color: foreground),
+                  onPressed: () async {
+                    Box<String> playlistsBox =
+                        await Hive.openBox<String>('playlists');
+                    setState(() {
+                      playlistNames = playlistsBox.values.toList();
+                    });
+                    showModalBottomSheet(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width,
+                        maxHeight: MediaQuery.of(context).size.height / 2,
+                      ),
+                      context: context,
+                      builder: (ctx) {
+                        return ChoosePlaylist(playlistNames: playlistNames, widget: widget);
+                      },
+                    );
+                  },
+                ),
               ],
             ),
             Container(
@@ -399,7 +215,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                   AudioPlayerSingleton().skipNext(context);
                                 }
                               },
-
                               activeColor: background,
                               inactiveColor: foreground,
                             ),
@@ -432,18 +247,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             isPlaying ? Icons.pause : Icons.play_arrow_outlined,
                             color: foreground,
                             size: 25),
-                        onPressed: () {
-                          setState(() {
-                            if (isPlaying) {
-                              audioPlayer.pause();
-                            } else {
-                              audioPlayer.play();
-                            }
-                            isPlaying = !isPlaying;
-                            RefreshNotifier().notifier.value =
-                                !RefreshNotifier().notifier.value;
-                          });
-                        },
+                        onPressed: playPause,
                       ),
                       IconButton(
                         icon:
@@ -483,19 +287,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
       appBar: true,
       action: true,
       actionIcon: IconButton(
-        onPressed: () async {
-          favsBox = await HiveService.getFavBox();
-          if (isFavorite) {
-            favsBox!.delete(widget.song.id);
-            favourite.removeWhere((song) => song.id == widget.song.id);
-          } else {
-            favsBox!.put(widget.song.id, widget.song);
-            favourite.add(widget.song);
-          }
-          setState(() {
-            isFavorite = !isFavorite;
-          });
-        },
+        onPressed: favIcon,
         icon: Icon(
           isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
           color: foreground,
@@ -505,8 +297,270 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     );
   }
 
+  void playPause() {
+    setState(() {
+      if (isPlaying) {
+        audioPlayer.pause();
+      } else {
+        audioPlayer.play();
+      }
+      isPlaying = !isPlaying;
+      RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
+    });
+  }
+
+  void favIcon() async {
+    favsBox = await HiveService.getFavBox();
+    if (isFavorite) {
+      favsBox!.delete(widget.song.id);
+      favourite.removeWhere((song) => song.id == widget.song.id);
+    } else {
+      favsBox!.put(widget.song.id, widget.song);
+      favourite.add(widget.song);
+    }
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
+
+  void getLyricsData() async {
+    lyrics = await LyricsNetwork()
+        .getLyrics(widget.song.artist.toString(), widget.song.displayNameWOExt);
+    lyricsLines = lyrics.split('\n');
+  }
+
+  getHiveMusic() async {
+    favsBox = await HiveService.getFavBox();
+    favourite.addAll(favsBox!.values);
+    isFavorite = favourite.any((song) => song.id == widget.song.id);
+    setState(() {});
+  }
+
+  checkPlayButton() async {
+    current = AudioPlayerSingleton().currentSong;
+    if (current == null) {
+      current = widget.song;
+      AudioPlayerSingleton().setCurrentSong(widget.song);
+      await AudioPlayerSingleton().playSong(widget.song);
+    } else if (current!.id != widget.song.id) {
+      await AudioPlayerSingleton().playSong(widget.song);
+    } else {
+      await AudioPlayerSingleton().playSong(widget.song);
+    }
+    AudioPlayerSingleton().setCurrentSong(widget.song);
+  }
+
+  fetchCurrentVolume() {
+    currentVolume = audioPlayer.volume.toDouble();
+    updateVolumeDisplay();
+  }
+
+  void volumeUp() {
+    if (currentVolume < 1.0) {
+      currentVolume += 0.1;
+      audioPlayer.setVolume(currentVolume);
+      updateVolumeDisplay();
+    }
+  }
+
+  void volumeDown() {
+    if (currentVolume > 0.1) {
+      currentVolume = currentVolume - 0.1;
+      audioPlayer.setVolume(currentVolume);
+      updateVolumeDisplay();
+    }
+  }
+
+  void updateVolumeDisplay() {
+    setState(() {
+      volumeDisplay = "Volume: ${(currentVolume * 100).toInt()}%";
+    });
+  }
+
+  void onAudioPositionChanged(Duration position) {
+    for (int i = 0; i < lyricsLines.length; i++) {
+      if (position.inSeconds >= i * 5 && position.inSeconds < (i + 1) * 5) {
+        currentLineIndex = i;
+        scrollToCurrentLine();
+        break;
+      }
+    }
+  }
+
+  void scrollToCurrentLine() {
+    if (lyricsScrollController.hasClients) {
+      lyricsScrollController.animateTo(
+        currentLineIndex * 40.0,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   void changeToSeconds(int seconds) {
     Duration duration = Duration(seconds: seconds);
     audioPlayer.seek(duration);
+  }
+}
+
+class ChoosePlaylist extends StatelessWidget {
+  const ChoosePlaylist({
+    super.key,
+    required this.playlistNames,
+    required this.widget,
+  });
+
+  final List<String> playlistNames;
+  final NowPlayingScreen widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.symmetric(
+          vertical: 15, horizontal: 18),
+      color: textPink,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween,
+            children: [
+              TextCustom(
+                text: "Choose PlayList",
+                color: background,
+                size: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: background,
+                  ))
+            ],
+          ),
+          playlistNames.isNotEmpty
+              ? ListOfPlaylist(playlistNames: playlistNames, widget: widget)
+              : const ListEmptyAddPlaylist(),
+        ],
+      ),
+    );
+  }
+}
+
+class ListEmptyAddPlaylist extends StatelessWidget {
+  const ListEmptyAddPlaylist({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        mainAxisAlignment:
+            MainAxisAlignment.spaceEvenly,
+        children: [
+          sh50,
+          TextCustom(
+            text:
+                "No PlayList Available Create One",
+            color: background,
+          ),
+          sh10,
+          ElevatedCustomButton(
+            buttonName: "Create Playlist",
+            onpress: () {
+              Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (ctx) {
+                return const CreatePlaylist();
+              }));
+            },
+          )
+        ],
+      );
+  }
+}
+
+class ListOfPlaylist extends StatelessWidget {
+  const ListOfPlaylist({
+    super.key,
+    required this.playlistNames,
+    required this.widget,
+  });
+
+  final List<String> playlistNames;
+  final NowPlayingScreen widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: ListView.builder(
+          itemCount: playlistNames.length,
+          itemBuilder: (ctx, index) {
+            return Column(
+              children: [
+                InkWell(
+                  onTap: () async {
+                    Box<SongHiveModel>
+                        playlistBox =
+                        await Hive.openBox(
+                            playlistNames[index]);
+                    playlistBox.put(
+                        widget.song.id,
+                        widget.song);
+                    Navigator.pop(context);
+                  },
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment
+                            .spaceBetween,
+                    children: [
+                      TextCustom(
+                        text:
+                            playlistNames[index],
+                        color: background,
+                        size: 18,
+                      ),
+                      IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons
+                                .arrow_forward_ios_outlined,
+                            color: background,
+                            size: 18,
+                          ))
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+  }
+}
+
+class ArtworkImage extends StatelessWidget {
+  const ArtworkImage({
+    super.key,
+    required this.widget,
+  });
+
+  final NowPlayingScreen widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return QueryArtworkWidget(
+      id: widget.song.id,
+      type: ArtworkType.AUDIO,
+      nullArtworkWidget: Icon(Icons.music_note, color: foreground, size: 150),
+      artworkFit: BoxFit.cover,
+      artworkWidth: 250,
+      artworkHeight: 210,
+      artworkBorder: BorderRadius.circular(15),
+    );
   }
 }

@@ -50,22 +50,7 @@ class _SearchMusicState extends State<SearchMusic> {
           ),
           sh10,
           if (searchQuery.isNotEmpty && filteredSongs.isNotEmpty)
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredSongs.length,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                ),
-                itemBuilder: (context, index) {
-                  return MusicWidget(
-                    data: filteredSongs[index],
-                    backGroundColor: background,
-                    color: foreground,
-                    playlistName: 'songs',
-                  );
-                },
-              ),
-            )
+            FilteredSongs(filteredSongs: filteredSongs)
           else if (searchQuery.isNotEmpty && filteredSongs.isEmpty)
             Padding(
               padding: EdgeInsets.symmetric(
@@ -127,6 +112,35 @@ class _SearchMusicState extends State<SearchMusic> {
         filteredSongs.clear();
       }
     });
+  }
+}
+
+class FilteredSongs extends StatelessWidget {
+  const FilteredSongs({
+    super.key,
+    required this.filteredSongs,
+  });
+
+  final List<SongHiveModel> filteredSongs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: filteredSongs.length,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 18,
+        ),
+        itemBuilder: (context, index) {
+          return MusicWidget(
+            data: filteredSongs[index],
+            backGroundColor: background,
+            color: foreground,
+            playlistName: 'songs',
+          );
+        },
+      ),
+    );
   }
 }
 
