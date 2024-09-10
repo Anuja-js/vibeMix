@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:vibemix/screens/library/favorite_screen.dart';
-import '../../global.dart';
+import 'global.dart';
 import 'package:vibemix/customs/custom_elevated_button.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
@@ -18,18 +18,15 @@ class MusicWidget extends StatefulWidget {
   String playlistName;
   Color color;
   Color backGroundColor;
-
   MusicWidget(
       {super.key,
       required this.data,
       required this.color,
       required this.playlistName,
       required this.backGroundColor});
-
   @override
   State<MusicWidget> createState() => _MusicWidgetState();
 }
-
 class _MusicWidgetState extends State<MusicWidget> {
   final audio = AudioPlayerSingleton().audioPlayer;
   SongHiveModel? current;
@@ -37,7 +34,7 @@ class _MusicWidgetState extends State<MusicWidget> {
   List<SongHiveModel> favourite = [];
   Box<SongHiveModel>? favsBox;
   bool isPlaying = false;
-
+  List<String> playlistNames = [];
   @override
   void initState() {
     super.initState();
@@ -49,26 +46,12 @@ class _MusicWidgetState extends State<MusicWidget> {
     getHiveMusic();
     checkIsPlaying();
   }
-
   @override
   void dispose() {
     RefreshNotifier().notifier.removeListener(checkIsPlaying);
     super.dispose();
   }
 
-  void checkIsPlaying() {
-    if (!audio.playing || AudioPlayerSingleton().currentSong == null) {
-      isPlaying = false;
-    } else if (audio.playing &&
-        AudioPlayerSingleton().currentSong == widget.data) {
-      isPlaying = true;
-    } else {
-      isPlaying = false;
-    }
-    setState(() {});
-  }
-
-  List<String> playlistNames = [];
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -159,7 +142,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                           if (widget.playlistName == "fav") {
                             Navigator.pushReplacement(context,
                                 MaterialPageRoute(builder: (ctx) {
-                              return FavoriteScreen();
+                              return const FavoriteScreen();
                             }));
                           }
                         },
@@ -349,8 +332,18 @@ class _MusicWidgetState extends State<MusicWidget> {
       },
     );
   }
-
-  getHiveMusic() async {
+  void checkIsPlaying() {
+    if (!audio.playing || AudioPlayerSingleton().currentSong == null) {
+      isPlaying = false;
+    } else if (audio.playing &&
+        AudioPlayerSingleton().currentSong == widget.data) {
+      isPlaying = true;
+    } else {
+      isPlaying = false;
+    }
+    setState(() {});
+  }
+ void  getHiveMusic() async {
     favsBox = await HiveService.getFavBox();
     favourite.addAll(favsBox!.values);
     isFavorite = favourite.any((song) => song.id == widget.data.id);

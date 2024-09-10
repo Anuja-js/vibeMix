@@ -4,7 +4,7 @@ import 'package:vibemix/customs/music_widget.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/models/box.dart';
-import '../../global.dart';
+import '../../customs/global.dart';
 import '../../models/audio_player_model.dart';
 import '../../models/hive.dart';
 

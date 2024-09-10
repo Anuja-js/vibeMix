@@ -7,7 +7,7 @@ import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/network/lyrics_network.dart';
 import '../../customs/custom_elevated_button.dart';
-import '../../global.dart';
+import '../../customs/global.dart';
 import '../../models/audio_player_model.dart';
 import '../../models/box.dart';
 import '../../models/hive.dart';

@@ -5,13 +5,13 @@ import 'package:vibemix/nav/navbar.dart';
 import 'package:vibemix/screens/playlist/sections_play.dart';
 import '../../customs/scaffold_custom.dart';
 import '../../customs/text_custom.dart';
-import '../../global.dart';
+import '../../customs/global.dart';
 import '../../models/audio_player_model.dart';
 import '../../models/hive.dart';
 import 'create_playlist.dart';
 
 class PlaylistScreen extends StatefulWidget {
-  const PlaylistScreen({Key? key}) : super(key: key);
+  const PlaylistScreen({super.key});
 
   @override
   State<PlaylistScreen> createState() => _PlaylistScreenState();
@@ -101,7 +101,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                               builder: (ctx) {
                                 return Container(
                                   width: MediaQuery.of(context).size.width,
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                       vertical: 15, horizontal: 18),
                                   color: foreground,
                                   child: Column(
@@ -131,20 +131,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                       ),
                                       ElevatedCustomButton(
                                         buttonName: "Delete",
-                                        onpress: () async {
-                                          Box<SongHiveModel> oldPlaylist =
-                                              await Hive.openBox<SongHiveModel>(
-                                                  playlistNames[index]);
-
-                                          Box<String> playlists =
-                                              await Hive.openBox("playlists");
-                                          playlists
-                                              .delete(playlistNames[index]);
-                                          oldPlaylist.deleteFromDisk();
-                                          playlistNames.removeAt(index);
-                                          setState(() {});
-                                          Navigator.of(context).pop();
-                                        },
+                                        onpress: delete,
                                       )
                                     ],
                                   ),
@@ -169,5 +156,19 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
       ),
       appBar: true,
     );
+  }
+  void delete() async {
+    Box<SongHiveModel> oldPlaylist =
+    await Hive.openBox<SongHiveModel>(
+        playlistNames[index]);
+
+    Box<String> playlists =
+    await Hive.openBox("playlists");
+    playlists
+        .delete(playlistNames[index]);
+    oldPlaylist.deleteFromDisk();
+    playlistNames.removeAt(index);
+    setState(() {});
+    Navigator.of(context).pop();
   }
 }

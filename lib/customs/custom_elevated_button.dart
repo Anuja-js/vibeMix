@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/customs/text_custom.dart';
 
-import '../../global.dart';
+import 'global.dart';
 class ElevatedCustomButton extends StatelessWidget {
   String buttonName;
   void Function()?   onpress;

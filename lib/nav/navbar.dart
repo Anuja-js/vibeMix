@@ -4,24 +4,21 @@ import 'package:vibemix/screens/home_screen.dart';
 import 'package:vibemix/screens/library/library_screen.dart';
 import 'package:vibemix/screens/settings/settings_screen.dart';
 import 'package:vibemix/utils/color_notifier.dart';
-
-import '../global.dart';
+import '../customs/global.dart';
 
 class NavBar extends StatefulWidget {
   bool reset = false;
   NavBar({super.key, required this.reset});
-
   @override
   State<NavBar> createState() => _NavBarState();
 }
 
 List<Widget> data = [
   const HomeScreen(),
-  LibraryScreen(),
+  const LibraryScreen(),
   const SettingScreen(),
   const AboutScreen()
 ];
-
 int index = 0;
 
 class _NavBarState extends State<NavBar> {

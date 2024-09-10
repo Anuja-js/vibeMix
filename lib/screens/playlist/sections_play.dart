@@ -5,7 +5,7 @@ import 'package:vibemix/models/hive.dart';
 
 import '../../customs/music_widget.dart';
 import '../../customs/text_custom.dart';
-import '../../global.dart';
+import '../../customs/global.dart';
 import 'edit_playlist.dart';
 class SecssionsEach extends StatefulWidget {
   String name;

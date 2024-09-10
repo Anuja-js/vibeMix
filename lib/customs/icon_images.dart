@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vibemix/global.dart';
+import 'package:vibemix/customs/global.dart';
 class IconImage extends StatelessWidget {
   double height;
   double width;

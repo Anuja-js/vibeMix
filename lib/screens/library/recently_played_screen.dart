@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:vibemix/customs/music_widget.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import 'package:vibemix/global.dart';
+import 'package:vibemix/customs/global.dart';
 import 'package:vibemix/models/recent.dart';
 
 import '../../models/box.dart';

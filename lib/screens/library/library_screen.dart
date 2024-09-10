@@ -4,7 +4,7 @@ import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/screens/library/favorite_screen.dart';
 import 'package:vibemix/screens/library/now_playing_screen.dart';
 import 'package:vibemix/screens/library/recently_played_screen.dart';
-import '../../global.dart';
+import '../../customs/global.dart';
 import '../../models/audio_player_model.dart';
 import '../playlist/playlist.dart';
 import 'mymusic.dart';

@@ -5,7 +5,7 @@ import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/screens/playlist/playlist.dart';
 
 import '../../customs/scaffold_custom.dart';
-import '../../global.dart';
+import '../../customs/global.dart';
 import '../../models/box.dart';
 import '../../models/hive.dart';
 

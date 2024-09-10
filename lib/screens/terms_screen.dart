@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 
-import '../global.dart';
+import '../customs/global.dart';
 
 // ignore: must_be_immutable
 class TermsAndCondition extends StatelessWidget {

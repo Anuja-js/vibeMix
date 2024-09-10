@@ -4,7 +4,7 @@ import 'package:vibemix/customs/scaffold_custom.dart';
 import '../../customs/container_custom.dart';
 import '../../customs/list_of_allsongs.dart';
 import '../../customs/text_custom.dart';
-import '../../global.dart';
+import '../../customs/global.dart';
 import '../../models/box.dart';
 import '../../models/hive.dart';
 

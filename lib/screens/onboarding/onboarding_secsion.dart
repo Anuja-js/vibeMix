@@ -5,7 +5,7 @@ import 'package:vibemix/customs/custom_elevated_button.dart';
 import 'package:vibemix/customs/icon_images.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import 'package:vibemix/global.dart';
+import 'package:vibemix/customs/global.dart';
 import 'package:vibemix/screens/onboarding/greeting_screen.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -71,14 +71,14 @@ class OnboardingScreen extends StatelessWidget {
 
       // ignore: use_build_context_synchronously
       Navigator.of(ctx).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => GreetingScreen()));
+          MaterialPageRoute(builder: (ctx) => const GreetingScreen()));
     } else {
       if (kDebugMode) {
         print("User name null");
       }
 
       Navigator.of(ctx).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => GreetingScreen()));
+          MaterialPageRoute(builder: (ctx) => const GreetingScreen()));
     }
   }
 }

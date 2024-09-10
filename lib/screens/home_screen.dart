@@ -12,13 +12,15 @@ import 'package:vibemix/screens/library/mymusic.dart';
 import '../customs/container_custom.dart';
 import '../customs/list_of_allsongs.dart';
 import '../customs/listtile_custom.dart';
-import '../global.dart';
+import '../customs/global.dart';
 import '../models/hive.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
 class _HomeScreenState extends State<HomeScreen> {
   String name = "Guest";
   bool hasPermission = false;
@@ -31,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     getname();
     checkAndRequestPermissions();
   }
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldCustom(
@@ -66,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (hasPermission)
                   if (songsBox == null || songsBox!.length == 0)
                     TextCustom(
-                      text: "Songs Not found", color: foreground,
+                      text: "Songs Not found",
+                      color: foreground,
                     ),
                 if (hasPermission && songsBox != null)
                   ListOfMusic(
@@ -87,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
       retryRequest: retry,
     );
     if (hasPermission) {
-     await getHiveMusic();
+      await getHiveMusic();
       setState(() {});
     } else {}
   }
@@ -108,7 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
               artist: information[i].artist,
               uri: information[i].uri));
     }
-    // AudioPlayerSingleton().setCurrentPlaylist("songs");
     setState(() {});
   }
 
@@ -121,22 +124,19 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class UserImageAndName extends StatefulWidget {
+  final String name;
+  final File? imageFile;
   const UserImageAndName({
     super.key,
     required this.name,
     this.imageFile,
   });
-
-  final String name;
-  final File? imageFile;
-
   @override
   State<UserImageAndName> createState() => _UserImageAndNameState();
 }
 
 class _UserImageAndNameState extends State<UserImageAndName> {
   File? imageFile;
-
   @override
   void initState() {
     super.initState();
@@ -183,11 +183,15 @@ class _UserImageAndNameState extends State<UserImageAndName> {
 
   void showImageSourceDialog() {
     showModalBottomSheet(
-      context: context,backgroundColor: textPink,
+      context: context,
+      backgroundColor: textPink,
       builder: (context) => Wrap(
         children: [
           ListTile(
-            leading: Icon(Icons.camera,color: background,),
+            leading: Icon(
+              Icons.camera,
+              color: background,
+            ),
             title: TextCustom(text: 'Camera', color: background),
             onTap: () {
               Navigator.pop(context);
@@ -195,7 +199,10 @@ class _UserImageAndNameState extends State<UserImageAndName> {
             },
           ),
           ListTile(
-            leading:  Icon(Icons.photo_library,color: background,),
+            leading: Icon(
+              Icons.photo_library,
+              color: background,
+            ),
             title: TextCustom(text: 'Gallery', color: background),
             onTap: () {
               Navigator.pop(context);
@@ -224,7 +231,7 @@ class _UserImageAndNameState extends State<UserImageAndName> {
             Text.rich(
               TextSpan(
                 text: "Hi There,\n",
-                style:  TextStyle(
+                style: TextStyle(
                   color: textPink,
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -232,7 +239,7 @@ class _UserImageAndNameState extends State<UserImageAndName> {
                 children: [
                   TextSpan(
                     text: widget.name,
-                    style:  TextStyle(
+                    style: TextStyle(
                       color: foreground,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,

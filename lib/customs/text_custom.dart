@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';import '../../global.dart';
+import 'package:flutter/material.dart';import 'global.dart';
 // ignore: must_be_immutable
 class TextCustom extends StatelessWidget {
   Color color;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vibemix/global.dart';
+import 'package:vibemix/customs/global.dart';
 import 'package:vibemix/models/hive.dart';
 import 'package:vibemix/screens/onboarding/splash_screen.dart';
 

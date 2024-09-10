@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import '../../global.dart';
+import 'global.dart';
 import '../screens/search_music.dart';
 class ContainerForSearch extends StatelessWidget {
   const ContainerForSearch({

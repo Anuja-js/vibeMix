@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:vibemix/customs/music_widget.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import 'package:vibemix/global.dart';
+import 'package:vibemix/customs/global.dart';
 import 'package:vibemix/models/hive.dart';
 import 'package:vibemix/models/box.dart';
 
@@ -100,7 +100,6 @@ class _SearchMusicState extends State<SearchMusic> {
                     false))
             .toList();
 
-        // Update recent searches
         if (!recentSearches.contains(query)) {
           recentSearches.add(query);
           if (recentSearches.length > 5) {

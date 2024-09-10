@@ -6,7 +6,7 @@ import 'package:vibemix/models/hive.dart';
 
 import '../../customs/scaffold_custom.dart';
 import '../../customs/text_custom.dart';
-import '../../global.dart';
+import '../../customs/global.dart';
 class CreatePlaylist extends StatefulWidget {
   const CreatePlaylist({Key? key}) : super(key: key);
   @override

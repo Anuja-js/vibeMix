@@ -5,7 +5,7 @@ import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/nav/navbar.dart';
 import '../../customs/custom_elevated_button.dart';
-import '../../global.dart';
+import '../../customs/global.dart';
 
 // ignore: must_be_immutable
 class GreetingScreen extends StatefulWidget {
@@ -64,10 +64,7 @@ class _GreetingScreenState extends State<GreetingScreen> {
   void getname() async {
     final sharedprfs = await SharedPreferences.getInstance();
     name = sharedprfs.getString("name") ?? "Guest";
-    setState(() {
-
-    });
-
+    setState(() {});
   }
 }
 
@@ -93,9 +90,9 @@ class MiddleWidget extends StatelessWidget {
         Text.rich(
           TextSpan(
             text: name,
-            style:  TextStyle(
+            style: TextStyle(
                 color: foreground, fontWeight: FontWeight.bold, fontSize: 45),
-            children:  <TextSpan>[
+            children: <TextSpan>[
               TextSpan(
                 text: '!\n',
                 style: TextStyle(

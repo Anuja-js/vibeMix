@@ -8,7 +8,7 @@ import 'package:vibemix/screens/terms_screen.dart';
 import 'package:vibemix/utils/color_notifier.dart';
 
 import '../../customs/text_custom.dart';
-import '../../global.dart';
+import '../../customs/global.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);

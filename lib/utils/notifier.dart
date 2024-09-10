@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class RefreshNotifier {
   static final RefreshNotifier _instance = RefreshNotifier._internal();
 
