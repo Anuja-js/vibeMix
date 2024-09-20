@@ -44,6 +44,7 @@ class _FloatingMusicState extends State<FloatingMusic> {
   }
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (ctx){

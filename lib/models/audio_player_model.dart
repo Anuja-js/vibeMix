@@ -123,7 +123,15 @@ class AudioPlayerSingleton {
   void skipNext(BuildContext context) async {
     try {
       if (_audioPlayer.hasNext) {
-        _audioPlayer.seekToNext();
+       if (_audioPlayer.loopMode.name=="one"){
+         _audioPlayer.setLoopMode(LoopMode.off);
+         _audioPlayer.seekToNext();
+         _audioPlayer.setLoopMode(LoopMode.one);
+       }else{
+         _audioPlayer.seekToNext();
+       }
+
+
           AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex+1]);
           if(currentIndex<playlistList.length){
             currentIndex++;
@@ -143,7 +151,15 @@ class AudioPlayerSingleton {
   void skipNextWithoutContext() async {
     try {
       if (_audioPlayer.hasNext) {
-        _audioPlayer.seekToNext();
+        if (_audioPlayer.loopMode.name=="one"){
+          _audioPlayer.setLoopMode(LoopMode.off);
+          _audioPlayer.seekToNext();
+          _audioPlayer.setLoopMode(LoopMode.one);
+        }else{
+          _audioPlayer.seekToNext();
+        }
+
+
         AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex+1]);
         if(currentIndex<playlistList.length){
           currentIndex++;
@@ -160,7 +176,14 @@ class AudioPlayerSingleton {
   void skipPrevious(BuildContext context) async {
     try {
       if (_audioPlayer.hasPrevious) {
-        _audioPlayer.seekToPrevious();
+        if (_audioPlayer.loopMode.name=="one"){
+          _audioPlayer.setLoopMode(LoopMode.off);
+          _audioPlayer.seekToPrevious();
+          _audioPlayer.setLoopMode(LoopMode.one);
+        }else{
+          _audioPlayer.seekToPrevious();
+        }
+
         AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex-1]);
         if(currentIndex>=0){
           currentIndex--;
@@ -180,7 +203,15 @@ class AudioPlayerSingleton {
   void skipPreviousNoContext() async {
     try {
       if (_audioPlayer.hasPrevious) {
-        _audioPlayer.seekToPrevious();
+        if (_audioPlayer.loopMode.name=="one"){
+          _audioPlayer.setLoopMode(LoopMode.off);
+          _audioPlayer.seekToPrevious();
+          _audioPlayer.setLoopMode(LoopMode.one);
+        }else{
+          _audioPlayer.seekToPrevious();
+        }
+
+
         AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex-1]);
         if(currentIndex>=0){
           currentIndex--;

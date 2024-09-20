@@ -7,6 +7,8 @@ import 'package:vibemix/models/box.dart';
 import '../../customs/global.dart';
 import '../../models/audio_player_model.dart';
 import '../../models/hive.dart';
+import '../../utils/fav_notifier.dart';
+import '../../utils/notifier.dart';
 
 class FavoriteScreen extends StatefulWidget {
   // ignore: use_key_in_widget_constructors
@@ -24,16 +26,25 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   void initState() {
-    super.initState();
+
+    FavNotifier().notifier.addListener(getHiveMusic);
     getHiveMusic();
+    super.initState();
+
   }
 
   getHiveMusic() async {
+    favourite = [];
     favsBox = await HiveService.getFavBox();
     favourite.addAll(favsBox!.values);
     setState(() {});
   }
 
+@override
+  void dispose() {
+  FavNotifier().notifier.removeListener(getHiveMusic);
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return ScaffoldCustom(
@@ -48,6 +59,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               physics: const ScrollPhysics(),
               itemCount: favourite.length,
               itemBuilder: (context, index) {
+
                 return MusicWidget(
                     data: favourite[index],
                     color: foreground,

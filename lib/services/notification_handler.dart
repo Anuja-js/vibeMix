@@ -59,9 +59,9 @@ class MyAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
         MediaControl.skipToNext,
       ],
       systemActions: {
-        // // MediaAction.seek,
-        // MediaAction.seekForward,
-        // MediaAction.seekBackward,
+        // MediaAction.seek,
+        MediaAction.seekForward,
+        MediaAction.seekBackward,
       },
       processingState: {
         ProcessingState.idle: AudioProcessingState.idle,

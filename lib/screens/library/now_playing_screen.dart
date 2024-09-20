@@ -8,6 +8,7 @@ import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/nav/navbar.dart';
 import 'package:vibemix/network/lyrics_network.dart';
+import 'package:vibemix/utils/fav_notifier.dart';
 import '../../customs/custom_elevated_button.dart';
 import '../../customs/global.dart';
 import '../../models/audio_player_model.dart';
@@ -46,11 +47,29 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   List<String> playlistNames = [];
   @override
   void initState() {
-    audioPlayer.play();
+    if(audioPlayer.playing)
+      {
+        isPlaying=true;
+      }else{
+      isPlaying=false;
+    }
+
     getHiveMusic();
     fetchCurrentVolume();
     getLyricsData();
     audioPlayer.positionStream.listen(onAudioPositionChanged);
+    audioPlayer.loopModeStream.listen((event){
+      if(event.name=="one"){
+        isLooping=true;
+      }else{
+        isLooping=false;
+      }
+      if(mounted) {
+        setState(() {
+
+      });
+      }
+    });
     audioPlayer.currentIndexStream.listen((index)  {
 
      refresh();
@@ -71,7 +90,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
 
 void refresh(){
    // await Future.delayed(Duration(seconds: 1));
-    print("777777777777777777${audioPlayer.currentIndex}");
     final playlistSong=AudioPlayerSingleton().playlistList[audioPlayer.currentIndex!];
     SongHiveModel currentSong=SongHiveModel(id: playlistSong.id, displayNameWOExt: playlistSong.displayNameWOExt, artist: playlistSong.artist, uri: playlistSong.uri);
     AudioPlayerSingleton().setCurrentSong(
@@ -92,6 +110,7 @@ void refresh(){
       backButton: true,
       onBack: () {
         RefreshNotifier().notifier.value = !RefreshNotifier().notifier.value;
+
         Navigator.pop(context);
       },
       body: Padding(
@@ -470,6 +489,7 @@ void refresh(){
   }
 
   void favIcon() async {
+
     favsBox = await HiveService.getFavBox();
     if (isFavorite) {
       favsBox!.delete(widget.song.id);
@@ -487,6 +507,7 @@ void refresh(){
     setState(() {
       isFavorite = !isFavorite;
     });
+    FavNotifier().notifier.value=!FavNotifier().notifier.value;
   }
 
   void getLyricsData() async {
