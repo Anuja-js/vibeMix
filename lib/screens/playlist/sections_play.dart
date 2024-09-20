@@ -45,7 +45,7 @@ class _SecssionsEachState extends State<SecssionsEach> {
         backButton: true,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
+            padding: const EdgeInsets.symmetric(horizontal: 18,),
             child:Column(children: [
               if(playlistSongs.length==0 )
                 TextCustom(color: foreground, size: 18, fontWeight: FontWeight.normal, text: "Songs Not found"),
@@ -61,7 +61,7 @@ class _SecssionsEachState extends State<SecssionsEach> {
 
             ],)
           ),
-        ),
+        ),floating: true,
         appBar: true);
   }
 

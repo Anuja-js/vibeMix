@@ -4,6 +4,7 @@ import 'package:vibemix/customs/music_widget.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/customs/global.dart';
+import 'package:vibemix/models/audio_player_model.dart';
 import 'package:vibemix/models/recent.dart';
 
 import '../../models/box.dart';
@@ -43,7 +44,7 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
     for (var song in recentList) {
       Duration difference = now.difference(song.time);
 
-      if (difference.inMinutes < 5) {
+      if (difference.inMinutes < 10) {
         lastSession.add(song);
       } else if (difference.inHours < 1) {
         oneHourAgo.add(song);
@@ -61,6 +62,7 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
   Widget build(BuildContext context) {
     return ScaffoldCustom(
       backButton: true,
+      floating: true,
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 18),
         child: SingleChildScrollView(
@@ -91,6 +93,11 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
                   recentList: yesterdayPlayed,
                   text: 'Played Yesterday',
                 ),
+              AudioPlayerSingleton().currentSong == null
+                  ? sh10
+                  : const SizedBox(
+                      height: 110,
+                    )
             ],
           ),
         ),

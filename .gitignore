@@ -1,3 +1,25 @@
+
+build/
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/app.framework
+ios/Flutter/Debug.xcconfig
+ios/Flutter/Release.xcconfig
+.idea/
+.vscode/
+pubspec.lock
+android/.gradle/
+ios/Pods/
+ios/.symlinks/
+.DS_Store
+ios/Podfile.lock
+.firebase/
 # Miscellaneous
 *.class
 *.log

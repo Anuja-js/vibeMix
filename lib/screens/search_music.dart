@@ -28,7 +28,7 @@ class _SearchMusicState extends State<SearchMusic> {
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
-        elevation: 0,
+        elevation: 0,title: TextCustom(color: foreground, text: "Search",size: 18,fontWeight: FontWeight.bold,), centerTitle: true,
         backgroundColor: background,
         leading: IconButton(
           onPressed: () {
@@ -52,15 +52,7 @@ class _SearchMusicState extends State<SearchMusic> {
           if (searchQuery.isNotEmpty && filteredSongs.isNotEmpty)
             FilteredSongs(filteredSongs: filteredSongs)
           else if (searchQuery.isNotEmpty && filteredSongs.isEmpty)
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height / 5,
-                  horizontal: MediaQuery.of(context).size.width / 3),
-              child: TextCustom(
-                text: "Song Not Found",
-                color: foreground,
-              ),
-            )
+            const Image(image: AssetImage("assets/images/notfound.png"),width: 200,height: 200,)
           else
             Expanded(
               child: ListView.builder(
@@ -150,38 +142,41 @@ class SearchTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      onChanged: onPress,
-      style: TextStyle(
-          color: foreground, fontSize: 15, fontWeight: FontWeight.normal),
-      scrollPhysics: const NeverScrollableScrollPhysics(),
-      decoration: InputDecoration(
-        fillColor: background,
-        filled: true,
-        focusColor: background,
-        suffixIconColor: foreground,
-        labelText: 'Search for anything ...',
-        floatingLabelStyle: TextStyle(
-            color: foreground, fontSize: 14, fontWeight: FontWeight.bold),
-        labelStyle: TextStyle(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: TextFormField(
+        onChanged: onPress,
+        style: TextStyle(
             color: foreground, fontSize: 15, fontWeight: FontWeight.normal),
-        suffixIcon: const Icon(
-          Icons.search,
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: foreground,
+        scrollPhysics: const NeverScrollableScrollPhysics(),
+        decoration: InputDecoration(
+          fillColor: background,
+          filled: true,
+          focusColor: background,
+          suffixIconColor: foreground,
+          labelText: 'Search for anything ...',
+          floatingLabelStyle: TextStyle(
+              color: foreground, fontSize: 14, fontWeight: FontWeight.bold),
+          labelStyle: TextStyle(
+              color: foreground, fontSize: 15, fontWeight: FontWeight.normal),
+          suffixIcon: const Icon(
+            Icons.search,
           ),
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: foreground),
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(color: foreground),
-          borderRadius: BorderRadius.circular(15.0),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: foreground,
+            ),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: foreground),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          border: UnderlineInputBorder(
+            borderSide: BorderSide(color: foreground),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
         ),
       ),
     );

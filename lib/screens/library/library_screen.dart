@@ -156,7 +156,7 @@ class NowPlayingSession extends StatelessWidget {
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No song is currently playing')),
+            const SnackBar(content: Text('No song is currently playing'),duration: Duration(seconds: 1),),
           );
         }
       },

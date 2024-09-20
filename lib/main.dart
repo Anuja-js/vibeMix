@@ -21,10 +21,11 @@ void main() async {
   // Initialize AudioHandler
   audioHandler = await AudioService.init(
     builder: () => MyAudioHandler(),
-    config: const AudioServiceConfig(
-      androidNotificationChannelId: 'com.example.vibemix.channel.audio',
+    config:  AudioServiceConfig(
+      androidNotificationChannelId: 'com.vibemix.vibemix',
       androidNotificationChannelName: 'Audio playback',
       androidNotificationOngoing: true,
+      androidShowNotificationBadge: true,
     ),
   );
   runApp(const MyApp());
@@ -36,9 +37,10 @@ Future<AudioHandler> initAudioHandler() async {
     final handler = await AudioService.init(
       builder: () => MyAudioHandler(),
       config: AudioServiceConfig(
-        androidNotificationChannelId: 'com.example.vibemix.channel',
+        androidNotificationChannelId: 'com.vibemix.vibemix',
         androidNotificationChannelName: 'Music playback',
-        androidNotificationOngoing: true, // Ensures the notification is ongoing
+        androidNotificationOngoing: true,
+        androidShowNotificationBadge: true,
       ),
     );
     return handler;

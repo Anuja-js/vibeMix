@@ -28,6 +28,7 @@ class _EditPlaylistState extends State<EditPlaylist> {
     super.initState();
   }
   List<SongHiveModel> selected = [];
+
   getHiveMusic() async {
     songsBox = await HiveService.getSongsBox();
     songs.addAll(songsBox!.values);
@@ -37,31 +38,25 @@ class _EditPlaylistState extends State<EditPlaylist> {
     setState(() {});
   }
 
-  void sortMusicList() {
-    // Filter the non-selected songs from the songs list
-    List<SongHiveModel> nonSelectedSongs =
-        songs.where((song) => !selected.contains(song)).toList();
 
-    // Clear the songs list to prepare for reordering
-    songs.clear();
-
-    // Add only unique selected songs to the songs list
-    for (var song in selected) {
-      if (!songs.contains(song)) {
-        songs.add(song);
+  void sortMusicList() async{
+    List<SongHiveModel> unSelected = [];
+    unSelected=songs;
+      for(int i=0;i<unSelected.length;i++){
+      for(int j=0;j<selected.length;j++){
+        if(unSelected[i].id==selected[j].id){
+          unSelected.removeAt(i);
+        }
       }
-    }
-
-    // Add only unique non-selected songs to the songs list
-    for (var song in nonSelectedSongs) {
-      if (!songs.contains(song)) {
-        songs.add(song);
       }
-    }
+   songs=[];
+    songs.addAll(selected);
+    songs.addAll(unSelected);
 
     // Update the UI or any dependent state if needed
     setState(() {});
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -201,9 +196,11 @@ class _EditPlaylistState extends State<EditPlaylist> {
                                     } else {
                                       selected.removeWhere(
                                           (song) => song.id == songs[index].id);
+                                      // sortMusicList();
                                     }
                                     setState(() {});
-                                  })
+                                  }),
+
                             ],
                           ),
                           subtitle: Text(

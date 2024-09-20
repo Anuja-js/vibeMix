@@ -42,13 +42,14 @@ class _MyMusicState extends State<MyMusic> {
                     size: 18,
                     fontWeight: FontWeight.normal,
                     text: "Songs Not found"),
-              ListOfMusic(songsBox: songsBox, count: songs.length)
+              ListOfMusic(songsBox: songsBox, count: songs.length),
+              SizedBox(height: 70,),
             ],
           ),
         ),
       ),
       appBar: true,
-      action: false,
+      action: false,floating: true,
     );
   }
 

@@ -36,7 +36,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldCustom(
-      tittle: "Playlists",
+      tittle: "Playlists",floating: true,
       onBack: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) {
           return NavBar(reset: false);
@@ -131,7 +131,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                       ),
                                       ElevatedCustomButton(
                                         buttonName: "Delete",
-                                        onpress: delete,
+                                        onpress: (){
+                                          return delete(index);
+                                        },
                                       )
                                     ],
                                   ),
@@ -149,7 +151,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             size: 18,
                           ),
                         );
-                      })
+                      }),sh50,
             ],
           )),
         ),
@@ -157,17 +159,20 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
       appBar: true,
     );
   }
-  void delete() async {
+  void delete(int index) async {
     Box<SongHiveModel> oldPlaylist =
     await Hive.openBox<SongHiveModel>(
         playlistNames[index]);
 
     Box<String> playlists =
-    await Hive.openBox("playlists");
+    await Hive.openBox("playlists"); ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${playlistNames[index].toString()} Removed'),duration: Duration(seconds: 1),),
+    );
     playlists
         .delete(playlistNames[index]);
     oldPlaylist.deleteFromDisk();
     playlistNames.removeAt(index);
+
     setState(() {});
     Navigator.of(context).pop();
   }

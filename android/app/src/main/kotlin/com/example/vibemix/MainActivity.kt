@@ -1,4 +1,4 @@
-package com.example.vibemix
+package com.vibemix.vibemix
 
 import io.flutter.embedding.android.FlutterActivity
 

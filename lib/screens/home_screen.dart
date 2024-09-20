@@ -5,14 +5,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/customs/icon_images.dart';
-import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/models/box.dart';
 import 'package:vibemix/screens/library/mymusic.dart';
+import 'package:vibemix/screens/search_music.dart';
 import '../customs/container_custom.dart';
 import '../customs/list_of_allsongs.dart';
 import '../customs/listtile_custom.dart';
 import '../customs/global.dart';
+import '../models/audio_player_model.dart';
 import '../models/hive.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,8 +37,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldCustom(
-      backButton: false,
+    return Scaffold(backgroundColor: background,
+      appBar: AppBar(elevation: 0,backgroundColor: background,automaticallyImplyLeading: false,
+        title: GestureDetector(onTap: (){
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (ctx) {
+            return const SearchMusic();
+          }));
+        },
+          child: Row(children: [sw10,
+           Icon(Icons.search,color: foreground,size: 20,),sw15,
+            TextCustom(color: foreground, text: "Search a songs")
+          ],),
+        ),
+        actions: [
+          IconImage(
+            height: 150,
+            width: 100,
+          )
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -46,16 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(
-                    alignment: Alignment.topRight,
-                    child: IconImage(
-                      height: 125,
-                      width: 90,
-                    )),
+                sh25,
                 UserImageAndName(name: name),
-                sh25,
-                const ContainerForSearch(),
-                sh25,
+                sh10,
                 ListTileCustom(
                   onTap: () {
                     Navigator.of(context)
@@ -72,17 +84,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       text: "Songs Not found",
                       color: foreground,
                     ),
+
                 if (hasPermission && songsBox != null)
                   ListOfMusic(
                       songsBox: songsBox,
-                      count: songsBox!.length > 5 ? 5 : songsBox!.length)
+                      count: songsBox!.length > 7 ?AudioPlayerSingleton().currentSong!=null?5: 7 : songsBox!.length),
+               AudioPlayerSingleton().currentSong==null? SizedBox(height: 70,):sh5,
               ],
             ),
           ),
         ),
       ),
-      appBar: false,
-      action: false,
     );
   }
 
@@ -172,7 +184,6 @@ class _UserImageAndNameState extends State<UserImageAndName> {
   Future<void> pickImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source);
-
     if (pickedFile != null) {
       setState(() {
         imageFile = File(pickedFile.path);

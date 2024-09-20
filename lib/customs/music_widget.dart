@@ -91,29 +91,29 @@ class _MusicWidgetState extends State<MusicWidget> {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              IconButton(
-                onPressed: () async {
-                  await AudioPlayerSingleton()
-                      .setCurrentPlaylist(widget.playlistName);
-                  if (audio.playing) {
-                    AudioPlayerSingleton().pause();
-                    if (AudioPlayerSingleton().currentSong != widget.data) {
-                      await AudioPlayerSingleton().playSong(widget.data);
-                    }
-                  } else {
-                    await AudioPlayerSingleton().playSong(widget.data);
-                  }
-                  current = widget.data;
-                  RefreshNotifier().notifier.value =
-                      !RefreshNotifier().notifier.value;
-                  setState(() {});
-                },
-                icon: Icon(
-                  isPlaying ? Icons.pause : Icons.play_circle_outline,
-                  color: foreground,
-                  size: 24,
-                ),
-              ),
+              // IconButton(
+              //   onPressed: () async {
+              //     await AudioPlayerSingleton()
+              //         .setCurrentPlaylist(widget.playlistName);
+              //     if (audio.playing) {
+              //       AudioPlayerSingleton().pause();
+              //       if (AudioPlayerSingleton().currentSong != widget.data) {
+              //         await AudioPlayerSingleton().playSong(widget.data);
+              //       }
+              //     } else {
+              //       await AudioPlayerSingleton().playSong(widget.data);
+              //     }
+              //     current = widget.data;
+              //     RefreshNotifier().notifier.value =
+              //         !RefreshNotifier().notifier.value;
+              //     setState(() {});
+              //   },
+              //   icon: Icon(
+              //     isPlaying ? Icons.pause : Icons.play_circle_outline,
+              //     color: foreground,
+              //     size: 24,
+              //   ),
+              // ),
               IconButton(
                 onPressed: () {
                   showMenu(
@@ -125,16 +125,22 @@ class _MusicWidgetState extends State<MusicWidget> {
                       PopupMenuItem(
                         value: 'favorite',
                         onTap: () {
-                          if (isFavorite) {
+                          if (isFavorite) {  ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Song removed from favorites'),duration: Duration(seconds: 1),),
+                          );
                             favsBox!.delete(widget.data.id);
                             favourite.removeWhere(
                                 (song) => song.id == widget.data.id);
+
                             setState(() {
                               isFavorite = !isFavorite;
                             });
-                          } else {
+                          } else { ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Song add to favorites'),duration: Duration(seconds: 1),),
+                          );
                             favsBox!.put(widget.data.id, widget.data);
                             favourite.add(widget.data);
+
                             setState(() {
                               isFavorite = !isFavorite;
                             });
@@ -214,15 +220,27 @@ class _MusicWidgetState extends State<MusicWidget> {
                                                   children: [
                                                     InkWell(
                                                       onTap: () async {
+
                                                         Box<SongHiveModel>
                                                             playlistBox =
                                                             await Hive.openBox(
                                                                 playlistNames[
                                                                     index]);
-                                                        playlistBox.put(
-                                                            widget.data.id,
-                                                            widget.data);
-                                                        Navigator.pop(context);
+                                                        if(playlistBox.containsKey(widget.data.id)){
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                            SnackBar(content: Text('Song already exist'),duration: const Duration(seconds: 1),),
+                                                          );
+                                                          Navigator.pop(context);
+                                                        }
+                                                        else{
+                                                          playlistBox.put(
+                                                              widget.data.id,
+                                                              widget.data);
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                            SnackBar(content: Text('Song add to ${playlistNames[index]}'),duration: const Duration(seconds: 1),),
+                                                          );
+                                                          Navigator.pop(context);
+                                                        }
                                                       },
                                                       child: Row(
                                                         mainAxisAlignment:
@@ -262,19 +280,21 @@ class _MusicWidgetState extends State<MusicWidget> {
                                                     "No PlayList Available Create One",
                                                 color: background,
                                               ),
-                                              sh10,
-                                              ElevatedCustomButton(
-                                                buttonName: "Create Playlist",
-                                                onpress: () {
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (ctx) {
-                                                    return const CreatePlaylist();
-                                                  }));
-                                                },
-                                              )
+
                                             ],
                                           ),
+                                    sh10,
+                                    ElevatedCustomButton(
+                                      buttonName: "Create Playlist",
+                                      onpress: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (ctx) {
+                                                  return const CreatePlaylist();
+                                                }));
+                                      },
+                                    )
                                   ],
                                 ),
                               );
@@ -287,6 +307,7 @@ class _MusicWidgetState extends State<MusicWidget> {
                           title: Text('Add to Playlist'),
                         ),
                       ),
+
                     ],
                   );
                 },
@@ -314,21 +335,24 @@ class _MusicWidgetState extends State<MusicWidget> {
         ],
       ),
       onTap: () async {
+        FocusManager.instance.primaryFocus!.unfocus();
         if (audio.playing) {
-          AudioPlayerSingleton().pause();
+         audio.pause();
         }
         await AudioPlayerSingleton().setCurrentPlaylist(widget.playlistName);
+        AudioPlayerSingleton().playSong(widget.data);
+        RefreshNotifier().notifier.value=!RefreshNotifier().notifier.value;
 
-        Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-          return NowPlayingScreen(
-            song: widget.data,
-          );
-        })).then((value) async {
-          getHiveMusic();
-          setState(() {
-            current = AudioPlayerSingleton().currentSong;
-          });
-        });
+        // Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+        //   return NowPlayingScreen(
+        //     song: widget.data,
+        //   );
+        // })).then((value) async {
+        //   getHiveMusic();
+        //   setState(() {
+        //     current = AudioPlayerSingleton().currentSong;
+        //   });
+        // });
       },
     );
   }

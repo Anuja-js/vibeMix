@@ -4,7 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/main.dart';
 import 'package:vibemix/screens/onboarding/onboarding_secsion.dart';
-import 'package:vibemix/screens/terms_screen.dart';
+import 'package:vibemix/screens/settings/privacy_policy.dart';
+import 'package:vibemix/screens/settings/terms_screen.dart';
 import 'package:vibemix/utils/color_notifier.dart';
 
 import '../../customs/text_custom.dart';
@@ -137,12 +138,28 @@ class _SettingScreenState extends State<SettingScreen> {
                 color: foreground,
                 size: 18,
                 fontWeight: FontWeight.normal,
-                text: "Logout",
+                text: "Privacy policy",
               ),
               onTap: () {
-                logout(context);
+                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+                  return PrivacyPolicy();
+                }));
               },
             ),
+            // ListTile(
+            //   trailing:  Icon(Icons.arrow_forward_ios_outlined,
+            //       size: 20, color: foreground),
+            //   title: TextCustom(
+            //     color: foreground,
+            //     size: 18,
+            //     fontWeight: FontWeight.normal,
+            //     text: "Logout",
+            //   ),
+            //   onTap: () {
+            //     logout(context);
+            //   },
+            // ),
+
           ],
         ),
       ),
@@ -189,38 +206,38 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   // Logout function
-  logout(BuildContext ctx) async {
-    final sharedprfs = await SharedPreferences.getInstance();
-    showDialog(
-      context: ctx,
-      builder: (ctx1) {
-        return AlertDialog(
-          title: const Text("Logout"),
-          content: const Text("Do you want to logout......?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx1).pop();
-              },
-              child: const Text("Close"),
-            ),
-            TextButton(
-              onPressed: () async {
-                await sharedprfs.clear();
-            await   Hive.deleteBoxFromDisk('fav');
-                await    Hive.deleteBoxFromDisk('songs');
-                await   Hive.deleteBoxFromDisk('playlists');
-                Navigator.of(ctx).pushReplacement(
-                  MaterialPageRoute(builder: (ctx1) => OnboardingScreen()),
-                );
-              },
-              child: const Text("Logout"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // logout(BuildContext ctx) async {
+  //   final sharedprfs = await SharedPreferences.getInstance();
+  //   showDialog(
+  //     context: ctx,
+  //     builder: (ctx1) {
+  //       return AlertDialog(
+  //         title: const Text("Logout"),
+  //         content: const Text("Do you want to logout......?"),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(ctx1).pop();
+  //             },
+  //             child: const Text("Close"),
+  //           ),
+  //           TextButton(
+  //             onPressed: () async {
+  //               await sharedprfs.clear();
+  //           await   Hive.deleteBoxFromDisk('fav');
+  //               await    Hive.deleteBoxFromDisk('songs');
+  //               await   Hive.deleteBoxFromDisk('playlists');
+  //               Navigator.of(ctx).pushReplacement(
+  //                 MaterialPageRoute(builder: (ctx1) => OnboardingScreen()),
+  //               );
+  //             },
+  //             child: const Text("Logout"),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
   showAccentColor(ctx){
     showModalBottomSheet(
         constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height/2,maxWidth: MediaQuery.of(context).size.width),
@@ -342,6 +359,7 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
             ),
             Divider(height: 15,),
+
           ],
         ),
       );

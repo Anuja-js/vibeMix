@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
 
-import '../customs/global.dart';
+import '../../customs/global.dart';
 
 // ignore: must_be_immutable
 class TermsAndCondition extends StatelessWidget {
@@ -29,27 +29,22 @@ class TermsAndCondition extends StatelessWidget {
           '''Vibe Mix does not upload or share your music files. All music files remain on your device, and you retain full ownership of the content. We do not claim any rights over the music files you play using Vibe Mix.'''
     },
     {
-      "head": "5. Privacy Policy",
-      "sub":
-          '''Vibe Mix respects your privacy. As an offline music player, the App does not collect, store, or share any personal information. For more details on our commitment to privacy, please review our Privacy Policy.'''
-    },
-    {
-      "head": "6. Intellectual Property ",
+      "head": "5. Intellectual Property ",
       "sub":
           '''All intellectual property rights in Vibe Mix and content provided by us remain our property. You are granted a limited, non-exclusive license to use the App for personal, non-commercial use.'''
     },
     {
-      "head": "7. Limitation of Liability",
+      "head": "6. Limitation of Liability",
       "sub":
           '''Vibe Mix is provided "as is" without any warranties, express or implied. We do not guarantee that the App will be free of errors or uninterrupted. In no event shall we be liable for any damages arising from the use or inability to use the App.'''
     },
     {
-      "head": "8. Governing Law ",
+      "head": "7. Governing Law ",
       "sub":
           '''These terms and conditions are governed by and construed in accordance with the laws of [Your Country/State], and you irrevocably submit to the exclusive jurisdiction of the courts in that location.'''
     },
     {
-      "head": "9. Contact Information",
+      "head": "8. Contact Information",
       "sub":
           '''If you have any questions or concerns about these terms, please contact us at anujajs2002@gmail.com'''
     },

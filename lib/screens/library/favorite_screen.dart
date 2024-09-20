@@ -37,12 +37,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldCustom(
-      tittle: "Favorites",
+      tittle: "Favorites",floating: true,
       backButton: true,
       body: favourite.isNotEmpty
           ? ListView.builder(
               padding: const EdgeInsets.only(
-                  bottom: 55, top: 20, left: 18, right: 18),
+                  bottom: 70, top: 20, left: 18, right: 18),
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               physics: const ScrollPhysics(),

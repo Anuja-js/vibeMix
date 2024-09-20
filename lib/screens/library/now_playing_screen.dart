@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
+import 'package:vibemix/nav/navbar.dart';
 import 'package:vibemix/network/lyrics_network.dart';
 import '../../customs/custom_elevated_button.dart';
 import '../../customs/global.dart';
@@ -15,9 +17,9 @@ import '../../utils/notifier.dart';
 import '../playlist/create_playlist.dart';
 
 class NowPlayingScreen extends StatefulWidget {
-  final SongHiveModel song;
+   SongHiveModel song;
 
-  const NowPlayingScreen({
+   NowPlayingScreen({
     super.key,
     required this.song,
   });
@@ -44,21 +46,45 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   List<String> playlistNames = [];
   @override
   void initState() {
-    checkPlayButton();
+    audioPlayer.play();
     getHiveMusic();
     fetchCurrentVolume();
     getLyricsData();
     audioPlayer.positionStream.listen(onAudioPositionChanged);
+    audioPlayer.currentIndexStream.listen((index)  {
+
+     refresh();
+    });
     super.initState();
   }
 
   @override
   void dispose() {
     lyricsScrollController.dispose();
+    audioPlayer.currentIndexStream.listen((index){
+      refresh();
+    }).cancel();
     timer?.cancel();
+    // audioPlayer.currentIndexStream.listen(onPlayerStateChanged).cancel();
     super.dispose();
   }
 
+void refresh(){
+   // await Future.delayed(Duration(seconds: 1));
+    print("777777777777777777${audioPlayer.currentIndex}");
+    final playlistSong=AudioPlayerSingleton().playlistList[audioPlayer.currentIndex!];
+    SongHiveModel currentSong=SongHiveModel(id: playlistSong.id, displayNameWOExt: playlistSong.displayNameWOExt, artist: playlistSong.artist, uri: playlistSong.uri);
+    AudioPlayerSingleton().setCurrentSong(
+      currentSong
+    );
+    widget.song=AudioPlayerSingleton().currentSong!;
+    getLyricsData();
+  if(mounted) {
+    setState(() {
+
+    });
+  }
+}
   @override
   Widget build(BuildContext context) {
     return ScaffoldCustom(
@@ -154,9 +180,9 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                 ),
                 IconButton(
                   icon: Icon(Icons.playlist_add, color: foreground),
-                  onPressed: () async {
+                  onPressed:  () async {
                     Box<String> playlistsBox =
-                        await Hive.openBox<String>('playlists');
+                    await Hive.openBox<String>('playlists');
                     setState(() {
                       playlistNames = playlistsBox.values.toList();
                     });
@@ -167,7 +193,121 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                       ),
                       context: context,
                       builder: (ctx) {
-                        return ChoosePlaylist(playlistNames: playlistNames, widget: widget);
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 18),
+                          color: textPink,
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextCustom(
+                                    text: "Choose PlayList",
+                                    color: background,
+                                    size: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Icon(
+                                        Icons.close_rounded,
+                                        color: background,
+                                      ))
+                                ],
+                              ),
+                              playlistNames.isNotEmpty
+                                  ? Expanded(
+                                child: ListView.builder(
+                                  itemCount: playlistNames.length,
+                                  itemBuilder: (ctx, index) {
+                                    return Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: () async {
+
+                                            Box<SongHiveModel>
+                                            playlistBox =
+                                            await Hive.openBox(
+                                                playlistNames[
+                                                index]);
+                                          if(playlistBox.containsKey(widget.song.id)){
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text('Song already exist'),duration: const Duration(seconds: 1),),
+                                            );
+                                            Navigator.pop(context);
+                                          }
+                                          else{
+                                            playlistBox.put(
+                                                widget.song.id,
+                                                widget.song);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(content: Text('Song add to ${playlistNames[index]}'),duration: const Duration(seconds: 1),),
+                                            );
+                                            Navigator.pop(context);
+                                          }
+
+
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: [
+                                              TextCustom(
+                                                text: playlistNames[
+                                                index],
+                                                color: background,
+                                                size: 18,
+                                              ),
+                                              IconButton(
+                                                  onPressed: () {},
+                                                  icon: Icon(
+                                                    Icons
+                                                        .arrow_forward_ios_outlined,
+                                                    color:
+                                                    background,
+                                                    size: 18,
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              )
+                                  : Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  sh50,
+                                  TextCustom(
+                                    text:
+                                    "No PlayList Available Create One",
+                                    color: background,
+                                  ),
+                                ],
+                              ),
+                              sh10,
+                             ElevatedCustomButton(
+                                buttonName: "Create Playlist",
+                                onpress: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(context,
+                                      MaterialPageRoute(
+                                          builder: (ctx) {
+                                            return const CreatePlaylist();
+                                          }));
+                                },
+                              )
+                            ],
+                          ),
+                        );
                       },
                     );
                   },
@@ -188,6 +328,17 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                     stream: audioPlayer.positionStream,
                     builder: (context, snapshot) {
                       final position = snapshot.data ?? Duration.zero;
+                   // print("${audioPlayer.duration},$position");
+                      // final position = snapshot.data ?? Duration.zero;
+                      final maxDuration = audioPlayer.duration ?? Duration.zero;
+
+                      // Use a tolerance check for slight differences between position and duration
+                      if (maxDuration != Duration.zero &&
+                          position.inSeconds >= maxDuration.inSeconds - 1) {
+                        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                        // Execute your function here when the audio completes
+                        // AudioPlayerSingleton().skipNext(context); // Example function
+                      }
 
                       return Row(
                         children: [
@@ -198,7 +349,8 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                             text: position.toString().split(".")[0],
                           ),
                           Expanded(
-                            child: Slider(
+                            child:
+                            Slider(
                               min: 0.0,
                               value: audioPlayer.duration == null
                                   ? 0.0
@@ -207,13 +359,20 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                                   0.0,
                               onChanged: (value) {
                                 changeToSeconds(value.toInt());
-                                Duration duration =
-                                    Duration(seconds: value.toInt());
-                                if (duration.inSeconds.toDouble() ==
-                                    audioPlayer.duration!.inSeconds
-                                        .toDouble()) {
-                                  AudioPlayerSingleton().skipNext(context);
-                                }
+
+                                print("lllllllllllllllllllllllllllllllllllllll");
+                                // Duration duration =
+                                //     Duration(seconds: value.toInt());
+                                // print("oooooooooooooooooooooooooooooooooooooooo${duration.inSeconds.toDouble()}");
+                                // print("oooooooooooooooooooooooooooooooooooooooo${audioPlayer.duration!.inSeconds.toDouble()}");
+                                // if (duration.inSeconds.toDouble() ==
+                                //     audioPlayer.duration!.inSeconds
+                                //         .toDouble()) {
+                                //   print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee${duration.inSeconds.toDouble()}");
+                                // print("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee${audioPlayer.duration!.inSeconds.toDouble()}");
+                                //
+                                // AudioPlayerSingleton().skipNext(context);
+                                // }
                               },
                               activeColor: background,
                               inactiveColor: foreground,
@@ -232,6 +391,7 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
                       );
                     },
                   ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -314,9 +474,15 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     if (isFavorite) {
       favsBox!.delete(widget.song.id);
       favourite.removeWhere((song) => song.id == widget.song.id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Song removed from favorites'),duration: Duration(seconds: 1),),
+      );
     } else {
       favsBox!.put(widget.song.id, widget.song);
       favourite.add(widget.song);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Song added to favorites'),duration: Duration(seconds: 1),),
+      );
     }
     setState(() {
       isFavorite = !isFavorite;
@@ -334,20 +500,6 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
     favourite.addAll(favsBox!.values);
     isFavorite = favourite.any((song) => song.id == widget.song.id);
     setState(() {});
-  }
-
-  checkPlayButton() async {
-    current = AudioPlayerSingleton().currentSong;
-    if (current == null) {
-      current = widget.song;
-      AudioPlayerSingleton().setCurrentSong(widget.song);
-      await AudioPlayerSingleton().playSong(widget.song);
-    } else if (current!.id != widget.song.id) {
-      await AudioPlayerSingleton().playSong(widget.song);
-    } else {
-      await AudioPlayerSingleton().playSong(widget.song);
-    }
-    AudioPlayerSingleton().setCurrentSong(widget.song);
   }
 
   fetchCurrentVolume() {
@@ -378,6 +530,12 @@ class _NowPlayingScreenState extends State<NowPlayingScreen> {
   }
 
   void onAudioPositionChanged(Duration position) {
+    if(position==audioPlayer.duration&& mounted){
+      print("wrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+      return  NowPlayingScreen(song: AudioPlayerSingleton().currentSong!);
+      }));
+    }
     for (int i = 0; i < lyricsLines.length; i++) {
       if (position.inSeconds >= i * 5 && position.inSeconds < (i + 1) * 5) {
         currentLineIndex = i;
@@ -434,6 +592,7 @@ class ChoosePlaylist extends StatelessWidget {
               ),
               IconButton(
                   onPressed: () {
+
                     Navigator.pop(context);
                   },
                   icon: Icon(
@@ -511,6 +670,9 @@ class ListOfPlaylist extends StatelessWidget {
                     playlistBox.put(
                         widget.song.id,
                         widget.song);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                       SnackBar(content: Text('Song added ${playlistNames[index]}'),duration: Duration(seconds: 1),),
+                    );
                     Navigator.pop(context);
                   },
                   child: Row(

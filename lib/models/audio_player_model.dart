@@ -1,8 +1,11 @@
+import 'package:audio_service/audio_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibemix/models/recent.dart';
+import 'package:vibemix/services/notification_handler.dart';
 
 import '../screens/library/now_playing_screen.dart';
 import '../utils/notifier.dart';
@@ -18,7 +21,7 @@ class AudioPlayerSingleton {
 
   // Single instance of AudioPlayerSingleton
   static final AudioPlayerSingleton _instance =
-      AudioPlayerSingleton._privateConstructor();
+  AudioPlayerSingleton._privateConstructor();
 
   // AudioPlayer instance
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -33,7 +36,7 @@ class AudioPlayerSingleton {
 
   // ConcatenatingAudioSource to handle the playlist
   ConcatenatingAudioSource currentPlaylist =
-      ConcatenatingAudioSource(children: []);
+  ConcatenatingAudioSource(children: []);
 
   // Method to get the AudioPlayer instance
   AudioPlayer get audioPlayer => _audioPlayer;
@@ -54,11 +57,15 @@ class AudioPlayerSingleton {
           initialIndex: currentIndex, initialPosition: Duration.zero);
       _currentSong = song;
       _audioPlayer.play();
+      // MyAudioHandler().setPlaylistWithCovers(playlistList);
+
       saveToRecent(song);
       RefreshNotifier().notifier.value =
       !RefreshNotifier().notifier.value;
     } catch (e) {
-      print("Error playing song: $e");
+      if (kDebugMode) {
+        print("Error playing song: $e");
+      }
     }
   }
 
@@ -102,7 +109,9 @@ class AudioPlayerSingleton {
         currentPlaylist.add(AudioSource.uri(Uri.parse(playlistList[i].uri!)));
       }
     } catch (e) {
-      print("Error setting playlist: $e");
+      if (kDebugMode) {
+        print("Error setting playlist: $e");
+      }
     }
     if (_audioPlayer.playing &&
         playlistList.contains(AudioPlayerSingleton().currentSong)) {
@@ -115,27 +124,47 @@ class AudioPlayerSingleton {
     try {
       if (_audioPlayer.hasNext) {
         _audioPlayer.seekToNext();
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
-          return NowPlayingScreen(song: playlistList[currentIndex + 1]);
-        }));
+          AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex+1]);
+          if(currentIndex<playlistList.length){
+            currentIndex++;
+          }
+
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Playlist reached the end')),
         );
       }
+    // ignore: empty_catches
     } catch (e) {
-      print('Error skipping to next track: $e');
+
     }
   }
+  // Skip to the next song
+  void skipNextWithoutContext() async {
+    try {
+      if (_audioPlayer.hasNext) {
+        _audioPlayer.seekToNext();
+        AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex+1]);
+        if(currentIndex<playlistList.length){
+          currentIndex++;
+        }
+      }
 
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error skipping to next track: $e');
+      }
+    }
+  }
   // Skip to the previous song
   void skipPrevious(BuildContext context) async {
     try {
       if (_audioPlayer.hasPrevious) {
         _audioPlayer.seekToPrevious();
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) {
-          return NowPlayingScreen(song: playlistList[currentIndex - 1]);
-        }));
+        AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex-1]);
+        if(currentIndex>=0){
+          currentIndex--;
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -143,10 +172,26 @@ class AudioPlayerSingleton {
         );
       }
     } catch (e) {
-      print('Error skipping to previous track: $e');
+      if (kDebugMode) {
+        print('Error skipping to previous track: $e');
+      }
     }
   }
-
+  void skipPreviousNoContext() async {
+    try {
+      if (_audioPlayer.hasPrevious) {
+        _audioPlayer.seekToPrevious();
+        AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex-1]);
+        if(currentIndex>=0){
+          currentIndex--;
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error skipping to previous track: $e');
+      }
+    }
+  }
   // Seek to a specific position in the current track
   void seek(Duration position) {
     _audioPlayer.seek(position);
