@@ -35,6 +35,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
       action: true,
       actionIcon: IconButton(
         onPressed: () async {
+          FocusManager.instance.primaryFocus!.unfocus();
           String playlistName = textctr.text;
           if (playlistName.isEmpty) return;
           Box<SongHiveModel> playlistSongsBox = await Hive.openBox<SongHiveModel>(playlistName);
@@ -44,7 +45,9 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
           }
           Box<String> playlistsBox = await Hive.openBox<String>('playlists');
           playlistsBox.put(playlistName, playlistName);
-
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Playlist created successfully'),duration: Duration(seconds: 1),),
+          );
           Navigator.of(context).pop(); // Go back to PlaylistScreen after saving
         },
         icon:  Icon(Icons.check_outlined, size: 25, color: foreground),

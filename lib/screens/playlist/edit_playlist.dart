@@ -65,6 +65,7 @@ class _EditPlaylistState extends State<EditPlaylist> {
         action: true,
         actionIcon: IconButton(
           onPressed: () async {
+            FocusManager.instance.primaryFocus!.unfocus();
             String playlistName = textctr.text;
             if (playlistName.isEmpty) return;
             Box<SongHiveModel> playlistSongsBox =
@@ -87,7 +88,9 @@ class _EditPlaylistState extends State<EditPlaylist> {
              await   playlistSongsBox.put(selected[i].id.toString(), selected[i]);
               }
             }
-
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Playlist edited successfully'),duration: Duration(seconds: 1),),
+            );
             // ignore: use_build_context_synchronously
             Navigator.of(context)
                 .pushReplacement(MaterialPageRoute(builder: (ctx) {
