@@ -210,8 +210,6 @@ class AudioPlayerSingleton {
         }else{
           _audioPlayer.seekToPrevious();
         }
-
-
         AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex-1]);
         if(currentIndex>=0){
           currentIndex--;
