@@ -47,6 +47,7 @@ class AudioPlayerSingleton {
   // Method to set the currently playing song
   void setCurrentSong(SongHiveModel song) {
     _currentSong = song;
+
   }
 
   Future<void> playSong(SongHiveModel song) async {
@@ -58,7 +59,6 @@ class AudioPlayerSingleton {
       _currentSong = song;
       _audioPlayer.play();
       // MyAudioHandler().setPlaylistWithCovers(playlistList);
-
       saveToRecent(song);
       RefreshNotifier().notifier.value =
       !RefreshNotifier().notifier.value;
@@ -87,6 +87,7 @@ class AudioPlayerSingleton {
   // Set the current playlist based on the name
   Future<void> setCurrentPlaylist(String playlistName) async {
     try {
+
       playlistList.clear();
       currentPlaylist.clear();
       final shared = await SharedPreferences.getInstance();
@@ -133,6 +134,7 @@ class AudioPlayerSingleton {
 
 
           AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex+1]);
+       saveToRecent(AudioPlayerSingleton().currentSong!);
           if(currentIndex<playlistList.length){
             currentIndex++;
           }
@@ -161,6 +163,7 @@ class AudioPlayerSingleton {
 
 
         AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex+1]);
+        saveToRecent(AudioPlayerSingleton().currentSong!);
         if(currentIndex<playlistList.length){
           currentIndex++;
         }
@@ -185,6 +188,7 @@ class AudioPlayerSingleton {
         }
 
         AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex-1]);
+        saveToRecent(AudioPlayerSingleton().currentSong!);
         if(currentIndex>=0){
           currentIndex--;
         }
@@ -211,6 +215,7 @@ class AudioPlayerSingleton {
           _audioPlayer.seekToPrevious();
         }
         AudioPlayerSingleton().setCurrentSong(playlistList[currentIndex-1]);
+        saveToRecent(AudioPlayerSingleton().currentSong!);
         if(currentIndex>=0){
           currentIndex--;
         }

@@ -129,7 +129,7 @@ class RecentCustom extends StatelessWidget {
           color: foreground,
         ),
         ListView.builder(
-            shrinkWrap: true,
+            shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
             itemCount: recentList.length,
             itemBuilder: (ctx, index) {
               return MusicWidget(

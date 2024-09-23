@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:vibemix/customs/scaffold_custom.dart';
 import 'package:vibemix/customs/text_custom.dart';
-import 'package:vibemix/nav/navbar.dart';
 import 'package:vibemix/network/lyrics_network.dart';
 import 'package:vibemix/utils/fav_notifier.dart';
 import '../../customs/custom_elevated_button.dart';
@@ -97,6 +95,7 @@ void refresh(){
     );
     widget.song=AudioPlayerSingleton().currentSong!;
     getLyricsData();
+    getHiveMusic();
   if(mounted) {
     setState(() {
 
@@ -256,7 +255,7 @@ void refresh(){
                                                 index]);
                                           if(playlistBox.containsKey(widget.song.id)){
                                             ScaffoldMessenger.of(context).showSnackBar(
-                                              SnackBar(content: Text('Song already exist'),duration: const Duration(seconds: 1),),
+                                              const SnackBar(content: Text('Song already exist'),duration: Duration(seconds: 1),),
                                             );
                                             Navigator.pop(context);
                                           }
@@ -692,7 +691,7 @@ class ListOfPlaylist extends StatelessWidget {
                         widget.song.id,
                         widget.song);
                     ScaffoldMessenger.of(context).showSnackBar(
-                       SnackBar(content: Text('Song added ${playlistNames[index]}'),duration: Duration(seconds: 1),),
+                       SnackBar(content: Text('Song added ${playlistNames[index]}'),duration: const Duration(seconds: 1),),
                     );
                     Navigator.pop(context);
                   },
