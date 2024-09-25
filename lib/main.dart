@@ -6,7 +6,6 @@ import 'package:vibemix/customs/global.dart';
 import 'package:vibemix/models/hive.dart';
 import 'package:vibemix/screens/onboarding/splash_screen.dart';
 import 'package:vibemix/services/notification_handler.dart';
-
 import 'models/recent.dart';
 late AudioHandler audioHandler;
 

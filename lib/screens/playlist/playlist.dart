@@ -112,13 +112,27 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          TextCustom(
-                                            text:
-                                                "Do You Want to Delete ${playlistNames[index]}?",
-                                            color: background,
-                                            size: 18,
-                                            fontWeight: FontWeight.bold,
+                                          Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              TextCustom(
+                                                text:
+                                                    "Do You Want to Delete ?",
+                                                color: background,
+                                                size: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              SizedBox(width: MediaQuery.of(context).size.width/2,
+                                                child: Text(playlistNames[index],maxLines: 1,
+                                                style: TextStyle(
+                                                  color: background,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis
+                                                ),
+                                                ),
+                                              )
+                                            ],
                                           ),
+
                                           IconButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
@@ -142,8 +156,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             );
                           },
                           title: Text(
-                            playlistNames[index],
-                            style: TextStyle(color: foreground),
+                            playlistNames[index],maxLines: 1,
+                            style: TextStyle(color: foreground,overflow: TextOverflow.ellipsis),
                           ),
                           trailing: Icon(
                             Icons.arrow_forward_ios_outlined,

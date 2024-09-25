@@ -61,12 +61,13 @@ class _SettingScreenState extends State<SettingScreen> {
                 icon: Icon(Icons.edit, size: 20, color: foreground),
                 onPressed: () => editName(context), // Edit name button
               ),
-              title: TextCustom(
+              title:Text(   userName,maxLines: 1,
+                style: TextStyle(
                 color: foreground,
-                size: 18,
-                fontWeight: FontWeight.normal,
-                text: userName,
-              ),
+                fontSize: 18,
+                fontWeight: FontWeight.normal,overflow: TextOverflow.ellipsis
+
+              ),)
             ),
             ListTile(
               trailing: Switch(

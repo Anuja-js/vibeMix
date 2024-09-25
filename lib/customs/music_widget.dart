@@ -247,11 +247,13 @@ class _MusicWidgetState extends State<MusicWidget> {
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: [
-                                                          TextCustom(
-                                                            text: playlistNames[
-                                                                index],
-                                                            color: background,
-                                                            size: 18,
+                                                          SizedBox(width:MediaQuery.of(context).size.width/3,
+                                                            child: Text(
+                                                              playlistNames[
+                                                                  index],maxLines: 1,
+                                                                style:TextStyle  ( color: background,overflow: TextOverflow.ellipsis,
+                                                              fontSize: 18,)
+                                                            ),
                                                           ),
                                                           IconButton(
                                                               onPressed: () {},

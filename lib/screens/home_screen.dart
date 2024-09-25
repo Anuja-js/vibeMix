@@ -9,7 +9,6 @@ import 'package:vibemix/customs/text_custom.dart';
 import 'package:vibemix/models/box.dart';
 import 'package:vibemix/screens/library/mymusic.dart';
 import 'package:vibemix/screens/search_music.dart';
-import '../customs/container_custom.dart';
 import '../customs/list_of_allsongs.dart';
 import '../customs/listtile_custom.dart';
 import '../customs/global.dart';
@@ -239,23 +238,24 @@ class _UserImageAndNameState extends State<UserImageAndName> {
                       as ImageProvider,
             ),
             const SizedBox(width: 15),
-            Text.rich(
-              TextSpan(
-                text: "Hi There,\n",
-                style: TextStyle(
-                  color: textPink,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
+            SizedBox(width: MediaQuery.of(context).size.width/2,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextSpan(
-                    text: widget.name,
-                    style: TextStyle(
-                      color: foreground,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
+                    Text(
+                      "Hi There,",
+                      style: TextStyle(
+                        color: textPink,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+    ),),
+                        Text(
+                           widget.name,maxLines: 1,
+                          style: TextStyle(
+                            color: foreground,overflow: TextOverflow.ellipsis,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
                 ],
               ),
             ),
